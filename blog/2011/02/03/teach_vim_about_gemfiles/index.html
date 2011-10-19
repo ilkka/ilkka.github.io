@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>
+ilkka.github.com
+ - Teach Vim about Gemfiles
+</title>
+<link href='http://fonts.googleapis.com/css?family=Cantarell:regular,italic,bold,bolditalic&amp;subset=latin' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Vollkorn:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+<link href='/css/default.css' media='screen' rel='stylesheet' type='text/css'>
+<link href='/css/pygments/default.css' media='screen' rel='stylesheet' type='text/css'>
+<link href='http://feeds.feedburner.com/ilkkagithubcom' rel='alternate' type='application/atom+xml'>
+<meta content='nanoc 3' name='generator'>
+<script>
+  //<![CDATA[
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-3223507-4']);
+    _gaq.push(['_trackPageview']);
+    
+    (function() {
+     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+     })();
+  //]]>
+</script>
+</head>
+<body>
+<div id='main-container'>
+<div class='feed-icon-floater'>
+<a href='http://ilkka.github.com/atom.xml'>
+<img alt='Atom feed' src='/images/feed-icon-28x28.png'>
+</a>
+
+</div>
+<div class='centered-container'>
+<div id='header'>
+<h1>
+Teach Vim about Gemfiles
+</h1>
+</div>
+<div id='content'>
+<div class='post'>
+<div class='postbody'>
+<p>By default, the excellent Vim editor doesn’t know what the filetype of
+Gemfiles is (it’s <code>ruby</code>, of course). I’ve been sprinkling Vim modelines in
+mine for ages, but just now as I was hacking at <a href="https://github.com/ilkka/ticgit">my clone of
+ticgit</a>, I realized that it makes no sense to
+sprinkle these onto other people’s code so liberally when I could just teach
+Vim to Do The Right Thing. So, I promptly added the following autocommand into
+my <code>vimrc</code>:</p>
+
+<pre><code>
+" I put my autocommands in a block like this
+if !exists("autocommandsLoaded")
+  let autocommandsLoaded = 1
+  ...
+  autocmd BufNewFile,BufRead Gemfile setlocal filetype=ruby
+endif
+</code></pre>
+
+<p>Now all <code>Gemfile</code>s are opened in ruby mode and I don’t have to annoy other
+people with my editor-specific modelines any more.</p>
+</div>
+<div class='postfooter'>
+Posted on Thursday  3 February 2011 and tagged <a href="/tag/ruby/">ruby</a>, <a href="/tag/vim/">vim</a> and <a href="/tag/coding/">coding</a>.
+
+</div>
+</div>
+<div class='navlinks'>
+<div class='previous' style='float: left'>
+Previously:&nbsp;<a href="/blog/2011/01/31/fix_outlook_quoting_style/">Fix Outlook Quoting Style</a>
+</div>
+<div class='next' style='float: right'>
+Next:&nbsp;<a href="/blog/2011/02/13/jitsu_is_a_meta_build_system_for_ninja/">Jitsu is a meta build system for Ninja</a>
+</div>
+
+</div>
+<br style='break: both'>
+<div class='related'>
+<h3>More stuff like this</h3>
+<ul>
+<li>
+<a href="/blog/2010/11/20/hosting-a-jekyll-blog-with-extensions-on-github/">Hosting a Jekyll blog with extensions on Github</a>
+(2010-11-20)
+</li>
+<li>
+<a href="/blog/2011/02/27/migrating_a_live_ubuntu_install_onto_lvm2/">Migrating a live Ubuntu install onto LVM2</a>
+(2011-02-27)
+</li>
+<li>
+<a href="/blog/2011/03/04/qtquick_2_scenegraph_glsl_fragment_shader_tutorial/">Qt Quick 2 QML Scene Graph GLSL fragment shader tutorial</a>
+(2011-03-04)
+</li>
+</ul>
+
+</div>
+<div class='comments'>
+<h3>Comments</h3>
+<!-- begin disqus comment code -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /**
+  * var disqus_identifier; [Optional but recommended: Define a
+  unique identifier (e.g. post id or slug) for this thread] 
+  */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type =
+  'text/javascript'; dsq.async = true;
+  dsq.src = 'http://ilkkablog.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] ||
+  document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view
+  the <a href="http://disqus.com/?ref_noscript=ilkkablog">comments
+    powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered
+  by <span class="logo-disqus">Disqus</span></a>
+<!-- end disqus comment code -->
+
+<!-- begin disqus comment count code -->
+<script type="text/javascript">
+  var disqus_shortname = 'ilkkablog';
+  (function () {
+  var s = document.createElement('script'); s.async = true;
+  s.src = 'http://disqus.com/forums/ilkkablog/count.js';
+  (document.getElementsByTagName('HEAD')[0] ||
+  document.getElementsByTagName('BODY')[0]).appendChild(s);
+  }());
+</script>
+<!-- end disqus comment count code -->
+
+</div>
+</div>
+</div>
+</div>
+<div id='footer-container'>
+<div id='footer'>
+<div class='col'>
+<h3>What else is here?</h3>
+<ul>
+<li>
+<a href='/'>Front page</a>
+</li>
+<li>
+Archives
+<ul>
+<li><a href="/archives/2010/11/">2010/11</a></li>
+<li><a href="/archives/2010/12/">2010/12</a></li>
+<li><a href="/archives/2011/01/">2011/1</a></li>
+<li><a href="/archives/2011/02/">2011/2</a></li>
+<li><a href="/archives/2011/03/">2011/3</a></li>
+<li><a href="/archives/2011/05/">2011/5</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+<div class='col'>
+<h3>Tags</h3>
+<ul class='tagcloud'>
+<li style='font-size: 70.98373692144486%'>
+<a href="/tag/meta/">meta</a>
+</li>
+<li style='font-size: 149.69506197546147%'>
+<a href="/tag/ruby/">ruby</a>
+</li>
+<li style='font-size: 70.98373692144486%'>
+<a href="/tag/jekyll/">jekyll</a>
+</li>
+<li style='font-size: 193.80930871145782%'>
+<a href="/tag/coding/">coding</a>
+</li>
+<li style='font-size: 60.99642213298283%'>
+<a href="/tag/qt/">qt</a>
+</li>
+<li style='font-size: 63.65616841209596%'>
+<a href="/tag/qml/">qml</a>
+</li>
+<li style='font-size: 87.01563350411524%'>
+<a href="/tag/ubuntu/">ubuntu</a>
+</li>
+<li style='font-size: 60.99642213298283%'>
+<a href="/tag/rake/">rake</a>
+</li>
+<li style='font-size: 60.99642213298283%'>
+<a href="/tag/photography/">photography</a>
+</li>
+<li style='font-size: 60.99642213298283%'>
+<a href="/tag/tools/">tools</a>
+</li>
+<li style='font-size: 60.99642213298283%'>
+<a href="/tag/vim/">vim</a>
+</li>
+<li style='font-size: 60.99642213298283%'>
+<a href="/tag/jitsu/">jitsu</a>
+</li>
+<li style='font-size: 60.99642213298283%'>
+<a href="/tag/ninja/">ninja</a>
+</li>
+<li style='font-size: 60.99642213298283%'>
+<a href="/tag/maemo/">maemo</a>
+</li>
+<li style='font-size: 60.99642213298283%'>
+<a href="/tag/n900/">n900</a>
+</li>
+<li style='font-size: 60.99642213298283%'>
+<a href="/tag/qtquick/">qtquick</a>
+</li>
+<li style='font-size: 60.99642213298283%'>
+<a href="/tag/glsl/">glsl</a>
+</li>
+<li style='font-size: 60.99642213298283%'>
+<a href="/tag/scenegraph/">scenegraph</a>
+</li>
+<li style='font-size: 60.99642213298283%'>
+<a href="/tag/opengl/">opengl</a>
+</li>
+<li style='font-size: 60.99642213298283%'>
+<a href="/tag/sysadmin/">sysadmin</a>
+</li>
+</ul>
+
+</div>
+<div class='col'>
+<h3>Find me elsewhere</h3>
+<ul style='list-style-type: none'>
+<li>
+<a href='http://twitter.com/ilkkalaukkanen'>
+<img alt='twitter.com/ilkkalaukkanen' src='/images/follow_bird_me-a.png'>
+</a>
+</li>
+<li>
+<a href='http://goo.gl/LSptt'>google plus</a>
+</li>
+<li>
+<a href='https://github.com/ilkka'>github.com/ilkka</a>
+</li>
+<li>
+<a href='https://bitbucket.org/Ilkka'>bitbucket.org/Ilkka</a>
+</li>
+</ul>
+
+</div>
+<div id='credits'>
+<p>This site was generated by <a href='http://nanoc.stoneship.org'>Nanoc</a>. Fonts courtesy of <a href='http://code.google.com/webfonts'>Google Font Directory</a>.</p>
+</div>
+</div>
+</div>
+</body>
+</html>
