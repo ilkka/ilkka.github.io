@@ -153,9 +153,9 @@ for LIB in "$LIBBUILDDIR"/src/*.dylib "$CLIENTBUILDDIR"/src/common/*.dylib \
 the ID of each library after it is copied:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class="language-bash"&gt;LIBBASENAME=$(basename $LIB)
-        LIB=$FWKDIR/$LIBBASENAME
-        install_name_tool -id "@executable_path/../Frameworks/$LIBBASENAME" \
-                "$LIB"&lt;/code&gt;&lt;/pre&gt;
+LIB=$FWKDIR/$LIBBASENAME
+install_name_tool -id "@executable_path/../Frameworks/$LIBBASENAME" \
+        "$LIB"&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;We set the ID to be the relative path inside the app bundle from the
 executable binary (which resides in &lt;code&gt;/Contents/MacOSX&lt;/code&gt;) to the library. This
@@ -168,12 +168,12 @@ the libs. We grep the framework names from otool output, generate new paths
 for them and change the paths in the libs:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class="language-bash"&gt;QTDEPS=$(otool -L $LIB|egrep 'Qt.*\.framework'| \
-                egrep -v '@executable_path'|awk '{print $1}'|tr '\n' ' ')
-        for DEP in $(echo $QTDEPS); do
-                NEWDEP=$(echo $DEP|sed 's%.*gcc/lib/%%')
-                install_name_tool -change "$DEP" \
-                        "@executable_path/../Frameworks/$NEWDEP" "$LIB"
-        done&lt;/code&gt;&lt;/pre&gt;
+        egrep -v '@executable_path'|awk '{print $1}'|tr '\n' ' ')
+for DEP in $(echo $QTDEPS); do
+        NEWDEP=$(echo $DEP|sed 's%.*gcc/lib/%%')
+        install_name_tool -change "$DEP" \
+                "@executable_path/../Frameworks/$NEWDEP" "$LIB"
+done&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Note that we ignore any Qt frameworks that might already have working paths
 with the &lt;code&gt;egrep -v '@executable_path'&lt;/code&gt; bit. Now when the Qt frameworks get
@@ -183,11 +183,10 @@ another round of dependency path fixing, this time picking anything with
 &lt;code&gt;libsiilihai&lt;/code&gt; in the name:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class="language-bash"&gt;DEPS=$(otool -L $LIB|egrep 'libsiilihai'|egrep -v '@executable_path' \
-                |awk '{print $1}'|tr '\n' ' ')
-        for DEP in $(echo $DEPS); do
-                install_name_tool -change "$DEP" \
-                        "@executable_path/../Frameworks/$DEP" "$LIB"
-        done
+        |awk '{print $1}'|tr '\n' ' ')
+for DEP in $(echo $DEPS); do
+        install_name_tool -change "$DEP" \
+                "@executable_path/../Frameworks/$DEP" "$LIB"
 done&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;That concludes the library ID and path fixing loop. Now the only thing
