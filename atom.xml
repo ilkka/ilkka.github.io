@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <id>http://ilkka.github.com/</id>
-  <title>ilkka.github.com</title>
+  <id>http://ilkka.github.io/</id>
+  <title>ilkka.github.io</title>
   <updated>2011-10-19T20:06:27Z</updated>
-  <link rel="alternate" href="http://ilkka.github.com/"/>
-  <link rel="self" href="http://ilkka.github.com/atom.xml"/>
+  <link rel="alternate" href="http://ilkka.github.io/"/>
+  <link rel="self" href="http://ilkka.github.io/atom.xml"/>
   <author>
     <name>Ilkka Laukkanen</name>
-    <uri>http://ilkka.github.com</uri>
+    <uri>http://ilkka.github.io</uri>
   </author>
   <entry>
-    <id>tag:ilkka.github.com,2011-10-19:/blog/2011/10/19/packaging_a_qt_app_for_os_x/</id>
+    <id>tag:ilkka.github.io,2011-10-19:/blog/2011/10/19/packaging_a_qt_app_for_os_x/</id>
     <title type="html">Packaging a Qt app for OS X</title>
     <published>2011-10-19T20:06:27Z</published>
     <updated>2011-10-19T20:06:27Z</updated>
-    <link rel="alternate" href="http://ilkka.github.com/blog/2011/10/19/packaging_a_qt_app_for_os_x/"/>
+    <link rel="alternate" href="http://ilkka.github.io/blog/2011/10/19/packaging_a_qt_app_for_os_x/"/>
     <content type="html">&lt;p&gt;I participated in &lt;a href="http://barcamp.org/w/page/39167337/BarCampTampere2"&gt;BarCamp Tampere
 2&lt;/a&gt; recently, and one of
 the many very interesting presentations was &lt;a href="http://www.modeemi.fi/~cosmo"&gt;Ville
@@ -106,11 +106,11 @@ linker. Siilihai’s libraries also link to each other, so I have to do the same
 thing to them too.&lt;/p&gt;</content>
   </entry>
   <entry>
-    <id>tag:ilkka.github.com,2011-05-25:/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/</id>
+    <id>tag:ilkka.github.io,2011-05-25:/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/</id>
     <title type="html">Dgh, The Debian/Ubuntu Downgrade Helper</title>
     <published>2011-05-25T19:39:00Z</published>
     <updated>2011-05-25T19:39:00Z</updated>
-    <link rel="alternate" href="http://ilkka.github.com/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/"/>
+    <link rel="alternate" href="http://ilkka.github.io/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/"/>
     <content type="html">&lt;p&gt;Ever had the bright idea of upgrading, say, your Ubuntu machine to use some
 snazzy new software from a PPA, only to have it blow up in your face? The grim
 realization that there’s no easy downgrade path, instead you’ll have to find
@@ -162,11 +162,11 @@ code&lt;/a&gt; or &lt;code&gt;gem install dgh&lt;/code&gt; directly from
 rubygems.&lt;/p&gt;</content>
   </entry>
   <entry>
-    <id>tag:ilkka.github.com,2011-03-04:/blog/2011/03/04/qtquick_2_scenegraph_glsl_fragment_shader_tutorial/</id>
+    <id>tag:ilkka.github.io,2011-03-04:/blog/2011/03/04/qtquick_2_scenegraph_glsl_fragment_shader_tutorial/</id>
     <title type="html">Qt Quick 2 QML Scene Graph GLSL fragment shader tutorial</title>
     <published>2011-03-04T11:33:50Z</published>
     <updated>2011-03-04T11:33:50Z</updated>
-    <link rel="alternate" href="http://ilkka.github.com/blog/2011/03/04/qtquick_2_scenegraph_glsl_fragment_shader_tutorial/"/>
+    <link rel="alternate" href="http://ilkka.github.io/blog/2011/03/04/qtquick_2_scenegraph_glsl_fragment_shader_tutorial/"/>
     <content type="html">&lt;p&gt;I had been hearing a lot about Scene Graph and Qt Quick 2 making it possible to
 implement whatever effects one wanted, to really make apps gorgeous, and still
 stay in the la-la-land of QML UI coding. What I &lt;em&gt;hadn’t&lt;/em&gt; had was a chance to
@@ -561,11 +561,11 @@ the upcoming Lion, due to a OpenGL version issue. Since my workhorse home
 computer is a Mac, this puts a bit of a crimp on toying with scenegraph.&lt;/p&gt;</content>
   </entry>
   <entry>
-    <id>tag:ilkka.github.com,2011-02-27:/blog/2011/02/27/migrating_a_live_ubuntu_install_onto_lvm2/</id>
+    <id>tag:ilkka.github.io,2011-02-27:/blog/2011/02/27/migrating_a_live_ubuntu_install_onto_lvm2/</id>
     <title type="html">Migrating a live Ubuntu install onto LVM2</title>
     <published>2011-02-27T11:56:40Z</published>
     <updated>2011-02-27T11:56:40Z</updated>
-    <link rel="alternate" href="http://ilkka.github.com/blog/2011/02/27/migrating_a_live_ubuntu_install_onto_lvm2/"/>
+    <link rel="alternate" href="http://ilkka.github.io/blog/2011/02/27/migrating_a_live_ubuntu_install_onto_lvm2/"/>
     <content type="html">&lt;p&gt;My only home computer is, and has been for a while, a Nokia Booklet. It’s a
 nice ultra-portable fanless laptop that gets about 6-7 hours of use per
 charge, and is in my opinion one of the most stylish products ever shipped by
@@ -786,11 +786,11 @@ for shooting myself in the leg, then managing to bandage it up without doing
 any more damage in the process.&lt;/p&gt;</content>
   </entry>
   <entry>
-    <id>tag:ilkka.github.com,2011-02-13:/blog/2011/02/13/jitsu_is_a_meta_build_system_for_ninja/</id>
+    <id>tag:ilkka.github.io,2011-02-13:/blog/2011/02/13/jitsu_is_a_meta_build_system_for_ninja/</id>
     <title type="html">Jitsu is a meta build system for Ninja</title>
     <published>2011-02-13T20:19:50Z</published>
     <updated>2011-02-13T20:19:50Z</updated>
-    <link rel="alternate" href="http://ilkka.github.com/blog/2011/02/13/jitsu_is_a_meta_build_system_for_ninja/"/>
+    <link rel="alternate" href="http://ilkka.github.io/blog/2011/02/13/jitsu_is_a_meta_build_system_for_ninja/"/>
     <content type="html">&lt;p&gt;A while back I hit upon &lt;a href="https://github.com/martine/ninja"&gt;Ninja&lt;/a&gt;, a very fast
 and very simple build system that is apparently used for building
 &lt;a href="http://www.chromium.org/"&gt;Chromium&lt;/a&gt;. Can’t remember where I first heard of
