@@ -99,10 +99,11 @@ fashion.</p>
 differences. Using the command line utility <code>otool</code> we can examine this
 search path information. Let’s see the output for <code>otool</code> itself:</p>
 
-<pre><code class="language-bash">$ otool -L `which otool`
+<p><code>&lt;pre&gt;
+$ otool -L `which otool`
 /usr/bin/otool:
-        /usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current
-        version 159.0.0)</code></pre>
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 159.0.0)
+&lt;/pre&gt;</code></p>
 
 <p>We can see that otool depends on a single dylib, libSystem. Now, my knowledge
 isn’t broad enough to tell if the actual path to the lib is hardcoded in the
@@ -110,19 +111,16 @@ binary, or if the output is due to the dynamic linker knowing to look in
 <code>/usr/lib</code>, but in the context of this discussion it doesn’t really matter.
 Let’s look at the output for <code>libSystem.B.dylib</code> next:</p>
 
-<pre><code class="language-bash">$ otool -L /usr/lib/libSystem.B.dylib
+<p><code>&lt;pre&gt;
+$ otool -L /usr/lib/libSystem.B.dylib
 /usr/lib/libSystem.B.dylib:
-        /usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current
-        version 159.0.0)
-        /usr/lib/system/libcache.dylib (compatibility version 1.0.0, current
-        version 47.0.0)
-        /usr/lib/system/libcommonCrypto.dylib (compatibility version 1.0.0,
-        current version 55010.0.0)
-        /usr/lib/system/libcompiler_rt.dylib (compatibility version 1.0.0,
-        current version 6.0.0)
-        /usr/lib/system/libcopyfile.dylib (compatibility version 1.0.0,
-        current version 85.1.0)
-        ...</code></pre>
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 159.0.0)
+	/usr/lib/system/libcache.dylib (compatibility version 1.0.0, current version 47.0.0)
+	/usr/lib/system/libcommonCrypto.dylib (compatibility version 1.0.0, current version 55010.0.0)
+	/usr/lib/system/libcompiler_rt.dylib (compatibility version 1.0.0, current version 6.0.0)
+	/usr/lib/system/libcopyfile.dylib (compatibility version 1.0.0, current version 85.1.0)
+	...
+&lt;/pre&gt;</code></p>
 
 <p>We see that libSystem is linked against a whole bunch of other system
 libraries, but also that the otool output lists the library itself. As far as
@@ -135,111 +133,6 @@ nonstandard place (inside the app bundle), I need to edit the library
 locations stored in the app binary so that the libraries get found by the
 linker. Siilihai’s libraries also link to each other, so I have to do the same
 thing to them too.</p>
-
-<p>If this all sounds complicated, that is because it is. In software it soon
-pays to automate even the simplest of tasks, and here there is definitely a
-lot to gain, so I wrote a script to build Siilihai and perform all these
-magic tricks for me.</p>
-
-<h2 id="scripture">Scripture</h2>
-
-<p>You can see the whole <a href="https://github.com/ilkka/siilihai-client/blob/osx/scripts/build-osx.sh">script in
-github</a>,
-but I’ll explain the most relevant bits here.</p>
-
-<p>First, the script tries to be clever about allowing you to run it from
-whatever directory and still finding all the sources and whatnot. For this it
-first locates the script directory:</p>
-
-<pre><code class="language-bash">SCRIPT=$(python -c 'import os,sys;print os.path.realpath(sys.argv[1])' $0)
-SCRIPTDIR=$(dirname $SCRIPT)</code></pre>
-
-<p>Using GNU readlink, the first assignment would be the much simpler
-<code>SCRIPT=$(readlink -f $0)</code>, but it doesn’t, hence the Python. Anyway, now that
-the script knows where it is, by extension it also knows where the Siilihai
-client source is. It assumes that
-<a href="https://github.com/vranki/libsiilihai">libsiilihai</a>’s sources are in the same
-directory.</p>
-
-<p>The script creates a temporary directory and proceeds to do normal shadow
-builds of the lib and the client. The lib build generates exclusively .dylib
-files while the client generates both .dylibs and an app bundle. The next step
-is to copy all the .dylibs into the app bundle. It doesn’t really matter
-where, but I decided to put them in the <code>/Contents/Frameworks</code> directory since
-I happen to know that’s where the Qt libs will end up too.</p>
-
-<pre><code class="language-bash">status "Copying libsiilihai dylibs into client bundle"
-BUNDLEDIR=$CLIENTBUILDDIR/src/reader/siilihai.app
-FWKDIR=$BUNDLEDIR/Contents/Frameworks
-mkdir -p "$FWKDIR"
-for LIB in "$LIBBUILDDIR"/src/*.dylib "$CLIENTBUILDDIR"/src/common/*.dylib \
-        "$CLIENTBUILDDIR"/src/parsermaker/*.dylib; do
-        cp -a "$LIB" "$FWKDIR"</code></pre>
-<!-- a* -->
-
-<p>Now we use
-<a href="http://www.manpagez.com/man/1/install_name_tool/"><code>install_name_tool</code></a> to set
-the ID of each library after it is copied:</p>
-
-<pre><code class="language-bash">LIBBASENAME=$(basename $LIB)
-LIB=$FWKDIR/$LIBBASENAME
-install_name_tool -id "@executable_path/../Frameworks/$LIBBASENAME" \
-        "$LIB"</code></pre>
-
-<p>We set the ID to be the relative path inside the app bundle from the
-executable binary (which resides in <code>/Contents/MacOSX</code>) to the library. This
-is the same rpath that will be set in the executable later.</p>
-
-<p>Since all the Siilihai libraries are linked against Qt, and the Qt frameworks
-will be deployed into the app bundle too, we need to change their rpaths in
-the libraries. At this point they still point at e.g. the Qt SDK used to build
-the libs. We grep the framework names from otool output, generate new paths
-for them and change the paths in the libs:</p>
-
-<pre><code class="language-bash">QTDEPS=$(otool -L $LIB|egrep 'Qt.*\.framework'| \
-        egrep -v '@executable_path'|awk '{print $1}'|tr '\n' ' ')
-for DEP in $(echo $QTDEPS); do
-        NEWDEP=$(echo $DEP|sed 's%.*gcc/lib/%%')
-        install_name_tool -change "$DEP" \
-                "@executable_path/../Frameworks/$NEWDEP" "$LIB"
-done</code></pre>
-
-<p>Note that we ignore any Qt frameworks that might already have working paths
-with the <code>egrep -v '@executable_path'</code> bit. Now when the Qt frameworks get
-copied into <code>/Contents/Frameworks</code>, the Siilihai libs will get linked against
-them at runtime. The libs are dependent on each other too, though, so we need
-another round of dependency path fixing, this time picking anything with
-<code>libsiilihai</code> in the name:</p>
-
-<pre><code class="language-bash">DEPS=$(otool -L $LIB|egrep 'libsiilihai'|egrep -v '@executable_path' \
-        |awk '{print $1}'|tr '\n' ' ')
-for DEP in $(echo $DEPS); do
-        install_name_tool -change "$DEP" \
-                "@executable_path/../Frameworks/$DEP" "$LIB"
-done</code></pre>
-
-<p>That concludes the library ID and path fixing loop. Now the only thing
-remaining is to run the <code>macdeployqt</code> tool. This tool finds all the Qt
-frameworks the executable is linked against and copies them into the bundle.
-It also strips them and fixes all the IDs and rpaths. As an additional bonus,
-since we’ve already copied Siilihai’s own .dylibs into the bundle, it also
-fixes <em>their</em> paths in the executable. The result is a self-contained app
-bundle that can be run in any reasonably modern Mac. Currently I believe the
-bundle is compatible with Intel Macs running OS X 10.5 or later.</p>
-
-<h2 id="further-development">Further development</h2>
-
-<p>One rather major problem with the script so far is that it leaves the app
-bundle using the default app icon, while it should use the Siilihai icon from
-the repo. This is something I’ll have to find out how to do. Other than that,
-the only thing I’ve thought of is support for tagging the repos when
-successful builds are made, and settings some sort of version metadata, should
-bundles support something like that.</p>
-
-<p>The experience does leave me with the feeling that if I was to write an app
-that I wanted to deploy onto Macs, I would just link everything into a
-monolithic binary. Given today’s storage space yadda yadda etc., you get the
-point.</p>
 </div>
 <div class='postfooter'>
 Posted on Wednesday 19 October 2011 and tagged <a href="/tag/qt/">qt</a> and <a href="/tag/osx/">osx</a>.
@@ -337,13 +230,13 @@ Archives
 <div class='col'>
 <h3>Tags</h3>
 <ul class='tagcloud'>
-<li style='font-size: 70.98373692144486%'>
+<li style='font-size: 69.9384961563864%'>
 <a href="/tag/meta/">meta</a>
 </li>
 <li style='font-size: 149.69506197546147%'>
 <a href="/tag/ruby/">ruby</a>
 </li>
-<li style='font-size: 70.98373692144486%'>
+<li style='font-size: 69.9384961563864%'>
 <a href="/tag/jekyll/">jekyll</a>
 </li>
 <li style='font-size: 193.80930871145782%'>
@@ -358,46 +251,46 @@ Archives
 <li style='font-size: 87.01563350411524%'>
 <a href="/tag/ubuntu/">ubuntu</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/rake/">rake</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/photography/">photography</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/tools/">tools</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/vim/">vim</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/jitsu/">jitsu</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/ninja/">ninja</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/maemo/">maemo</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/n900/">n900</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/qtquick/">qtquick</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/glsl/">glsl</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/scenegraph/">scenegraph</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/opengl/">opengl</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/sysadmin/">sysadmin</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/osx/">osx</a>
 </li>
 </ul>

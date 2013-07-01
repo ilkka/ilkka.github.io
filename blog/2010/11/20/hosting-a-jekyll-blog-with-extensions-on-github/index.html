@@ -186,25 +186,25 @@ root – there’s no commonality there – so I want a pristine <code>master</c
 branch. Happily this is easy with Git. First I rename the old branch
 locally:</p>
 
-<pre><code class="language-sh">git branch -m master source</code></pre>
+<div class="CodeRay"><div class="code"><pre><code class="language-sh">git branch -m master source</code></pre></div></div>
 
 <p>This only renames the local branch though: I still have to rename the
 remote branch in GitHub, which I’ll do later. Now I create a pristine
 new <code>master</code>, which is well documented in the <a href="http://book.git-scm.com/5_creating_new_empty_branches.html">Git Community
 Book</a>:</p>
 
-<pre><code class="language-sh">git symbolic-ref HEAD refs/heads/master
+<div class="CodeRay"><div class="code"><pre><code class="language-sh">git symbolic-ref HEAD refs/heads/master
 rm .git/index 
 git clean -fdx 
 touch index.html
 git add your files 
-git commit -m 'Blank new master branch'</code></pre>
+git commit -m 'Blank new master branch'</code></pre></div></div>
 
 <p>Now I cannot just do a normal push with this new <code>master</code> branch
 because the master in GitHub is unrelated and cannot be merged. What I
 <em>can</em> do is borrow a page from George Lucas’ book and force-push:</p>
 
-<pre><code class="language-sh">git push --force origin master</code></pre>
+<div class="CodeRay"><div class="code"><pre><code class="language-sh">git push --force origin master</code></pre></div></div>
 
 <p>This will essentially clobber the remote repo and is really not
 recommended on a published repo, but in my case I think it’s pretty
@@ -212,7 +212,7 @@ unlikely that anybody else has cloned it yet.</p>
 
 <p>Now all that remains is to push the <code>source</code> branch:</p>
 
-<pre><code class="language-sh">git push origin source:source</code></pre>
+<div class="CodeRay"><div class="code"><pre><code class="language-sh">git push origin source:source</code></pre></div></div>
 
 <p>Also done but not detailed here is that <code>source</code> was set to follow
 <code>origin/master</code> so I actually had to recreate it locally and set it to
@@ -220,9 +220,9 @@ follow <code>origin/source</code>. Then I checked out <code>source</code> and ad
 submodule, using my private URL so that I could commit changes to the
 generated site easily:</p>
 
-<pre><code class="language-sh">git checkout source
+<div class="CodeRay"><div class="code"><pre><code class="language-sh">git checkout source
 git submodule add git@github.com:ilkka/ilkka.github.com.git _site
-git commit -m "Added site as submodule"</code></pre>
+git commit -m "Added site as submodule"</code></pre></div></div>
 
 <p>Now whenever I run Jekyll, or as I normally do, namely have <code>compass
 watch</code> running in one window and <code>jekyll --auto --server</code> in another,
@@ -339,13 +339,13 @@ Archives
 <div class='col'>
 <h3>Tags</h3>
 <ul class='tagcloud'>
-<li style='font-size: 70.98373692144486%'>
+<li style='font-size: 69.9384961563864%'>
 <a href="/tag/meta/">meta</a>
 </li>
 <li style='font-size: 149.69506197546147%'>
 <a href="/tag/ruby/">ruby</a>
 </li>
-<li style='font-size: 70.98373692144486%'>
+<li style='font-size: 69.9384961563864%'>
 <a href="/tag/jekyll/">jekyll</a>
 </li>
 <li style='font-size: 193.80930871145782%'>
@@ -360,46 +360,46 @@ Archives
 <li style='font-size: 87.01563350411524%'>
 <a href="/tag/ubuntu/">ubuntu</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/rake/">rake</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/photography/">photography</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/tools/">tools</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/vim/">vim</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/jitsu/">jitsu</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/ninja/">ninja</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/maemo/">maemo</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/n900/">n900</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/qtquick/">qtquick</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/glsl/">glsl</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/scenegraph/">scenegraph</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/opengl/">opengl</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/sysadmin/">sysadmin</a>
 </li>
-<li style='font-size: 60.99642213298283%'>
+<li style='font-size: 60.90160003008207%'>
 <a href="/tag/osx/">osx</a>
 </li>
 </ul>

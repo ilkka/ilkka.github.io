@@ -70,10 +70,11 @@ fashion.&lt;/p&gt;
 differences. Using the command line utility &lt;code&gt;otool&lt;/code&gt; we can examine this
 search path information. Let’s see the output for &lt;code&gt;otool&lt;/code&gt; itself:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class="language-bash"&gt;$ otool -L `which otool`
+&lt;p&gt;&lt;code&gt;&amp;lt;pre&amp;gt;
+$ otool -L `which otool`
 /usr/bin/otool:
-        /usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current
-        version 159.0.0)&lt;/code&gt;&lt;/pre&gt;
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 159.0.0)
+&amp;lt;/pre&amp;gt;&lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;We can see that otool depends on a single dylib, libSystem. Now, my knowledge
 isn’t broad enough to tell if the actual path to the lib is hardcoded in the
@@ -81,19 +82,16 @@ binary, or if the output is due to the dynamic linker knowing to look in
 &lt;code&gt;/usr/lib&lt;/code&gt;, but in the context of this discussion it doesn’t really matter.
 Let’s look at the output for &lt;code&gt;libSystem.B.dylib&lt;/code&gt; next:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class="language-bash"&gt;$ otool -L /usr/lib/libSystem.B.dylib
+&lt;p&gt;&lt;code&gt;&amp;lt;pre&amp;gt;
+$ otool -L /usr/lib/libSystem.B.dylib
 /usr/lib/libSystem.B.dylib:
-        /usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current
-        version 159.0.0)
-        /usr/lib/system/libcache.dylib (compatibility version 1.0.0, current
-        version 47.0.0)
-        /usr/lib/system/libcommonCrypto.dylib (compatibility version 1.0.0,
-        current version 55010.0.0)
-        /usr/lib/system/libcompiler_rt.dylib (compatibility version 1.0.0,
-        current version 6.0.0)
-        /usr/lib/system/libcopyfile.dylib (compatibility version 1.0.0,
-        current version 85.1.0)
-        ...&lt;/code&gt;&lt;/pre&gt;
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 159.0.0)
+	/usr/lib/system/libcache.dylib (compatibility version 1.0.0, current version 47.0.0)
+	/usr/lib/system/libcommonCrypto.dylib (compatibility version 1.0.0, current version 55010.0.0)
+	/usr/lib/system/libcompiler_rt.dylib (compatibility version 1.0.0, current version 6.0.0)
+	/usr/lib/system/libcopyfile.dylib (compatibility version 1.0.0, current version 85.1.0)
+	...
+&amp;lt;/pre&amp;gt;&lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;We see that libSystem is linked against a whole bunch of other system
 libraries, but also that the otool output lists the library itself. As far as
@@ -105,112 +103,7 @@ comment.&lt;/p&gt;
 nonstandard place (inside the app bundle), I need to edit the library
 locations stored in the app binary so that the libraries get found by the
 linker. Siilihai’s libraries also link to each other, so I have to do the same
-thing to them too.&lt;/p&gt;
-
-&lt;p&gt;If this all sounds complicated, that is because it is. In software it soon
-pays to automate even the simplest of tasks, and here there is definitely a
-lot to gain, so I wrote a script to build Siilihai and perform all these
-magic tricks for me.&lt;/p&gt;
-
-&lt;h2 id="scripture"&gt;Scripture&lt;/h2&gt;
-
-&lt;p&gt;You can see the whole &lt;a href="https://github.com/ilkka/siilihai-client/blob/osx/scripts/build-osx.sh"&gt;script in
-github&lt;/a&gt;,
-but I’ll explain the most relevant bits here.&lt;/p&gt;
-
-&lt;p&gt;First, the script tries to be clever about allowing you to run it from
-whatever directory and still finding all the sources and whatnot. For this it
-first locates the script directory:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class="language-bash"&gt;SCRIPT=$(python -c 'import os,sys;print os.path.realpath(sys.argv[1])' $0)
-SCRIPTDIR=$(dirname $SCRIPT)&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Using GNU readlink, the first assignment would be the much simpler
-&lt;code&gt;SCRIPT=$(readlink -f $0)&lt;/code&gt;, but it doesn’t, hence the Python. Anyway, now that
-the script knows where it is, by extension it also knows where the Siilihai
-client source is. It assumes that
-&lt;a href="https://github.com/vranki/libsiilihai"&gt;libsiilihai&lt;/a&gt;’s sources are in the same
-directory.&lt;/p&gt;
-
-&lt;p&gt;The script creates a temporary directory and proceeds to do normal shadow
-builds of the lib and the client. The lib build generates exclusively .dylib
-files while the client generates both .dylibs and an app bundle. The next step
-is to copy all the .dylibs into the app bundle. It doesn’t really matter
-where, but I decided to put them in the &lt;code&gt;/Contents/Frameworks&lt;/code&gt; directory since
-I happen to know that’s where the Qt libs will end up too.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class="language-bash"&gt;status "Copying libsiilihai dylibs into client bundle"
-BUNDLEDIR=$CLIENTBUILDDIR/src/reader/siilihai.app
-FWKDIR=$BUNDLEDIR/Contents/Frameworks
-mkdir -p "$FWKDIR"
-for LIB in "$LIBBUILDDIR"/src/*.dylib "$CLIENTBUILDDIR"/src/common/*.dylib \
-        "$CLIENTBUILDDIR"/src/parsermaker/*.dylib; do
-        cp -a "$LIB" "$FWKDIR"&lt;/code&gt;&lt;/pre&gt;
-&lt;!-- a* --&gt;
-
-&lt;p&gt;Now we use
-&lt;a href="http://www.manpagez.com/man/1/install_name_tool/"&gt;&lt;code&gt;install_name_tool&lt;/code&gt;&lt;/a&gt; to set
-the ID of each library after it is copied:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class="language-bash"&gt;LIBBASENAME=$(basename $LIB)
-LIB=$FWKDIR/$LIBBASENAME
-install_name_tool -id "@executable_path/../Frameworks/$LIBBASENAME" \
-        "$LIB"&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;We set the ID to be the relative path inside the app bundle from the
-executable binary (which resides in &lt;code&gt;/Contents/MacOSX&lt;/code&gt;) to the library. This
-is the same rpath that will be set in the executable later.&lt;/p&gt;
-
-&lt;p&gt;Since all the Siilihai libraries are linked against Qt, and the Qt frameworks
-will be deployed into the app bundle too, we need to change their rpaths in
-the libraries. At this point they still point at e.g. the Qt SDK used to build
-the libs. We grep the framework names from otool output, generate new paths
-for them and change the paths in the libs:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class="language-bash"&gt;QTDEPS=$(otool -L $LIB|egrep 'Qt.*\.framework'| \
-        egrep -v '@executable_path'|awk '{print $1}'|tr '\n' ' ')
-for DEP in $(echo $QTDEPS); do
-        NEWDEP=$(echo $DEP|sed 's%.*gcc/lib/%%')
-        install_name_tool -change "$DEP" \
-                "@executable_path/../Frameworks/$NEWDEP" "$LIB"
-done&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Note that we ignore any Qt frameworks that might already have working paths
-with the &lt;code&gt;egrep -v '@executable_path'&lt;/code&gt; bit. Now when the Qt frameworks get
-copied into &lt;code&gt;/Contents/Frameworks&lt;/code&gt;, the Siilihai libs will get linked against
-them at runtime. The libs are dependent on each other too, though, so we need
-another round of dependency path fixing, this time picking anything with
-&lt;code&gt;libsiilihai&lt;/code&gt; in the name:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class="language-bash"&gt;DEPS=$(otool -L $LIB|egrep 'libsiilihai'|egrep -v '@executable_path' \
-        |awk '{print $1}'|tr '\n' ' ')
-for DEP in $(echo $DEPS); do
-        install_name_tool -change "$DEP" \
-                "@executable_path/../Frameworks/$DEP" "$LIB"
-done&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;That concludes the library ID and path fixing loop. Now the only thing
-remaining is to run the &lt;code&gt;macdeployqt&lt;/code&gt; tool. This tool finds all the Qt
-frameworks the executable is linked against and copies them into the bundle.
-It also strips them and fixes all the IDs and rpaths. As an additional bonus,
-since we’ve already copied Siilihai’s own .dylibs into the bundle, it also
-fixes &lt;em&gt;their&lt;/em&gt; paths in the executable. The result is a self-contained app
-bundle that can be run in any reasonably modern Mac. Currently I believe the
-bundle is compatible with Intel Macs running OS X 10.5 or later.&lt;/p&gt;
-
-&lt;h2 id="further-development"&gt;Further development&lt;/h2&gt;
-
-&lt;p&gt;One rather major problem with the script so far is that it leaves the app
-bundle using the default app icon, while it should use the Siilihai icon from
-the repo. This is something I’ll have to find out how to do. Other than that,
-the only thing I’ve thought of is support for tagging the repos when
-successful builds are made, and settings some sort of version metadata, should
-bundles support something like that.&lt;/p&gt;
-
-&lt;p&gt;The experience does leave me with the feeling that if I was to write an app
-that I wanted to deploy onto Macs, I would just link everything into a
-monolithic binary. Given today’s storage space yadda yadda etc., you get the
-point.&lt;/p&gt;</content>
+thing to them too.&lt;/p&gt;</content>
   </entry>
   <entry>
     <id>tag:ilkka.github.com,2011-05-25:/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/</id>
@@ -245,19 +138,20 @@ available in any repository. Usage is simple, but requires some manual work
 &lt;li&gt;Remove the offending package archive from apt’s sources&lt;/li&gt;
   &lt;li&gt;Run &lt;code&gt;apt-get update&lt;/code&gt;
 &lt;/li&gt;
-  &lt;li&gt;Produce &lt;code&gt;apt-cache policy&lt;/code&gt; output for all installed packages, e.g.:&lt;/li&gt;
-&lt;/ol&gt;&lt;pre&gt;&lt;code&gt;    &amp;lt;pre&amp;gt;&amp;lt;code&amp;gt;dpkg --get-selections| \
-egrep '\binstall'|awk '{print $1}'| \
-xargs env LANG=C apt-cache policy| \
-tee packages.list&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+  &lt;li&gt;
+    &lt;p&gt;Produce &lt;code&gt;apt-cache policy&lt;/code&gt; output for all installed packages, e.g.:&lt;/p&gt;
 
-&lt;ol&gt;
-&lt;li&gt;Run &lt;code&gt;dgh&lt;/code&gt; on the output:&lt;/li&gt;
-&lt;/ol&gt;&lt;pre&gt;&lt;code&gt;    &amp;lt;pre&amp;gt;&amp;lt;code&amp;gt;$ dgh packages.list&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+    &lt;pre&gt;&lt;code&gt;dpkg --get-selections| \
+    egrep '\binstall'|awk '{print $1}'| \
+    xargs env LANG=C apt-cache policy| \
+    tee packages.list&lt;/code&gt;&lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Run &lt;code&gt;dgh&lt;/code&gt; on the output:&lt;/p&gt;
 
-&lt;p&gt;Dgh will report packages it thinks are downgrade candidates. Note that it will
+    &lt;pre&gt;&lt;code&gt;$ dgh packages.list&lt;/code&gt;&lt;/pre&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;&lt;p&gt;Dgh will report packages it thinks are downgrade candidates. Note that it will
 probably report all manually installed packages too, so be careful when
 downgrading.&lt;/p&gt;
 
