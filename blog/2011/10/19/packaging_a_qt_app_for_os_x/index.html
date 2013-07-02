@@ -8,6 +8,8 @@ ilkka.github.io
 </title>
 <link href='http://fonts.googleapis.com/css?family=Rosarivo:400,400italic|Oregano|Trocchi|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 <link href='/css/default.css' media='screen' rel='stylesheet' type='text/css'>
+<link href='/css/wide.css' media='screen and (min-width: 820px)' rel='stylesheet' type='text/css'>
+<link href='/css/narrow.css' media='screen and (max-width: 820px)' rel='stylesheet' type='text/css'>
 <link href='/css/pygments/default.css' media='screen' rel='stylesheet' type='text/css'>
 <link href='http://feeds.feedburner.com/ilkkagithubcom' rel='alternate' type='application/atom+xml'>
 <meta content='nanoc 3' name='generator'>
@@ -35,26 +37,38 @@ ilkka.github.io
 </div>
 <div class='centered-container'>
 <div id='header'>
+<a class='sitetitle' href='/'>
+ilkka.github.io
+</a>
 <h1>
 Packaging a Qt app for OS X
 </h1>
 </div>
 <div id='content'>
 <div class='post'>
+<div class='postmeta'>
+Posted on Wednesday 19 October 2011 and tagged <a href="/tag/qt/">qt</a> and <a href="/tag/osx/">osx</a>.
+
+<div class='navlinks'>
+Previously:&nbsp;<a href="/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/">Dgh, The Debian/Ubuntu Downgrade Helper</a>
+
+</div>
+</div>
 <div class='postbody'>
 <p>I participated in <a href="http://barcamp.org/w/page/39167337/BarCampTampere2">BarCamp Tampere
 2</a> recently, and one of
 the many very interesting presentations was <a href="http://www.modeemi.fi/~cosmo">Ville
 Ranki</a> talking about
 <a href="http://siilihai.com/">Siilihai</a>, a web forum reader app intentionally very
-reminiscent of newsreaders of old. Siilihai scrapes the content from web
-forums and presents it as threaded conversations so that it’s easier to read
-and follow conversations. Parsers can be written pretty easily for
-most forum software, and while forum content is only accessed locally by the
-client, it stores generated message IDs in the siilihai.com service so that
-whatever messages you read in one client are marked read in any other clients
-you might use as well. The service is also used as a repository for forum
-parsers.</p>
+reminiscent of newsreaders of old.</p>
+
+<p>Siilihai scrapes the content from web forums and presents it as threaded
+conversations so that it’s easier to read and follow conversations. Parsers
+can be written pretty easily for most forum software, and while forum content
+is only accessed locally by the client, it stores generated message IDs in the
+siilihai.com service so that whatever messages you read in one client are
+marked read in any other clients you might use as well. The service is also
+used as a repository for forum parsers.</p>
 
 <p>Anyway, as the event was held at <a href="http://www.futurice.com">our office</a>, I
 grabbed a Mac that was handy so that I could try out Siilihai for myself.
@@ -132,16 +146,6 @@ locations stored in the app binary so that the libraries get found by the
 linker. Siilihai’s libraries also link to each other, so I have to do the same
 thing to them too.</p>
 </div>
-<div class='postfooter'>
-Posted on Wednesday 19 October 2011 and tagged <a href="/tag/qt/">qt</a> and <a href="/tag/osx/">osx</a>.
-
-</div>
-</div>
-<div class='navlinks'>
-<div class='previous' style='float: left'>
-Previously:&nbsp;<a href="/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/">Dgh, The Debian/Ubuntu Downgrade Helper</a>
-</div>
-
 </div>
 <br style='break: both'>
 <div class='related'>

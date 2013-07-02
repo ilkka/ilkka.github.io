@@ -20,14 +20,15 @@
 the many very interesting presentations was &lt;a href="http://www.modeemi.fi/~cosmo"&gt;Ville
 Ranki&lt;/a&gt; talking about
 &lt;a href="http://siilihai.com/"&gt;Siilihai&lt;/a&gt;, a web forum reader app intentionally very
-reminiscent of newsreaders of old. Siilihai scrapes the content from web
-forums and presents it as threaded conversations so that it’s easier to read
-and follow conversations. Parsers can be written pretty easily for
-most forum software, and while forum content is only accessed locally by the
-client, it stores generated message IDs in the siilihai.com service so that
-whatever messages you read in one client are marked read in any other clients
-you might use as well. The service is also used as a repository for forum
-parsers.&lt;/p&gt;
+reminiscent of newsreaders of old.&lt;/p&gt;
+
+&lt;p&gt;Siilihai scrapes the content from web forums and presents it as threaded
+conversations so that it’s easier to read and follow conversations. Parsers
+can be written pretty easily for most forum software, and while forum content
+is only accessed locally by the client, it stores generated message IDs in the
+siilihai.com service so that whatever messages you read in one client are
+marked read in any other clients you might use as well. The service is also
+used as a repository for forum parsers.&lt;/p&gt;
 
 &lt;p&gt;Anyway, as the event was held at &lt;a href="http://www.futurice.com"&gt;our office&lt;/a&gt;, I
 grabbed a Mac that was handy so that I could try out Siilihai for myself.
