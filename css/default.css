@@ -1,8 +1,11 @@
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Cantarell', sans-serif; }
+h1 {
+  font-family: 'Oregano', cursive; }
+
+h2, h3, h4, h5, h6 {
+  font-family: 'Trocchi', serif; }
 
 body {
-  font-family: 'Vollkorn', serif;
+  font-family: 'Rosarivo', serif;
   margin: 0;
   padding: 0;
   background-color: #d9d9d9; }

@@ -70,11 +70,11 @@ fashion.&lt;/p&gt;
 differences. Using the command line utility &lt;code&gt;otool&lt;/code&gt; we can examine this
 search path information. Let’s see the output for &lt;code&gt;otool&lt;/code&gt; itself:&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;&amp;lt;pre&amp;gt;
+&lt;pre&gt;&lt;code&gt;
 $ otool -L `which otool`
 /usr/bin/otool:
 	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 159.0.0)
-&amp;lt;/pre&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;We can see that otool depends on a single dylib, libSystem. Now, my knowledge
 isn’t broad enough to tell if the actual path to the lib is hardcoded in the
@@ -82,7 +82,7 @@ binary, or if the output is due to the dynamic linker knowing to look in
 &lt;code&gt;/usr/lib&lt;/code&gt;, but in the context of this discussion it doesn’t really matter.
 Let’s look at the output for &lt;code&gt;libSystem.B.dylib&lt;/code&gt; next:&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;&amp;lt;pre&amp;gt;
+&lt;pre&gt;&lt;code&gt;
 $ otool -L /usr/lib/libSystem.B.dylib
 /usr/lib/libSystem.B.dylib:
 	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 159.0.0)
@@ -91,7 +91,7 @@ $ otool -L /usr/lib/libSystem.B.dylib
 	/usr/lib/system/libcompiler_rt.dylib (compatibility version 1.0.0, current version 6.0.0)
 	/usr/lib/system/libcopyfile.dylib (compatibility version 1.0.0, current version 85.1.0)
 	...
-&amp;lt;/pre&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;We see that libSystem is linked against a whole bunch of other system
 libraries, but also that the otool output lists the library itself. As far as
