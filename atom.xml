@@ -105,6 +105,7 @@ nonstandard place (inside the app bundle), I need to edit the library
 locations stored in the app binary so that the libraries get found by the
 linker. Siilihai’s libraries also link to each other, so I have to do the same
 thing to them too.&lt;/p&gt;</content>
+    <summary type="html">I participated in BarCamp Tampere 2 recently, and one of the many very interesting presentations was Ville Ranki talking about Siilihai, a web forum reader app intentionally very reminiscent of newsreaders of old.</summary>
   </entry>
   <entry>
     <id>tag:ilkka.github.io,2011-05-25:/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/</id>
@@ -161,6 +162,7 @@ requiring a pre-created policy output file and perhaps even performing the
 downgrade by itself, but it’s usable now, just &lt;a href="http://github.com/ilkka/dgh"&gt;grab the
 code&lt;/a&gt; or &lt;code&gt;gem install dgh&lt;/code&gt; directly from
 rubygems.&lt;/p&gt;</content>
+    <summary type="html">Ever had the bright idea of upgrading, say, your Ubuntu machine to use some snazzy new software from a PPA, only to have it blow up in your face? The grim realization that there's no easy downgrade path, instead you'll have to find every single package the PPA upgraded and downgrade them by hand to keep software from breaking? Me too!</summary>
   </entry>
   <entry>
     <id>tag:ilkka.github.io,2011-03-04:/blog/2011/03/04/qtquick_2_scenegraph_glsl_fragment_shader_tutorial/</id>
@@ -560,6 +562,7 @@ bit more. The need to build the &lt;code&gt;qtquick2&lt;/code&gt; staging branch
 hindrance since it seems it’s impossible to build it on OS X versions prior to
 the upcoming Lion, due to a OpenGL version issue. Since my workhorse home
 computer is a Mac, this puts a bit of a crimp on toying with scenegraph.&lt;/p&gt;</content>
+    <summary type="html">I had been hearing a lot about Scene Graph and Qt Quick 2 making it possible to implement whatever effects one wanted, to really make apps gorgeous, and still stay in the la-la-land of QML UI coding. What I *hadn't* had was a chance to try it out myself, until recently that is. It's been the most fun I remember having in a while, coding-wise.</summary>
   </entry>
   <entry>
     <id>tag:ilkka.github.io,2011-02-27:/blog/2011/02/27/migrating_a_live_ubuntu_install_onto_lvm2/</id>
@@ -785,6 +788,7 @@ the old root partition here):&lt;/p&gt;
 &lt;p&gt;And that’s it! One reboot later I’m here typing this and feeling a bit smug
 for shooting myself in the leg, then managing to bandage it up without doing
 any more damage in the process.&lt;/p&gt;</content>
+    <summary type="html">My only home computer is, and has been for a while, a Nokia Booklet. It's a nice ultra-portable fanless laptop that gets about 6-7 hours of use per charge, and is in my opinion one of the most stylish products ever shipped by Nokia.</summary>
   </entry>
   <entry>
     <id>tag:ilkka.github.io,2011-02-13:/blog/2011/02/13/jitsu_is_a_meta_build_system_for_ninja/</id>
@@ -820,6 +824,7 @@ go, I haven’t really delineated the scope yet, to e.g. just doing C++ builds.&
 &lt;p&gt;If you are interested, install the gem, maybe &lt;a href="https://github.com/ilkka/jitsu"&gt;grab the
 source&lt;/a&gt; and give it a spin. Let me know what
 you think. Also see &lt;a href="http://ilkka.github.com/jitsu"&gt;the documentation&lt;/a&gt;.&lt;/p&gt;</content>
+    <summary type="html">A while back I hit upon [Ninja](https://github.com/martine/ninja), a very fast and very simple build system that is apparently used for building [Chromium](http://www.chromium.org/). Can't remember where I first heard of it, might've been [Hacker News](http://news.ycombinator.com) or just somebody's tweet, but having been interested in build systems for years, at least since setting up Linux builds from scratch for a big piece of software while working on my M.Sc. thesis, I immediately started playing around with it.</summary>
   </entry>
 </feed>
 
