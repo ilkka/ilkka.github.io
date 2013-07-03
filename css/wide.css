@@ -17,3 +17,28 @@
   #footer .col {
     width: 250px;
     float: left; }
+
+#header {
+  position: relative; }
+
+#sitesearch {
+  position: absolute;
+  top: 1em;
+  right: 1em; }
+
+#search_results {
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+  border: 1px solid;
+  position: absolute;
+  z-index: 100;
+  background: white;
+  padding: 1em;
+  right: 0;
+  top: 3em;
+  width: 60%; }
+  #search_results a.close {
+    display: block;
+    position: absolute;
+    top: 0.2em;
+    right: 0.5em;
+    color: #c24145; }

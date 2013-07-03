@@ -79,11 +79,11 @@
   </url>
   <url>
     <loc>http://ilkka.github.io/css/default.css</loc>
-    <lastmod>2013-07-02</lastmod>
+    <lastmod>2013-07-03</lastmod>
   </url>
   <url>
     <loc>http://ilkka.github.io/css/narrow.css</loc>
-    <lastmod>2013-07-02</lastmod>
+    <lastmod>2013-07-03</lastmod>
   </url>
   <url>
     <loc>http://ilkka.github.io/css/pygments/default.css</loc>
@@ -95,7 +95,7 @@
   </url>
   <url>
     <loc>http://ilkka.github.io/css/wide.css</loc>
-    <lastmod>2013-07-02</lastmod>
+    <lastmod>2013-07-03</lastmod>
   </url>
   <url>
     <loc>http://ilkka.github.io/atom.xml</loc>
@@ -104,6 +104,10 @@
   <url>
     <loc>http://ilkka.github.io/google1dba611f54dc093b.html</loc>
     <lastmod>2013-07-01</lastmod>
+  </url>
+  <url>
+    <loc>http://ilkka.github.io/images/ajax-loader.gif</loc>
+    <lastmod>2013-07-03</lastmod>
   </url>
   <url>
     <loc>http://ilkka.github.io/images/feed-icon-28x28.png</loc>
@@ -119,6 +123,14 @@
   </url>
   <url>
     <loc>http://ilkka.github.io/js/jquery-tapir.min.js</loc>
+    <lastmod>2013-07-03</lastmod>
+  </url>
+  <url>
+    <loc>http://ilkka.github.io/js/jquery.history.js</loc>
+    <lastmod>2013-07-03</lastmod>
+  </url>
+  <url>
+    <loc>http://ilkka.github.io/js/search.js</loc>
     <lastmod>2013-07-03</lastmod>
   </url>
   <url>

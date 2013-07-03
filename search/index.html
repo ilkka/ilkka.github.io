@@ -43,21 +43,55 @@ ilkka.github.io
 <h1>
 Search
 </h1>
+<form action='#' id='sitesearch' method='GET'>
+<img id='spinner' src='/images/ajax-loader.gif' style='display: none'>
+<input id='search_query' onkeypress='return !(window.event &amp;&amp; window.event.keyCode == 13)' placeholder='Search' type='text'>
+</form>
+<div id='search_results' style='display: none'>
+<a class='close' href='#'>
+x
+</a>
+<div class='resultlist'></div>
+</div>
 </div>
 <div id='content'>
-<form action="/search" method="GET">
-  <input type="text" name="query"/>
-  <input type="submit" value="Search"/>
+<form action="#" method="GET">
+  <input type="text" id="search_query" placeholder="Search" onkeypress="return !(window.event && window.event.keyCode == 13)"/>
 </form>
 
 <div id="search_results">
 </div>
+
 <script type="text/javascript" src="/js/jquery-1.10.1.min.js">
 </script>
 <script type="text/javascript" src="/js/jquery-tapir.min.js">
 </script>
+<script type="text/javascript" src="/js/jquery.history.js">
+</script>
 <script type="text/javascript">
-  $('#search_results').tapir({'token':'51d2e6a86854880100000415'});
+  var searchbox = $('#search_query'),
+    resultsbox = $('#search_results');
+  // http://stackoverflow.com/a/8764051/15064
+  function getURLParameter(name) {
+    return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+  }
+  // check if we were loaded with a query param
+  if (getURLParameter('query') != null) {
+    searchbox.val(getURLParameter('query'));
+    resultsbox.tapir({'token':'51d2e6a86854880100000415'});
+  }
+  $(function() {
+    var query = searchbox.val();
+    setInterval(function() {
+      var newquery = searchbox.val();
+      if (newquery != query) {
+        resultsbox.empty();
+        query = newquery;
+        History.pushState(null, null, "?query="+query);
+        resultsbox.tapir({'token':'51d2e6a86854880100000415'});
+      }
+    }, 400);
+  });
 </script>
 </div>
 </div>
@@ -179,5 +213,9 @@ Archives
 </div>
 </div>
 </div>
+<script src='/js/jquery-1.10.1.min.js' type='text/javascript'></script>
+<script src='/js/jquery-tapir.min.js' type='text/javascript'></script>
+<script src='/js/jquery.history.js' type='text/javascript'></script>
+<script src='/js/search.js' type='text/javascript'></script>
 </body>
 </html>

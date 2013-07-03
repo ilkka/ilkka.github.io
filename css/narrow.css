@@ -2,3 +2,6 @@
   max-width: 250px;
   margin: 0 1em;
   float: left; }
+
+#search_results a.close {
+  display: none; }

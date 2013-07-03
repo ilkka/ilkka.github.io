@@ -43,6 +43,16 @@ ilkka.github.io
 <h1>
 Where to find packages for my software
 </h1>
+<form action='#' id='sitesearch' method='GET'>
+<img id='spinner' src='/images/ajax-loader.gif' style='display: none'>
+<input id='search_query' onkeypress='return !(window.event &amp;&amp; window.event.keyCode == 13)' placeholder='Search' type='text'>
+</form>
+<div id='search_results' style='display: none'>
+<a class='close' href='#'>
+x
+</a>
+<div class='resultlist'></div>
+</div>
 </div>
 <div id='content'>
 <div class='post'>
@@ -245,5 +255,9 @@ Archives
 </div>
 </div>
 </div>
+<script src='/js/jquery-1.10.1.min.js' type='text/javascript'></script>
+<script src='/js/jquery-tapir.min.js' type='text/javascript'></script>
+<script src='/js/jquery.history.js' type='text/javascript'></script>
+<script src='/js/search.js' type='text/javascript'></script>
 </body>
 </html>
