@@ -102,13 +102,12 @@ blockquote {
 
 #footer-container {
   border-top: 1px solid #7a5e26; }
-
-#footer a img {
-  border: none; }
-#footer #credits {
-  clear: both;
-  font-size: 90%;
-  margin-top: 1em; }
+  #footer-container a img {
+    border: none; }
+  #footer-container #credits {
+    clear: both;
+    font-size: 90%;
+    margin-top: 1em; }
 
 #credits {
   text-align: center; }
