@@ -1,13 +1,17 @@
-var searchbox = $('#search_query'),
-  searchpopup = $('#search_results'),
-  resultlist = searchpopup.find('.resultlist');
-searchpopup.search = function() {
-  resultlist.tapir({
+var $searchbox = $('#search-query'),
+  $maincontent = $('#main-content'),
+  $searchresults = $('#search-results'),
+  $searchclosebutton = $('#sitesearch button.close'),
+  $searchspinner = $searchresults.find('.spinner'),
+  $resultlist = $searchresults.find('.resultlist');
+$searchresults.search = function() {
+  $searchresults.tapir({
     'token':'51d2e6a86854880100000415',
     'complete': function() {
-      $('#spinner').hide();
-      resultlist.empty();
-      searchpopup.show('fast');
+      $searchspinner.addClass('hidden');
+      $resultlist.empty();
+      $searchresults.removeClass('hidden');
+      $maincontent.addClass('hidden');
     }
   });
 }
@@ -20,35 +24,41 @@ function getURLParameter(name) {
 // Update search according to query
 function updateSearch(query) {
   if (query) {
-    $('#spinner').show();
+    $searchspinner.removeClass('hidden');
+    $searchclosebutton.removeClass('hidden');
     History.pushState(null, null, "?query="+query);
-    searchpopup.search();
+    $searchresults.search();
   } else {
     History.pushState(null, null, "?");
-    searchpopup.hide("fast");
+    $searchresults.addClass('hidden');
+    $maincontent.removeClass('hidden');
   }
 }
 
 $(function() {
   // check if we were loaded with a query param
   if (getURLParameter('query') != null) {
-    searchbox.val(getURLParameter('query'));
-    searchpopup.search();
+    $searchbox.val(getURLParameter('query'));
+    $searchresults.search();
   }
-  // handler for close button
-  $('#search_results a.close').click(function() {
-    searchpopup.hide('fast');
-  });
   // handler for focusing search box
-  searchbox.focus(function() {
+  $searchbox.focus(function() {
     // if there is a query, redisplay the results
     if ($(this).val()) {
-      searchpopup.show('fast');
+      $searchresults.removeClass('hidden');
+      $maincontent.addClass('hidden');
     } 
   });
-  var query = searchbox.val();
+  // handler for clearing search
+  $searchclosebutton.on('click', function () {
+    $searchbox.val('');
+    updateSearch('');
+    $(this).addClass('hidden');
+  });
+  // store old value and update search on change
+  var query = $searchbox.val();
   setInterval(function() {
-    var newquery = searchbox.val();
+    var newquery = $searchbox.val();
     if (newquery != query) {
       query = newquery;
       updateSearch(query);
