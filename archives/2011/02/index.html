@@ -2,17 +2,21 @@
 <html lang='en'>
 <head>
 <meta charset='utf-8'>
+<meta content='width=device-width, initial-scale=1' name='viewport'>
 <title>
 ilkka.github.io
  - Archive for February 2011
 </title>
-<link href='http://fonts.googleapis.com/css?family=Rosarivo:400,400italic|Oregano|Trocchi|Inconsolata:400,700' rel='stylesheet' type='text/css'>
-<link href='/css/default.css' media='screen' rel='stylesheet' type='text/css'>
-<link href='/css/wide.css' media='screen and (min-width: 820px)' rel='stylesheet' type='text/css'>
-<link href='/css/narrow.css' media='screen and (max-width: 820px)' rel='stylesheet' type='text/css'>
+<link href='/bootstrap/css/bootstrap.min.css' media='screen' rel='stylesheet' type='text/css'>
+<link href='/bootstrap/css/bootstrap-theme.min.css' media='screen' rel='stylesheet' type='text/css'>
 <link href='/css/pygments/default.css' media='screen' rel='stylesheet' type='text/css'>
+<link href='/css/style.css' media='screen' rel='stylesheet' type='text/css'>
 <link href='http://feeds.feedburner.com/ilkkagithubcom' rel='alternate' type='application/atom+xml'>
 <meta content='nanoc 3' name='generator'>
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
 <script>
   //<![CDATA[
     var _gaq = _gaq || [];
@@ -28,76 +32,97 @@ ilkka.github.io
 </script>
 </head>
 <body>
-<div id='main-container'>
-<div class='feed-icon-floater'>
+<div class='container'>
+<header class='row'>
+<div class='col-sm-6'>
+<a class='top-left-15px' href='/' id='sitetitle'>
+ilkka.github.io
+</a>
+<h1 class='bold main-heading'>
+Archive for February 2011
+</h1>
+</div>
+<div class='col-sm-6'>
+<div class='pull-right pad'>
 <a href='http://feeds.feedburner.com/ilkkagithubcom'>
 <img alt='Atom feed' src='/images/feed-icon-28x28.png'>
 </a>
 
 </div>
-<div class='centered-container'>
-<header>
-<a class='sitetitle' href='/'>
-ilkka.github.io
-</a>
-<h1>
-Archive for February 2011
-</h1>
+<div class='pull-right pad' id='search-container'>
 <form action='#' id='sitesearch' method='GET'>
-<img id='spinner' src='/images/ajax-loader.gif' style='display: none'>
-<input id='search_query' onkeypress='return !(window.event &amp;&amp; window.event.keyCode == 13)' placeholder='Search' type='text'>
+<button aria-hidden='true' class='close hidden' style='float: none' type='button'>
+&times;
+</button>
+<input id='search-query' onkeypress='return !(window.event &amp;&amp; window.event.keyCode == 13)' placeholder='Search' type='text'>
 </form>
-<div id='search_results' style='display: none'>
-<a class='close' href='#'>
-x
-</a>
-<div class='resultlist'></div>
-<div class='small right'>
-<p>Search by <a href='http://tapirgo.com/'>Tapir</a></p>
 </div>
 </div>
 </header>
-<div id='content'>
-<div class='post'>
-<h2><a href="/blog/2011/02/27/migrating_a_live_ubuntu_install_onto_lvm2/">Migrating a live Ubuntu install onto LVM2</a></h2>
+<div class='row'>
+<div class='col-sm-8 hidden' id='search-results'>
+<h2>
+Search results
+<img class='spinner hidden' src='/images/ajax-loader.gif'>
+</h2>
+<div class='resultlist'></div>
+</div>
+<div class='col-sm-8' id='main-content'>
+<article class='post'>
+<h2 class='article-excerpt-title'><a href="/blog/2011/02/27/migrating_a_live_ubuntu_install_onto_lvm2/">Migrating a live Ubuntu install onto LVM2</a></h2>
 <div class='excerpt'>
 <p>My only home computer is, and has been for a while, a Nokia Booklet. It&#8217;s a nice ultra-portable fanless laptop that gets about 6-7 hours of use per charge, and is in my opinion one of the most stylish products ever shipped by Nokia. (<a href='/blog/2011/02/27/migrating_a_live_ubuntu_install_onto_lvm2/'>read more</a>)</p>
 </div>
-<div class='postmeta'>
+<div class='postmeta light text-muted'>
 Posted on Sunday 27 February 2011 and tagged <a href="/tag/ubuntu/">ubuntu</a>.
 
 </div>
-</div>
+</article>
 
-<div class='post'>
-<h2><a href="/blog/2011/02/13/jitsu_is_a_meta_build_system_for_ninja/">Jitsu is a meta build system for Ninja</a></h2>
+<article class='post'>
+<h2 class='article-excerpt-title'><a href="/blog/2011/02/13/jitsu_is_a_meta_build_system_for_ninja/">Jitsu is a meta build system for Ninja</a></h2>
 <div class='excerpt'>
 <p>A while back I hit upon <a href='https://github.com/martine/ninja'>Ninja</a>, a very fast and very simple build system that is apparently used for building <a href='http://www.chromium.org/'>Chromium</a>. Can&#8217;t remember where I first heard of it, might&#8217;ve been <a href='http://news.ycombinator.com'>Hacker News</a> or just somebody&#8217;s tweet, but having been interested in build systems for years, at least since setting up Linux builds from scratch for a big piece of software while working on my M.Sc. thesis, I immediately started playing around with it. (<a href='/blog/2011/02/13/jitsu_is_a_meta_build_system_for_ninja/'>read more</a>)</p>
 </div>
-<div class='postmeta'>
+<div class='postmeta light text-muted'>
 Posted on Sunday 13 February 2011 and tagged <a href="/tag/jitsu/">jitsu</a>, <a href="/tag/ninja/">ninja</a>, <a href="/tag/ruby/">ruby</a> and <a href="/tag/coding/">coding</a>.
 
 </div>
-</div>
+</article>
 
-<div class='post'>
-<h2><a href="/blog/2011/02/03/teach_vim_about_gemfiles/">Teach Vim about Gemfiles</a></h2>
+<article class='post'>
+<h2 class='article-excerpt-title'><a href="/blog/2011/02/03/teach_vim_about_gemfiles/">Teach Vim about Gemfiles</a></h2>
 <div class='excerpt'>
 <p>By default, the excellent Vim editor doesn&#8217;t know what the filetype of Gemfiles is (it&#8217;s <code>ruby</code>, of course). I&#8217;ve been sprinkling Vim modelines in mine for ages, but just now as I was hacking at <a href='https://github.com/ilkka/ticgit'>my clone of ticgit</a>, I realized that it makes no sense to sprinkle these onto other&#8230; (<a href='/blog/2011/02/03/teach_vim_about_gemfiles/'>read more</a>)</p>
 </div>
-<div class='postmeta'>
+<div class='postmeta light text-muted'>
 Posted on Thursday  3 February 2011 and tagged <a href="/tag/ruby/">ruby</a>, <a href="/tag/vim/">vim</a> and <a href="/tag/coding/">coding</a>.
 
 </div>
-</div>
+</article>
 
 
 </div>
-</div>
-</div>
-<div id='footer-container'>
+<aside class='col-sm-3'>
 <nav>
-<div class='col'>
+<h3>Find me elsewhere</h3>
+<ul style='list-style-type: none'>
+<li>
+<a href='http://twitter.com/ilkkalaukkanen'>
+<img alt='twitter.com/ilkkalaukkanen' src='/images/follow_bird_me-a.png'>
+</a>
+</li>
+<li>
+<a href='https://plus.google.com/111305386307650364124?rel=author'>Google</a>
+</li>
+<li>
+<a href='https://github.com/ilkka'>github.com/ilkka</a>
+</li>
+<li>
+<a href='https://bitbucket.org/Ilkka'>bitbucket.org/Ilkka</a>
+</li>
+</ul>
+
 <h3>What else is here?</h3>
 <ul>
 <li>
@@ -117,17 +142,15 @@ Archives
 </li>
 </ul>
 
-</div>
-<div class='col'>
 <h3>Tags</h3>
 <ul class='tagcloud'>
-<li style='font-size: 69.9384961563864%'>
+<li style='font-size: 70.98373692144486%'>
 <a href="/tag/meta/">meta</a>
 </li>
 <li style='font-size: 149.69506197546147%'>
 <a href="/tag/ruby/">ruby</a>
 </li>
-<li style='font-size: 69.9384961563864%'>
+<li style='font-size: 70.98373692144486%'>
 <a href="/tag/jekyll/">jekyll</a>
 </li>
 <li style='font-size: 193.80930871145782%'>
@@ -142,77 +165,61 @@ Archives
 <li style='font-size: 87.01563350411524%'>
 <a href="/tag/ubuntu/">ubuntu</a>
 </li>
-<li style='font-size: 60.90160003008207%'>
+<li style='font-size: 60.99642213298283%'>
 <a href="/tag/rake/">rake</a>
 </li>
-<li style='font-size: 60.90160003008207%'>
+<li style='font-size: 60.99642213298283%'>
 <a href="/tag/photography/">photography</a>
 </li>
-<li style='font-size: 60.90160003008207%'>
+<li style='font-size: 60.99642213298283%'>
 <a href="/tag/tools/">tools</a>
 </li>
-<li style='font-size: 60.90160003008207%'>
+<li style='font-size: 60.99642213298283%'>
 <a href="/tag/vim/">vim</a>
 </li>
-<li style='font-size: 60.90160003008207%'>
+<li style='font-size: 60.99642213298283%'>
 <a href="/tag/jitsu/">jitsu</a>
 </li>
-<li style='font-size: 60.90160003008207%'>
+<li style='font-size: 60.99642213298283%'>
 <a href="/tag/ninja/">ninja</a>
 </li>
-<li style='font-size: 60.90160003008207%'>
+<li style='font-size: 60.99642213298283%'>
 <a href="/tag/maemo/">maemo</a>
 </li>
-<li style='font-size: 60.90160003008207%'>
+<li style='font-size: 60.99642213298283%'>
 <a href="/tag/n900/">n900</a>
 </li>
-<li style='font-size: 60.90160003008207%'>
+<li style='font-size: 60.99642213298283%'>
 <a href="/tag/qtquick/">qtquick</a>
 </li>
-<li style='font-size: 60.90160003008207%'>
+<li style='font-size: 60.99642213298283%'>
 <a href="/tag/glsl/">glsl</a>
 </li>
-<li style='font-size: 60.90160003008207%'>
+<li style='font-size: 60.99642213298283%'>
 <a href="/tag/scenegraph/">scenegraph</a>
 </li>
-<li style='font-size: 60.90160003008207%'>
+<li style='font-size: 60.99642213298283%'>
 <a href="/tag/opengl/">opengl</a>
 </li>
-<li style='font-size: 60.90160003008207%'>
+<li style='font-size: 60.99642213298283%'>
 <a href="/tag/sysadmin/">sysadmin</a>
 </li>
-<li style='font-size: 60.90160003008207%'>
+<li style='font-size: 60.99642213298283%'>
 <a href="/tag/osx/">osx</a>
 </li>
 </ul>
 
-</div>
-<div class='col'>
-<h3>Find me elsewhere</h3>
-<ul style='list-style-type: none'>
-<li>
-<a href='http://twitter.com/ilkkalaukkanen'>
-<img alt='twitter.com/ilkkalaukkanen' src='/images/follow_bird_me-a.png'>
-</a>
-</li>
-<li>
-<a href='https://plus.google.com/111305386307650364124?rel=author'>Google</a>
-</li>
-<li>
-<a href='https://github.com/ilkka'>github.com/ilkka</a>
-</li>
-<li>
-<a href='https://bitbucket.org/Ilkka'>bitbucket.org/Ilkka</a>
-</li>
-</ul>
-
-</div>
-<div id='credits'>
-<p>This site was generated by <a href='http://nanoc.ws/'>Nanoc</a>. Fonts courtesy of <a href='http://www.google.com/fonts/'>Google Fonts</a>. Search courtesy of <a href='http://tapirgo.com/'>Tapir</a>.</p>
-</div>
 </nav>
+</aside>
 </div>
-<script src='/js/jquery-1.10.1.min.js' type='text/javascript'></script>
+</div>
+<footer class='bg-info'>
+<div class='light text-muted'>
+<p>This site was generated by <a href='http://nanoc.ws/'>Nanoc</a> and has <a href='http://getbootstrap.com'>Bootstrap</a>. Search courtesy of <a href='http://tapirgo.com/'>Tapir</a>.</p>
+</div>
+</footer>
+<script src='/js/jquery-1.11.0.min.js' type='text/javascript'></script>
+<script src='/bootstrap/js/bootstrap.min.js' type='text/javascript'></script>
 <script src='/js/jquery-tapir.min.js' type='text/javascript'></script>
 <script src='/js/jquery.history.js' type='text/javascript'></script>
 <script src='/js/search.js' type='text/javascript'></script>

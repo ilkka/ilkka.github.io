@@ -1,0 +1,44 @@
+body {
+  color: black;
+  font-size: 14pt; }
+
+.bold {
+  font-weight: 900; }
+
+.light {
+  font-weight: 100; }
+
+.align-right {
+  text-align: right; }
+
+.center-vertical {
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%); }
+
+.pad {
+  padding: 2em; }
+
+.pad-small {
+  padding: 1em; }
+
+.main-heading {
+  margin: 2em 0; }
+
+header {
+  position: relative; }
+
+footer {
+  text-align: center;
+  margin: 1em 0 0 0;
+  padding: 2em 0; }
+
+.top-left-15px {
+  position: absolute;
+  top: 15px;
+  left: 15px; }
+
+.postmeta {
+  margin-bottom: 2em; }

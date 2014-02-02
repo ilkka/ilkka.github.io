@@ -104,7 +104,8 @@ comment.&lt;/p&gt;
 nonstandard place (inside the app bundle), I need to edit the library
 locations stored in the app binary so that the libraries get found by the
 linker. Siilihai’s libraries also link to each other, so I have to do the same
-thing to them too.&lt;/p&gt;</content>
+thing to them too.&lt;/p&gt;
+</content>
     <summary type="html">I participated in BarCamp Tampere 2 recently, and one of the many very interesting presentations was Ville Ranki talking about Siilihai, a web forum reader app intentionally very reminiscent of newsreaders of old.</summary>
   </entry>
   <entry>
@@ -126,10 +127,12 @@ failed, probably thanks to the infamous GMA500 graphics hardware. Anyway,
 after a bit of hand-wringing I realized that:&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;I had to downgrade, there was stuff on the machine I didn’t want to wipe,&lt;/li&gt;
+  &lt;li&gt;I had to downgrade, there was stuff on the machine I didn’t want to wipe,&lt;/li&gt;
   &lt;li&gt;I had been in this same situation before, and&lt;/li&gt;
   &lt;li&gt;probably others had, too.&lt;/li&gt;
-&lt;/ol&gt;&lt;p&gt;So I wrote a little tool to help, and I’m glad to say it worked perfectly. The
+&lt;/ol&gt;
+
+&lt;p&gt;So I wrote a little tool to help, and I’m glad to say it worked perfectly. The
 tool is &lt;a href="http://github.com/ilkka/dgh"&gt;dgh&lt;/a&gt;, and it helps by finding the
 packages that look like they need to be downgraded. It does this by looking at
 &lt;code&gt;apt-cache policy&lt;/code&gt; output, and finding packages whose installed version is not
@@ -137,23 +140,26 @@ available in any repository. Usage is simple, but requires some manual work
 (for now):&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;Remove the offending package archive from apt’s sources&lt;/li&gt;
+  &lt;li&gt;Remove the offending package archive from apt’s sources&lt;/li&gt;
   &lt;li&gt;Run &lt;code&gt;apt-get update&lt;/code&gt;
 &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Produce &lt;code&gt;apt-cache policy&lt;/code&gt; output for all installed packages, e.g.:&lt;/p&gt;
+  &lt;li&gt;Produce &lt;code&gt;apt-cache policy&lt;/code&gt; output for all installed packages, e.g.:&lt;/li&gt;
+&lt;/ol&gt;
 
-    &lt;pre&gt;&lt;code&gt;dpkg --get-selections| \
-    egrep '\binstall'|awk '{print $1}'| \
-    xargs env LANG=C apt-cache policy| \
-    tee packages.list&lt;/code&gt;&lt;/pre&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Run &lt;code&gt;dgh&lt;/code&gt; on the output:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    &amp;lt;pre&amp;gt;&amp;lt;code&amp;gt;dpkg --get-selections| \
+egrep '\binstall'|awk '{print $1}'| \
+xargs env LANG=C apt-cache policy| \
+tee packages.list&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
 
-    &lt;pre&gt;&lt;code&gt;$ dgh packages.list&lt;/code&gt;&lt;/pre&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;&lt;p&gt;Dgh will report packages it thinks are downgrade candidates. Note that it will
+&lt;ol&gt;
+  &lt;li&gt;Run &lt;code&gt;dgh&lt;/code&gt; on the output:&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code&gt;    &amp;lt;pre&amp;gt;&amp;lt;code&amp;gt;$ dgh packages.list&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Dgh will report packages it thinks are downgrade candidates. Note that it will
 probably report all manually installed packages too, so be careful when
 downgrading.&lt;/p&gt;
 
@@ -161,7 +167,8 @@ downgrading.&lt;/p&gt;
 requiring a pre-created policy output file and perhaps even performing the
 downgrade by itself, but it’s usable now, just &lt;a href="http://github.com/ilkka/dgh"&gt;grab the
 code&lt;/a&gt; or &lt;code&gt;gem install dgh&lt;/code&gt; directly from
-rubygems.&lt;/p&gt;</content>
+rubygems.&lt;/p&gt;
+</content>
     <summary type="html">Ever had the bright idea of upgrading, say, your Ubuntu machine to use some snazzy new software from a PPA, only to have it blow up in your face? The grim realization that there's no easy downgrade path, instead you'll have to find every single package the PPA upgraded and downgrade them by hand to keep software from breaking? Me too!</summary>
   </entry>
   <entry>
@@ -183,11 +190,13 @@ Qt Quick 2 isn’t altogether straightforward. The docs that I found most helpfu
 were:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href="http://zchydem.enume.net/2010/11/01/playing-with-qt-scene-graph/"&gt;Zchydem’s earlier blog
+  &lt;li&gt;&lt;a href="http://zchydem.enume.net/2010/11/01/playing-with-qt-scene-graph/"&gt;Zchydem’s earlier blog
 post&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href="http://www.opengl.org/documentation/glsl/"&gt;The GLSL reference manual&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href="http://www.lighthouse3d.com/opengl/glsl/"&gt;Lighthouse 3D’s GLSL tutorial&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;p&gt;So, having studied these and banged my head against the wall, I was pretty
+&lt;/ul&gt;
+
+&lt;p&gt;So, having studied these and banged my head against the wall, I was pretty
 excited when I got my first fragment shaders working on both Ubuntu and the
 N900. I then decided that I’d do a tutorial-style write-up to maybe make it
 easier for other people to get started. This is not a real GLSL tutorial
@@ -207,11 +216,13 @@ Scenegraph + GLSL fragment shaders&lt;/a&gt; from &lt;a href="http://vimeo.com/u
 version of Qt. There are two ways to accomplish this that I know of:&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;Qt master + scene graph master (as documented in &lt;a href="http://zchydem.enume.net/2010/11/01/playing-with-qt-scene-graph/"&gt;Zchydem’s
+  &lt;li&gt;Qt master + scene graph master (as documented in &lt;a href="http://zchydem.enume.net/2010/11/01/playing-with-qt-scene-graph/"&gt;Zchydem’s
 post&lt;/a&gt;)&lt;/li&gt;
   &lt;li&gt;The &lt;code&gt;qml-team/qtquick2&lt;/code&gt; branch from the &lt;a href="http://gitorious.org/qt/staging"&gt;Qt staging
 repo&lt;/a&gt;.&lt;/li&gt;
-&lt;/ol&gt;&lt;p&gt;I’d actually recommend the second method because it’s a simpler,
+&lt;/ol&gt;
+
+&lt;p&gt;I’d actually recommend the second method because it’s a simpler,
 almost-one-step process, and because it’s the method I &lt;em&gt;know&lt;/em&gt; will work for
 the N900. So go ahead and clone, checkout and build:&lt;/p&gt;
 
@@ -561,7 +572,8 @@ of old-school demo stuff, I like.&lt;/p&gt;
 bit more. The need to build the &lt;code&gt;qtquick2&lt;/code&gt; staging branch is a bit of a
 hindrance since it seems it’s impossible to build it on OS X versions prior to
 the upcoming Lion, due to a OpenGL version issue. Since my workhorse home
-computer is a Mac, this puts a bit of a crimp on toying with scenegraph.&lt;/p&gt;</content>
+computer is a Mac, this puts a bit of a crimp on toying with scenegraph.&lt;/p&gt;
+</content>
     <summary type="html">I had been hearing a lot about Scene Graph and Qt Quick 2 making it possible to implement whatever effects one wanted, to really make apps gorgeous, and still stay in the la-la-land of QML UI coding. What I *hadn't* had was a chance to try it out myself, until recently that is. It's been the most fun I remember having in a while, coding-wise.</summary>
   </entry>
   <entry>
@@ -592,7 +604,7 @@ more substantial than simply growing a logical volume.&lt;/p&gt;
 &lt;p&gt;This, then, was my plan of action:&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;Nuke the windows partition, make a LVM partition in it’s place, and
+  &lt;li&gt;Nuke the windows partition, make a LVM partition in it’s place, and
 create a volume group and logical volume with it, then create a new ext4
 fs on the logical volume.&lt;/li&gt;
   &lt;li&gt;Copy over the running Ubuntu installation onto the new filesystem.&lt;/li&gt;
@@ -600,7 +612,9 @@ fs on the logical volume.&lt;/li&gt;
   &lt;li&gt;Boot from the logical volume.&lt;/li&gt;
   &lt;li&gt;Add the old Ubuntu partition to the volume group and grow the logical
 volume and filesystem onto that.&lt;/li&gt;
-&lt;/ol&gt;&lt;p&gt;Simple! There are a couple of glaring holes in the plan but we’ll handle those
+&lt;/ol&gt;
+
+&lt;p&gt;Simple! There are a couple of glaring holes in the plan but we’ll handle those
 as we get to ‘em.&lt;/p&gt;
 
 &lt;h2 id="nuke-em-high"&gt;Nuke ‘em high&lt;/h2&gt;
@@ -739,7 +753,7 @@ configuration:&lt;/p&gt;
 
 &lt;p&gt;…and the same error message.&lt;/p&gt;
 
-&lt;p&gt;&lt;img alt="WTF?!" src="http://4.bp.blogspot.com/_dcdi--LdAeQ/Sa1sWd8j4pI/AAAAAAAAEBg/BGX_vc32JHc/s400/wtf.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="WTF?!" class="img-responsive" src="http://4.bp.blogspot.com/_dcdi--LdAeQ/Sa1sWd8j4pI/AAAAAAAAEBg/BGX_vc32JHc/s400/wtf.jpg"&gt;&lt;/p&gt;
 
 &lt;p&gt;I did the same boot from USB stick, install lvm, mount root rumba again and
 started scratching my head and looking at files. In the end it was a simple
@@ -787,7 +801,8 @@ the old root partition here):&lt;/p&gt;
 
 &lt;p&gt;And that’s it! One reboot later I’m here typing this and feeling a bit smug
 for shooting myself in the leg, then managing to bandage it up without doing
-any more damage in the process.&lt;/p&gt;</content>
+any more damage in the process.&lt;/p&gt;
+</content>
     <summary type="html">My only home computer is, and has been for a while, a Nokia Booklet. It's a nice ultra-portable fanless laptop that gets about 6-7 hours of use per charge, and is in my opinion one of the most stylish products ever shipped by Nokia.</summary>
   </entry>
   <entry>
@@ -823,7 +838,8 @@ go, I haven’t really delineated the scope yet, to e.g. just doing C++ builds.&
 
 &lt;p&gt;If you are interested, install the gem, maybe &lt;a href="https://github.com/ilkka/jitsu"&gt;grab the
 source&lt;/a&gt; and give it a spin. Let me know what
-you think. Also see &lt;a href="http://ilkka.github.com/jitsu"&gt;the documentation&lt;/a&gt;.&lt;/p&gt;</content>
+you think. Also see &lt;a href="http://ilkka.github.com/jitsu"&gt;the documentation&lt;/a&gt;.&lt;/p&gt;
+</content>
     <summary type="html">A while back I hit upon [Ninja](https://github.com/martine/ninja), a very fast and very simple build system that is apparently used for building [Chromium](http://www.chromium.org/). Can't remember where I first heard of it, might've been [Hacker News](http://news.ycombinator.com) or just somebody's tweet, but having been interested in build systems for years, at least since setting up Linux builds from scratch for a big piece of software while working on my M.Sc. thesis, I immediately started playing around with it.</summary>
   </entry>
 </feed>
