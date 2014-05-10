@@ -4,13 +4,15 @@
   "private": true,
   "description": "My github pages site",
   "main": "gulpfile.js",
-  "browser": {
-    "react": "./bower_components/react/react.js"
-  },
   "browserify": {
     "transform": [
-      "reactify"
+      "reactify",
+      "browserify-shim"
     ]
+  },
+  "browserify-shim": {
+    // shim react so that 1) we can still require() it 2) it's a browser global so devtools work
+    "react": "global:React"
   },
   "repository": {
     "type": "git",
