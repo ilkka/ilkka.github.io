@@ -11,8 +11,10 @@
     ]
   },
   "browserify-shim": {
-    // shim react so that 1) we can still require() it 2) it's a browser global so devtools work
-    "react": "global:React"
+    "react": "global:React",
+    "jquery": "global:$",
+    "lodash": "global:_",
+    "moment": "global:moment"
   },
   "repository": {
     "type": "git",
