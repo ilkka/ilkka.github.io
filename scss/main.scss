@@ -1,0 +1,17 @@
+@import '_variables';
+
+body {
+    background: $pagebg;
+    color: $pagefg;
+    font-family: monospace;
+}
+
+.selected {
+    background: $selectedbg;
+    color: $selectedfg;
+}
+
+.bar {
+    background: $barbg;
+    color: $barfg;
+}

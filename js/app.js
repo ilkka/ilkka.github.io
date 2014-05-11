@@ -103,13 +103,13 @@ var MuttApp = React.createClass({
             <header className="row">
             <div className="large-12 columns">
             <div className="row">
-            <div className="large-12 columns">q:Quit  d:Del  u:Undel  s:Save  m:Mail  r:Reply  g:Group  ?:Help</div>
+            <div className="large-12 columns bar">q:Quit  d:Del  u:Undel  s:Save  m:Mail  r:Reply  g:Group  ?:Help</div>
             </div>
             <div className="row">
             <MessageList messages={ this.props.messages } selectedIndex={ this.state.selectedMessageIndex } />
             </div>
             <div className="row">
-            <div className="large-12 columns" id="statusline-top">-*-Mutt:</div>
+            <div className="large-12 columns bar" id="statusline-top">-*-Mutt:</div>
             </div>
             </div>
             </header>
@@ -120,7 +120,7 @@ var MuttApp = React.createClass({
 
             <footer className="row">
             <div className="large-12 columns">
-            <div className="row" id="statusline-bottom">-   - 123 / 245</div>
+            <div className="row bar" id="statusline-bottom">-   - 123 / 245</div>
             </div>
             </footer>
             </div>;
