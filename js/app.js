@@ -68,20 +68,13 @@ var MessageList = React.createClass({
             this.setState({
                 selectedIndex: this.state.selectedIndex + 1
             });
-            console.log('inc to ' + this.state.selectedIndex);
-        } else {
-            console.log('no inc');
         }
-        this.setProps();
     },
     selectPrevious: function() {
         if (this.state.selectedIndex > 0) {
             this.setState({
                 selectedIndex: this.state.selectedIndex - 1
             });
-            console.log('dec to ' + this.state.selectedIndex);
-        } else {
-            console.log('no dec');
         }
     }
 });
