@@ -16,8 +16,8 @@ var messages = _.map(_.range(20), function(idx) {
     return new Message(idx,
                        new Date(),
                        "Ahto Simakuutio <ahto@simakuut.io>",
-                       "Hello friend",
-                       "foobar foobar");
+                       "Hello friend " + idx,
+                       "foobar foobar " + idx);
 });
 
 
@@ -44,56 +44,103 @@ var MessageList = React.createClass({
             windowSize: 10
         };
     },
-    getInitialState: function() {
-        return {
-            selectedIndex: 10
-        };
-    },
     render: function() {
         var displayRange = {
-            start: Math.max(Math.min(this.state.selectedIndex - (this.props.windowSize / 2),
+            start: Math.max(Math.min(this.props.selectedIndex - (this.props.windowSize / 2),
                                      this.props.messages.length - this.props.windowSize),
                             0),
-            end: Math.min(Math.max(this.state.selectedIndex + (this.props.windowSize / 2),
+            end: Math.min(Math.max(this.props.selectedIndex + (this.props.windowSize / 2),
                                    this.props.windowSize),
                           this.props.messages.length)
         };
         var msgs = this.props.messages.slice(displayRange.start,
                                              displayRange.end);
-        return <div>
+        return <nav class="large-12 columns">
             {
                 _.map(msgs, function(message) {
                     return <MessageListRow message={ message }
                     key={ message.id }
-                    selected={ message.id == this.state.selectedIndex }/>;
+                    selected={ message.id == this.props.selectedIndex }/>;
                 }, this)
             }
-        </div>;
+        </nav>;
+    }
+});
+
+var MessageView = React.createClass({
+    render: function() {
+        return <div class="large-12 columns panel">
+            <dl>
+            <dt>Date:</dt>
+            <dd>{ moment(this.props.message.datetime) }</dd>
+            <dt>Sender:</dt>
+            <dd>{ this.props.message.sender }</dd>
+            <dt>Subject:</dt>
+            <dd>{ this.props.message.subject }</dd>
+            </dl>
+            <p>{ this.props.message.body }</p>
+            </div>;
+    }
+});
+
+var MuttApp = React.createClass({
+    getInitialState: function() {
+        return {
+            selectedMessageIndex: 0
+        };
     },
     selectNext: function() {
-        if (this.state.selectedIndex < this.props.messages.length - 1) {
+        if (this.state.selectedMessageIndex < this.props.messages.length - 1) {
             this.setState({
-                selectedIndex: this.state.selectedIndex + 1
+                selectedMessageIndex: this.state.selectedMessageIndex + 1
             });
         }
     },
     selectPrevious: function() {
-        if (this.state.selectedIndex > 0) {
+        if (this.state.selectedMessageIndex > 0) {
             this.setState({
-                selectedIndex: this.state.selectedIndex - 1
+                selectedMessageIndex: this.state.selectedMessageIndex - 1
             });
         }
+    },
+    render: function() {
+        return <div>
+            <header className="row">
+            <div className="large-12 columns">
+            <div className="row">
+            <div className="large-12 columns">q:Quit  d:Del  u:Undel  s:Save  m:Mail  r:Reply  g:Group  ?:Help</div>
+            </div>
+            <div className="row">
+            <MessageList messages={ this.props.messages } selectedIndex={ this.state.selectedMessageIndex } />
+            </div>
+            <div className="row">
+            <div className="large-12 columns" id="statusline-top">-*-Mutt:</div>
+            </div>
+            </div>
+            </header>
+
+            <div className="row">
+            <MessageView message={ this.props.messages[this.state.selectedMessageIndex] } />
+            </div>
+
+            <footer className="row">
+            <div className="large-12 columns">
+            <div className="row" id="statusline-bottom">-   - 123 / 245</div>
+            </div>
+            </footer>
+            </div>;
     }
 });
 
-// render message list
-var messagelist = React.renderComponent(<MessageList messages={ messages }/>, document.getElementById('nav'));
+// render app
+var app = React.renderComponent(<MuttApp messages={ messages }/>,
+                                document.getElementById('app'));
 
 // bind keyboard shortcuts
 $(document).bind('keydown.nav', 'j', function() {
-    messagelist.selectNext();
+    app.selectNext();
 });
 
 $(document).bind('keydown.nav', 'k', function() {
-    messagelist.selectPrevious();
+    app.selectPrevious();
 });
