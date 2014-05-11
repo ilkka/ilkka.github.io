@@ -19,13 +19,13 @@ var MessageListRow = React.createClass({
         var classname = 'large-12 columns' + (this.props.selected ? ' selected' : '');
         return <div className={ classname }>
             <div className="row">
-            <div className="large-1 columns">{ this.props.key }</div>
-            <div className="large-1 columns">{
+            <div className="large-1 medium-1 columns">{ this.props.key }</div>
+            <div className="large-1 medium-1 columns">{
                 moment(this.props.message.datetime).format('MMM DD YYYY')
             }</div>
-            <div className="large-3 columns">{ this.props.message.sender }</div>
-            <div className="large-1 columns">123</div>
-            <div className="large-6 columns">{ this.props.message.subject }</div>
+            <div className="large-3 medium-3 columns">{ this.props.message.sender }</div>
+            <div className="large-1 medium-1 columns">123</div>
+            <div className="large-6 medium-6 columns">{ this.props.message.subject }</div>
             </div>
             </div>;
     }
