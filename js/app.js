@@ -20,7 +20,7 @@ var MessageListRow = React.createClass({
         var classname = 'large-12 columns' + (this.props.selected ? ' selected' : '');
         return <div className={ classname }>
             <div className="row">
-            <div className="large-1 medium-1 columns">{ this.props.key }</div>
+            <div className="large-1 medium-1 columns">{ this.props.rowIndex }</div>
             <div className="large-1 medium-1 columns">{
                 moment(this.props.message.datetime).format('MMM DD YYYY')
             }</div>
@@ -51,10 +51,11 @@ var MessageList = React.createClass({
                                              displayRange.end);
         return <nav className="large-12 columns">
             {
-                _.map(msgs, function(message) {
+                _.map(msgs, function(message, idx) {
                     return <MessageListRow message={ message }
+                    rowIndex={ displayRange.start + idx }
                     key={ message.id }
-                    selected={ message.id == this.props.selectedIndex }/>;
+                    selected={ displayRange.start + idx == this.props.selectedIndex }/>;
                 }, this)
             }
         </nav>;
@@ -141,6 +142,8 @@ Promise.cast($.get('/content/blog/articles.json')).then(function(data) {
                                body);
         });
     });
+}).then(function(messages) {
+    return messages.reverse();
 }).then(function(messages) {
     var app = React.renderComponent(<MuttApp messages={ messages }/>,
                                     document.getElementById('app'));
