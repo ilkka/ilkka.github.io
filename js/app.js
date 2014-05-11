@@ -4,15 +4,17 @@ var $ = require('jquery');
 var _ = require('lodash');
 var moment = require('moment');
 
-var Message = function(datetime, sender, subject, body) {
+var Message = function(id, datetime, sender, subject, body) {
+    this.id = id;
     this.datetime = datetime;
     this.sender = sender;
     this.subject = subject;
     this.body = body;
 }
 
-var messages = _.map(_.range(100), function() {
-    return new Message(new Date(),
+var messages = _.map(_.range(100), function(idx) {
+    return new Message(idx,
+                       new Date(),
                        "Ahto Simakuutio <ahto@simakuut.io>",
                        "Hello friend",
                        "foobar foobar");
@@ -41,20 +43,55 @@ var MessageList = React.createClass({
     },
     getInitialState: function() {
         return {
-            selectedIndex: 0
-        }
+            selectedIndex: 20
+        };
     },
     render: function() {
         var displayRange = {
-            start: Math.max(0, this.state.selectedIndex - (this.props.windowSize / 2)),
-            end: Math.min(this.props.messages.length, this.state.selectedIndex + (this.props.windowSize / 2))
+            start: this.state.selectedIndex - 5,
+            end: this.state.selectedIndex + 5
         };
+        var msgs = this.props.messages.slice(displayRange.start,
+                                             displayRange.end);
         return <div>
-            {_.map(this.props.messages.slice(displayRange.start, displayRange.end), function(message, idx) {
-                return <MessageListRow datetime={ moment(message.datetime).format('MMM DD YYYY') } sender={ message.sender } subject={ message.subject } key={ idx }/>;
+            {_.map(msgs, function(message, idx) {
+                return <MessageListRow
+                datetime={ moment(message.datetime).format('MMM DD YYYY') }
+                sender={ message.sender }
+                subject={ message.subject }
+                key={ message.id }/>;
             })}
         </div>;
+    },
+    selectNext: function() {
+        if (this.state.selectedIndex < this.props.messages.length - 1) {
+            this.setState({
+                selectedIndex: this.state.selectedIndex + 1
+            });
+            console.log('inc to ' + this.state.selectedIndex);
+        } else {
+            console.log('no inc');
+        }
+        this.setProps();
+    },
+    selectPrevious: function() {
+        if (this.state.selectedIndex > 0) {
+            this.setState({
+                selectedIndex: this.state.selectedIndex - 1
+            });
+            console.log('dec to ' + this.state.selectedIndex);
+        } else {
+            console.log('no dec');
+        }
     }
 });
 
-React.renderComponent(<MessageList messages={ messages }/>, document.getElementById('nav'));
+var messagelist = React.renderComponent(<MessageList messages={ messages }/>, document.getElementById('nav'));
+
+ $(document).bind('keydown.nav', 'j', function() {
+    messagelist.selectNext();
+});
+
+$(document).bind('keydown.nav', 'k', function() {
+    messagelist.selectPrevious();
+});
