@@ -12,7 +12,7 @@ var Message = function(id, datetime, sender, subject, body) {
     this.body = body;
 }
 
-var messages = _.map(_.range(100), function(idx) {
+var messages = _.map(_.range(20), function(idx) {
     return new Message(idx,
                        new Date(),
                        "Ahto Simakuutio <ahto@simakuut.io>",
@@ -44,13 +44,17 @@ var MessageList = React.createClass({
     },
     getInitialState: function() {
         return {
-            selectedIndex: 20
+            selectedIndex: 10
         };
     },
     render: function() {
         var displayRange = {
-            start: this.state.selectedIndex - 5,
-            end: this.state.selectedIndex + 5
+            start: Math.max(Math.min(this.state.selectedIndex - (this.props.windowSize / 2),
+                                     this.props.messages.length - this.props.windowSize),
+                            0),
+            end: Math.min(Math.max(this.state.selectedIndex + (this.props.windowSize / 2),
+                                   this.props.windowSize),
+                          this.props.messages.length)
         };
         var msgs = this.props.messages.slice(displayRange.start,
                                              displayRange.end);
