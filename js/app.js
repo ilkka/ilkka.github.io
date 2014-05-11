@@ -23,7 +23,8 @@ var messages = _.map(_.range(100), function(idx) {
 
 var MessageListRow = React.createClass({
     render: function() {
-        return <div className="large-12 columns">
+        var classname = 'large-12 columns' + (this.props.selected ? ' selected' : '');
+        return <div className={ classname }>
             <div className="row">
             <div className="large-1 columns">{ this.props.key }</div>
             <div className="large-1 columns">{ this.props.datetime.toString() }</div>
@@ -59,8 +60,9 @@ var MessageList = React.createClass({
                 datetime={ moment(message.datetime).format('MMM DD YYYY') }
                 sender={ message.sender }
                 subject={ message.subject }
-                key={ message.id }/>;
-            })}
+                key={ message.id }
+                selected={ message.id == this.state.selectedIndex }/>;
+            }, this)}
         </div>;
     },
     selectNext: function() {
