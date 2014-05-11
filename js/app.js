@@ -5,6 +5,7 @@ var _ = require('lodash');
 var moment = require('moment');
 var Promise = require('bluebird');
 var YAML = require('yamljs');
+var marked = require('../bower_components/marked/index.js');
 
 var Message = function(id, datetime, sender, subject, body) {
     this.id = id;
@@ -71,7 +72,7 @@ var MessageView = React.createClass({
             <dt>Subject:</dt>
             <dd>{ this.props.message.subject }</dd>
             </dl>
-            <p>{ this.props.message.body }</p>
+            <div dangerouslySetInnerHTML={{__html: marked(this.props.message.body) }}></div>
             </div>;
     }
 });
