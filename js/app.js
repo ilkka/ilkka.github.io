@@ -27,10 +27,12 @@ var MessageListRow = React.createClass({
         return <div className={ classname }>
             <div className="row">
             <div className="large-1 columns">{ this.props.key }</div>
-            <div className="large-1 columns">{ this.props.datetime.toString() }</div>
-            <div className="large-3 columns">{ this.props.sender }</div>
+            <div className="large-1 columns">{
+                moment(this.props.message.datetime).format('MMM DD YYYY')
+            }</div>
+            <div className="large-3 columns">{ this.props.message.sender }</div>
             <div className="large-1 columns">123</div>
-            <div className="large-6 columns">{ this.props.subject }</div>
+            <div className="large-6 columns">{ this.props.message.subject }</div>
             </div>
             </div>;
     }
@@ -59,14 +61,13 @@ var MessageList = React.createClass({
         var msgs = this.props.messages.slice(displayRange.start,
                                              displayRange.end);
         return <div>
-            {_.map(msgs, function(message, idx) {
-                return <MessageListRow
-                datetime={ moment(message.datetime).format('MMM DD YYYY') }
-                sender={ message.sender }
-                subject={ message.subject }
-                key={ message.id }
-                selected={ message.id == this.state.selectedIndex }/>;
-            }, this)}
+            {
+                _.map(msgs, function(message) {
+                    return <MessageListRow message={ message }
+                    key={ message.id }
+                    selected={ message.id == this.state.selectedIndex }/>;
+                }, this)
+            }
         </div>;
     },
     selectNext: function() {
@@ -85,9 +86,11 @@ var MessageList = React.createClass({
     }
 });
 
+// render message list
 var messagelist = React.renderComponent(<MessageList messages={ messages }/>, document.getElementById('nav'));
 
- $(document).bind('keydown.nav', 'j', function() {
+// bind keyboard shortcuts
+$(document).bind('keydown.nav', 'j', function() {
     messagelist.selectNext();
 });
 
