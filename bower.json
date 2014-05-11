@@ -23,6 +23,7 @@
     "modernizr": "~2.8.1",
     "jquery": "~2.1.1",
     "moment": "~2.6.0",
-    "jquery.hotkeys": "jeresig/jquery.hotkeys#~0.1.0"
+    "jquery.hotkeys": "jeresig/jquery.hotkeys#~0.1.0",
+    "yamljs": "~0.1.5"
   }
 }

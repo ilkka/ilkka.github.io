@@ -3,6 +3,8 @@ var React = require('react');
 var $ = require('jquery');
 var _ = require('lodash');
 var moment = require('moment');
+var Promise = require('bluebird');
+var YAML = require('yamljs');
 
 var Message = function(id, datetime, sender, subject, body) {
     this.id = id;
@@ -11,15 +13,6 @@ var Message = function(id, datetime, sender, subject, body) {
     this.subject = subject;
     this.body = body;
 }
-
-var messages = _.map(_.range(20), function(idx) {
-    return new Message(idx,
-                       new Date(),
-                       "Ahto Simakuutio <ahto@simakuut.io>",
-                       "Hello friend " + idx,
-                       "foobar foobar " + idx);
-});
-
 
 var MessageListRow = React.createClass({
     render: function() {
@@ -55,7 +48,7 @@ var MessageList = React.createClass({
         };
         var msgs = this.props.messages.slice(displayRange.start,
                                              displayRange.end);
-        return <nav class="large-12 columns">
+        return <nav className="large-12 columns">
             {
                 _.map(msgs, function(message) {
                     return <MessageListRow message={ message }
@@ -72,7 +65,7 @@ var MessageView = React.createClass({
         return <div class="large-12 columns panel">
             <dl>
             <dt>Date:</dt>
-            <dd>{ moment(this.props.message.datetime) }</dd>
+            <dd>{ moment(this.props.message.datetime).format() }</dd>
             <dt>Sender:</dt>
             <dd>{ this.props.message.sender }</dd>
             <dt>Subject:</dt>
@@ -132,15 +125,31 @@ var MuttApp = React.createClass({
     }
 });
 
-// render app
-var app = React.renderComponent(<MuttApp messages={ messages }/>,
-                                document.getElementById('app'));
+// read messages and render app
+Promise.cast($.get('/content/blog/articles.json')).then(function(data) {
+    return Promise.map(data, function(name, idx) {
+        return Promise.cast($.get('/content/blog/' + name)).then(function(data) {
+            var parts = data.match(/^---\n((?:.+:.+\n)+)---\n((?:.|\n)*)$/m);
+            console.log(parts[1]);
+            var header = YAML.parse(parts[1]);
+            var body = parts[2];
+            return new Message(idx,
+                               header.created_at,
+                               'Ilkka Laukkanen <ilkka@fastmail.fm>',
+                               header.title,
+                               body);
+        });
+    });
+}).then(function(messages) {
+    var app = React.renderComponent(<MuttApp messages={ messages }/>,
+                                    document.getElementById('app'));
 
-// bind keyboard shortcuts
-$(document).bind('keydown.nav', 'j', function() {
-    app.selectNext();
-});
+    // bind keyboard shortcuts
+    $(document).bind('keydown.nav', 'j', function() {
+        app.selectNext();
+    });
 
-$(document).bind('keydown.nav', 'k', function() {
-    app.selectPrevious();
+    $(document).bind('keydown.nav', 'k', function() {
+        app.selectPrevious();
+    });
 });

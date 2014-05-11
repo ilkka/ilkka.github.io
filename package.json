@@ -14,7 +14,8 @@
     "react": "global:React",
     "jquery": "global:$",
     "lodash": "global:_",
-    "moment": "global:moment"
+    "moment": "global:moment",
+    "yamljs": "global:YAML"
   },
   "repository": {
     "type": "git",
@@ -40,5 +41,8 @@
     "reactify": "^0.13.1",
     "uglify-js": "^2.4.13",
     "watchify": "^0.8.0"
+  },
+  "dependencies": {
+    "bluebird": "^1.2.4"
   }
 }
