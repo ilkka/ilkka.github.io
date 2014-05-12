@@ -15,3 +15,9 @@ body {
     background: $barbg;
     color: $barfg;
 }
+
+.keep-oneline, .keep-oneline * {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

@@ -18,7 +18,7 @@ var Message = function(id, timestamp, sender, subject, body) {
 
 var MessageListRow = React.createClass({
     render: function() {
-        var classname = 'large-12 columns' + (this.props.selected ? ' selected' : '');
+        var classname = 'large-12 columns keep-oneline' + (this.props.selected ? ' selected' : '');
         return <div className={ classname }>
             <div className="row">
             <div className="large-1 medium-1 columns">{ this.props.rowIndex }</div>
