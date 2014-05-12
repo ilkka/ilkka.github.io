@@ -151,7 +151,7 @@ Promise.cast($.get('/content/blog/articles.json'))//.then(function(data) {
             var body = parts[2];
             return new Message(idx,
                                header['created_at'],
-                               'Ilkka Laukkanen <ilkka@fastmail.fm>',
+                               'Ilkka Laukkanen',
                                header.title,
                                body);
         });
