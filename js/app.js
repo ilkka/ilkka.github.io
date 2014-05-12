@@ -6,10 +6,11 @@ var moment = require('moment');
 var Promise = require('bluebird');
 var YAML = require('yamljs');
 var marked = require('../bower_components/marked/index.js');
+var fs = require('fs');
 
-var Message = function(id, datetime, sender, subject, body) {
+var Message = function(id, timestamp, sender, subject, body) {
     this.id = id;
-    this.datetime = datetime;
+    this.timestamp = timestamp;
     this.sender = sender;
     this.subject = subject;
     this.body = body;
@@ -22,7 +23,7 @@ var MessageListRow = React.createClass({
             <div className="row">
             <div className="large-1 medium-1 columns">{ this.props.rowIndex }</div>
             <div className="large-1 medium-1 columns">{
-                moment(this.props.message.datetime).format('MMM DD YYYY')
+                moment(this.props.message.timestamp).format('MMM DD YYYY')
             }</div>
             <div className="large-3 medium-3 columns">{ this.props.message.sender }</div>
             <div className="large-1 medium-1 columns">123</div>
@@ -64,16 +65,23 @@ var MessageList = React.createClass({
 
 var MessageView = React.createClass({
     render: function() {
-        return <div class="large-12 columns panel">
+        var data = {timestamp:'', sender: '', subject: '', body: ''};
+        if (this.props.message) {
+            data.timestamp = moment(this.props.message.timestamp).format();
+            data.sender = this.props.message.sender;
+            data.subject = this.props.message.subject;
+            data.body = marked(this.props.message.body);
+        }
+        return <div className="large-12 columns">
             <dl>
             <dt>Date:</dt>
-            <dd>{ moment(this.props.message.datetime).format() }</dd>
+            <dd>{ moment(data.timestamp).format() }</dd>
             <dt>Sender:</dt>
-            <dd>{ this.props.message.sender }</dd>
+            <dd>{ data.sender }</dd>
             <dt>Subject:</dt>
-            <dd>{ this.props.message.subject }</dd>
+            <dd>{ data.subject }</dd>
             </dl>
-            <div dangerouslySetInnerHTML={{__html: marked(this.props.message.body) }}></div>
+            <div dangerouslySetInnerHTML={{__html: data.body }}></div>
             </div>;
     }
 });
@@ -128,15 +136,21 @@ var MuttApp = React.createClass({
 });
 
 // read messages and render app
-Promise.cast($.get('/content/blog/articles.json')).then(function(data) {
+Promise.cast($.get('/content/blog/articles.json'))//.then(function(data) {
+//Promise.promisify(fs.readFile)('./content/blog/articles.json', 'utf-8').then(function(data) {
+//(new Promise(function(resolve) {
+//    resolve(JSON.parse(fs.readFileSync('./content/blog/articles.json', 'utf-8')));
+//}))
+.catch(function(err) {
+    return [];
+}).then(function(data) {
     return Promise.map(data, function(name, idx) {
         return Promise.cast($.get('/content/blog/' + name)).then(function(data) {
             var parts = data.match(/^---\n((?:.+:.+\n)+)---\n((?:.|\n)*)$/m);
-            console.log(parts[1]);
             var header = YAML.parse(parts[1]);
             var body = parts[2];
             return new Message(idx,
-                               header.created_at,
+                               header['created_at'],
                                'Ilkka Laukkanen <ilkka@fastmail.fm>',
                                header.title,
                                body);

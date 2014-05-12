@@ -8,6 +8,7 @@ var cdn = require('gulp-google-cdn');
 var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
 var concatCss = require('gulp-concat-css');
+var brfs = require('brfs');
 
 var styles = 'scss/*.scss';
 var sources = 'js/**/*.js';
@@ -17,9 +18,9 @@ gulp.task('bundle', function() {
         .pipe(plumber())
         .pipe(browserify({
             debug: true,
-            transform: ['reactify']
+            transform: ['reactify', 'brfs']
         }))
-        // .pipe(uglify())
+        //.pipe(uglify())
         .pipe(rename('bundle.js'))
         .pipe(gulp.dest('static'))
         .pipe(livereload());
