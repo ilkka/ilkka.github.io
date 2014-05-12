@@ -31,7 +31,8 @@ gulp.task('sass', function() {
         .pipe(sass())
         .pipe(concatCss('css/bundle.css'))
         .pipe(minifyCss())
-        .pipe(gulp.dest('.'));
+        .pipe(gulp.dest('.'))
+        .pipe(livereload());
 });
 
 gulp.task('cdn', function() {
