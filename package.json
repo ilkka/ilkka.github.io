@@ -32,6 +32,7 @@
     "browserify": "^3.46.1",
     "browserify-shim": "^3.4.1",
     "cdnjs-cdn-data": "^0.1.1",
+    "fb-flo": "^0.2.1",
     "gulp": "^3.6.2",
     "gulp-browserify": "^0.5.0",
     "gulp-concat-css": "^0.1.4",
