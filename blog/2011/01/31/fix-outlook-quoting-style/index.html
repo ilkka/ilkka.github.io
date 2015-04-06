@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+    <head prefix="og: http://ogp.me/ns#">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="About me and the things I think and do.">
+    <meta property="og:title" content="Fix Outlook Quoting Style &mdash; ilkka.io">
+    <meta property="og:site_name" content="ilkka.io">
+    <meta property="og:url" content="http://localhost:1313/blog/2011/01/31/fix-outlook-quoting-style/">
+    
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="Like many others before and after myself, I find myself having to use MS
+Outlook in my daily work. Also like many, I loathe its style of quoting email
+messages. Fortunately I use Exchange&rsquo;s rather surprisingly good (as of the
+2007 version) OWA web client, so with Firefox&rsquo;s It&rsquo;s All
+Text extension,
+Vim and some Ruby code, I can fix quoting in messages I&rsquo;m replying to easily.
+">
+    
+    <meta property="og:article:author" content="http://twitter.com/ilkkalaukkanen">
+    
+    <meta property="og:article:published_time" content="31000-01-01T131:00:00Z00:00">
+    
+    <meta property="og:article:tag" content="coding">
+    
+    <meta property="og:article:tag" content="ruby">
+    
+    <meta property="og:article:tag" content="tools">
+    
+    
+
+    <meta name="superfish" content="nofish">
+
+    <title>Fix Outlook Quoting Style &mdash; ilkka.io</title>
+
+    <link rel="canonical" href="http://localhost:1313/blog/2011/01/31/fix-outlook-quoting-style/">
+    <link href="" rel="alternate" type="application/rss+xml" title="ilkka.io" />
+
+    <link href="http://localhost:1313/css/print.css" media="print" rel="stylesheet" type="text/css">
+    <link href="http://localhost:1313/css/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/zenburn.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//cdn.jsdelivr.net/jquery.midnight/1.1.0/midnight.jquery.min.js"></script>
+
+    <script src="http://localhost:1313/js/bundle.js"></script>
+
+    
+</head>
+
+    <body>
+        <nav class="nav--main">
+    <div class="nav__links">
+        <a href="http://localhost:1313/" class="icon--home"><span class="hide">home</span></a>
+    </div>
+</nav>
+
+        <article class="post post--single post--full">
+            <header class="page-header post__header" id="header-with-changing-background" data-midnight="header">
+                <h1 class="post__title">Fix Outlook Quoting Style</h1>
+                <aside class="post__meta">
+                    
+
+<i class="fa fa-tag"></i>&nbsp;<a class="tag-link" href="http://localhost:1313/tags/coding">coding</a>
+, <a class="tag-link" href="http://localhost:1313/tags/ruby">ruby</a>
+, <a class="tag-link" href="http://localhost:1313/tags/tools">tools</a>
+, 
+
+a
+
+2 minute read from Monday, 31 Jan 2011.
+
+                </aside>
+            </header>
+
+            <main class="post__content" data-midnight="body">
+                <p>Like many others before and after myself, I find myself having to use MS
+Outlook in my daily work. Also like many, I loathe its style of quoting email
+messages. Fortunately I use Exchange&rsquo;s rather surprisingly good (as of the
+2007 version) OWA web client, so with Firefox&rsquo;s <a href="https://addons.mozilla.org/en-US/firefox/addon/its-all-text/">It&rsquo;s All
+Text</a> extension,
+Vim and some Ruby code, I can fix quoting in messages I&rsquo;m replying to easily.</p>
+
+<p>Googling for a ready-made solution I came across <a href="http://www.mail-archive.com/gnhlug@zk3.dec.com/msg13395.html">a post to gnhlug&rsquo;s mailing
+list</a> that had a
+Perl solution, albeit one supporting only English and only older Exchange
+versions, but it gave me the spark I needed to write my own implementation.</p>
+
+<p>Whereas (as far as I can tell) the original author wanted to correct the
+quoting style of all the participants in the conversation, I thought that was
+unnecessarily disruptive and only opted to correctly quote the message I would
+be replying to. The usage scenario then is something like this:</p>
+
+<ol>
+<li><p>In OWA, choose to reply to a message. Horribly quoted message text appears.</p></li>
+
+<li><p>Use It&rsquo;s All Text or some other similar tool to open message text in a
+reasonably smart editor.</p></li>
+
+<li><p>Filter entire message text through this script. E.g. in Vim type
+<code>:%!path-to-script.rb</code>, after making the script executable of course.</p></li>
+
+<li><p>Replace original mesage text with output of filter. If using It&rsquo;s All Text,
+just type <code>:wq</code>.</p></li>
+
+<li><p>Presto! Correctly quoted message. You might have to move your sig, though.</p></li>
+</ol>
+
+<p>That&rsquo;s how to use it, now here&rsquo;s the script:</p>
+
+<script
+src="https://gist.github.com/803961.js?file=fix-outlook-quoting.rb"></script>
+
+            </main>
+        </article>
+        <footer>
+    <div>
+        <p>© 2015 Ilkka Laukkanen. <a href="http://creativecommons.org/licenses/by-sa/4.0/">Some rights reserved</a>.</p>
+        <p><a href="https://github.com/ilkka"><i class="fa fa-github"></i> ilkka</a> &mdash; 
+        <a href="https://twitter.com/ilkkalaukkanen"><i class="fa fa-twitter"></i> ilkkalaukkanen</a></p>
+        <p>Home icon by iconsmind.com from <a href="https://thenounproject.com">The Noun Project</a>.</p>
+    </div>
+</footer>
+
+    <script>document.write('<script src="http://'
+        + (location.host || 'localhost').split(':')[0]
+		+ ':1313/livereload.js?mindelay=10"></'
+        + 'script>')</script></body>
+</html>

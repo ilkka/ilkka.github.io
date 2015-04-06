@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ninja on ilkka.io</title>
+    <link>http://localhost:1313/tags/ninja/</link>
+    <description>Recent content in Ninja on ilkka.io</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© 2015 Ilkka Laukkanen. &lt;a href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Some rights reserved&lt;/a&gt;.</copyright>
+    <lastBuildDate>Sun, 13 Feb 2011 22:19:50 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/ninja/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Jitsu is a meta build system for Ninja</title>
+      <link>http://localhost:1313/blog/2011/02/13/jitsu-is-a-meta-build-system-for-ninja/</link>
+      <pubDate>Sun, 13 Feb 2011 22:19:50 +0200</pubDate>
+      
+      <guid>http://localhost:1313/blog/2011/02/13/jitsu-is-a-meta-build-system-for-ninja/</guid>
+      <description>&lt;p&gt;A while back I hit upon &lt;a href=&#34;https://github.com/martine/ninja&#34;&gt;Ninja&lt;/a&gt;, a very fast
+and very simple build system that is apparently used for building
+&lt;a href=&#34;http://www.chromium.org/&#34;&gt;Chromium&lt;/a&gt;. Can&amp;rsquo;t remember where I first heard of
+it, might&amp;rsquo;ve been &lt;a href=&#34;http://news.ycombinator.com&#34;&gt;Hacker News&lt;/a&gt; or just
+somebody&amp;rsquo;s tweet, but having been interested in build systems for years, at
+least since setting up Linux builds from scratch for a big piece of software
+while working on my M.Sc. thesis, I immediately started playing around with
+it.&lt;/p&gt;
+
+&lt;p&gt;Ninja is indeed fast, but by design the buildfiles are hard to write. Ninja
+sources include a patch to &lt;a href=&#34;http://code.google.com/p/gyp&#34;&gt;Gyp&lt;/a&gt;, a higher-level
+build system also somehow (not sure how exactly) related to Chromium, but the
+support wasn&amp;rsquo;t very complete, and somehow I just didn&amp;rsquo;t find Gyp appealing. I
+therefore did what anyone in my circumstances would&amp;rsquo;ve done, and started
+writing a &amp;ldquo;meta build system&amp;rdquo; myself.&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s called &lt;a href=&#34;https://github.com/ilkka/jitsu&#34;&gt;Jitsu&lt;/a&gt;, and since I really like
+Ruby, that&amp;rsquo;s what I wrote it in. It&amp;rsquo;s at version 0.1.2 now and available from
+rubygems.org, and as of now it can build (or rather, generate ninja buildfiles
+for) C++ binaries and static libraries. Builds are specified as &lt;code&gt;build.jitsu&lt;/code&gt;
+files in YAML format, which the tool processes into &lt;code&gt;build.ninja&lt;/code&gt; files that
+can then be used by Ninja. I&amp;rsquo;ll keep trying to use it in my own projects so
+hopefully it&amp;rsquo;ll keep on improving from here on out. Let&amp;rsquo;s see where it will
+go, I haven&amp;rsquo;t really delineated the scope yet, to e.g. just doing C++ builds.&lt;/p&gt;
+
+&lt;p&gt;If you are interested, install the gem, maybe &lt;a href=&#34;https://github.com/ilkka/jitsu&#34;&gt;grab the
+source&lt;/a&gt; and give it a spin. Let me know what
+you think. Also see &lt;a href=&#34;http://ilkka.github.com/jitsu&#34;&gt;the documentation&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

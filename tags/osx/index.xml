@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Osx on ilkka.io</title>
+    <link>http://localhost:1313/tags/osx/</link>
+    <description>Recent content in Osx on ilkka.io</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© 2015 Ilkka Laukkanen. &lt;a href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Some rights reserved&lt;/a&gt;.</copyright>
+    <lastBuildDate>Wed, 19 Oct 2011 23:06:27 +0300</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/osx/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Packaging a Qt app for OS X</title>
+      <link>http://localhost:1313/blog/2011/10/19/packaging-a-qt-app-for-os-x/</link>
+      <pubDate>Wed, 19 Oct 2011 23:06:27 +0300</pubDate>
+      
+      <guid>http://localhost:1313/blog/2011/10/19/packaging-a-qt-app-for-os-x/</guid>
+      <description>
+
+&lt;p&gt;I participated in &lt;a href=&#34;http://barcamp.org/w/page/39167337/BarCampTampere2&#34;&gt;BarCamp Tampere 2&lt;/a&gt; recently, and one of
+the many very interesting presentations was &lt;a href=&#34;http://www.modeemi.fi/~cosmo&#34;&gt;Ville Ranki&lt;/a&gt; talking about
+&lt;a href=&#34;http://siilihai.com/&#34;&gt;Siilihai&lt;/a&gt;, a web forum reader app intentionally very
+reminiscent of newsreaders of old.&lt;/p&gt;
+
+&lt;p&gt;Siilihai scrapes the content from web forums and presents it as threaded
+conversations so that it&amp;rsquo;s easier to read and follow conversations. Parsers
+can be written pretty easily for most forum software, and while forum content
+is only accessed locally by the client, it stores generated message IDs in the
+siilihai.com service so that whatever messages you read in one client are
+marked read in any other clients you might use as well. The service is also
+used as a repository for forum parsers.&lt;/p&gt;
+
+&lt;p&gt;Anyway, as the event was held at &lt;a href=&#34;http://www.futurice.com&#34;&gt;our office&lt;/a&gt;, I
+grabbed a Mac that was handy so that I could try out Siilihai for myself.
+Getting it built was simple as it is written using Qt, but I wanted to create
+a distributable package (an app bundle in OS X parlance) so that all the other
+beret wearers could enjoy it too. This, however, turned out to be a bit more
+involved than I&amp;rsquo;d thought.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-anatomy-of-an-app:76d812ff55f356c4b63aef151eb7ae82&#34;&gt;The anatomy of an app&lt;/h2&gt;
+
+&lt;p&gt;An app bundle is pretty self-contained. Apart from basic system libraries that
+can be assumed to be available on every Mac, apps usually ship all their
+libraries inside the app bundle together with the runnable binary. Some space
+may be wasted this way if several apps bundle the same libraries, but
+generally it seems pretty useful. At least it&amp;rsquo;s simple to deploy applications
+when they can simply be copied into place.&lt;/p&gt;
+
+&lt;p&gt;Siilihai uses a couple of shared libraries of its own, and naturally Qt. Since
+Qt is not installed by default in OS X, I had to include all of these in the
+app bundle. Bundling Qt is relatively simple using the
+&lt;a href=&#34;http://doc.qt.nokia.com/stable/deployment-mac.html&#34;&gt;macdeployqt&lt;/a&gt; tool
+included in the Qt SDK, but it only really takes care of the whole process if
+the application is a single binary that is only dependent on Qt. Siilihai&amp;rsquo;s
+custom libraries required a bit more love.&lt;/p&gt;
+
+&lt;h2 id=&#34;rewiring-and-rewriting:76d812ff55f356c4b63aef151eb7ae82&#34;&gt;Rewiring and rewriting&lt;/h2&gt;
+
+&lt;p&gt;For an app that uses dynamic libraries to work, the runtime linker must be
+able to find the libraries when the app is run. In Unix-style OSes this is
+generally accomplished by installing the libraries into standard paths such as
+&lt;code&gt;/usr/lib&lt;/code&gt;. The dynamic linker is preconfigured to look in these directories
+when it is looking for library files.&lt;/p&gt;
+
+&lt;p&gt;If the libraries are for some reason installed into a nonstandard path, that
+path can also be configured as an &amp;ldquo;rpath&amp;rdquo; in the app binary itself. This is
+just another way of telling the dynamic linker where to look, but in a per-app
+fashion.&lt;/p&gt;
+
+&lt;p&gt;These concepts are valid for OS X &lt;code&gt;.dylib&lt;/code&gt; files as well, with some
+differences. Using the command line utility &lt;code&gt;otool&lt;/code&gt; we can examine this
+search path information. Let&amp;rsquo;s see the output for &lt;code&gt;otool&lt;/code&gt; itself:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;$ otool -L &lt;span style=&#34;color: #e6db74&#34;&gt;`&lt;/span&gt;which otool&lt;span style=&#34;color: #e6db74&#34;&gt;`&lt;/span&gt;
+/usr/bin/otool:
+    /usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 159.0.0)
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;We can see that otool depends on a single dylib, libSystem. Now, my knowledge
+isn&amp;rsquo;t broad enough to tell if the actual path to the lib is hardcoded in the
+binary, or if the output is due to the dynamic linker knowing to look in
+&lt;code&gt;/usr/lib&lt;/code&gt;, but in the context of this discussion it doesn&amp;rsquo;t really matter.
+Let&amp;rsquo;s look at the output for &lt;code&gt;libSystem.B.dylib&lt;/code&gt; next:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;$ otool -L /usr/lib/libSystem.B.dylib
+/usr/lib/libSystem.B.dylib:
+    /usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 159.0.0)
+    /usr/lib/system/libcache.dylib (compatibility version 1.0.0, current version 47.0.0)
+    /usr/lib/system/libcommonCrypto.dylib (compatibility version 1.0.0, current version 55010.0.0)
+    /usr/lib/system/libcompiler_rt.dylib (compatibility version 1.0.0, current version 6.0.0)
+    /usr/lib/system/libcopyfile.dylib (compatibility version 1.0.0, current version 85.1.0)
+    ...
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;We see that libSystem is linked against a whole bunch of other system
+libraries, but also that the otool output lists the library itself. As far as
+I can tell, this is because the library knows its own path, something that
+needs to be taken into account later. If you know better, please leave a
+comment.&lt;/p&gt;
+
+&lt;p&gt;The consequence is that because I was going to put siilihai&amp;rsquo;s libraries in a
+nonstandard place (inside the app bundle), I need to edit the library
+locations stored in the app binary so that the libraries get found by the
+linker. Siilihai&amp;rsquo;s libraries also link to each other, so I have to do the same
+thing to them too.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

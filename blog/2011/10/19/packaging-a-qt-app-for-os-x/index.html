@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+    <head prefix="og: http://ogp.me/ns#">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="About me and the things I think and do.">
+    <meta property="og:title" content="Packaging a Qt app for OS X &mdash; ilkka.io">
+    <meta property="og:site_name" content="ilkka.io">
+    <meta property="og:url" content="http://localhost:1313/blog/2011/10/19/packaging-a-qt-app-for-os-x/">
+    
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="I participated in BarCamp Tampere 2 recently, and one of
+the many very interesting presentations was Ville Ranki talking about
+Siilihai, a web forum reader app intentionally very
+reminiscent of newsreaders of old.
+">
+    
+    <meta property="og:article:author" content="http://twitter.com/ilkkalaukkanen">
+    
+    <meta property="og:article:published_time" content="19000-10-10T1019:00:00Z00:00">
+    
+    <meta property="og:article:tag" content="qt">
+    
+    <meta property="og:article:tag" content="osx">
+    
+    
+
+    <meta name="superfish" content="nofish">
+
+    <title>Packaging a Qt app for OS X &mdash; ilkka.io</title>
+
+    <link rel="canonical" href="http://localhost:1313/blog/2011/10/19/packaging-a-qt-app-for-os-x/">
+    <link href="" rel="alternate" type="application/rss+xml" title="ilkka.io" />
+
+    <link href="http://localhost:1313/css/print.css" media="print" rel="stylesheet" type="text/css">
+    <link href="http://localhost:1313/css/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/zenburn.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//cdn.jsdelivr.net/jquery.midnight/1.1.0/midnight.jquery.min.js"></script>
+
+    <script src="http://localhost:1313/js/bundle.js"></script>
+
+    
+</head>
+
+    <body>
+        <nav class="nav--main">
+    <div class="nav__links">
+        <a href="http://localhost:1313/" class="icon--home"><span class="hide">home</span></a>
+    </div>
+</nav>
+
+        <article class="post post--single post--full">
+            <header class="page-header post__header" id="header-with-changing-background" data-midnight="header">
+                <h1 class="post__title">Packaging a Qt app for OS X</h1>
+                <aside class="post__meta">
+                    
+
+<i class="fa fa-tag"></i>&nbsp;<a class="tag-link" href="http://localhost:1313/tags/qt">qt</a>
+, <a class="tag-link" href="http://localhost:1313/tags/osx">osx</a>
+, 
+
+a
+
+4 minute read from Wednesday, 19 Oct 2011.
+
+                </aside>
+            </header>
+
+            <main class="post__content" data-midnight="body">
+                
+
+<p>I participated in <a href="http://barcamp.org/w/page/39167337/BarCampTampere2">BarCamp Tampere 2</a> recently, and one of
+the many very interesting presentations was <a href="http://www.modeemi.fi/~cosmo">Ville Ranki</a> talking about
+<a href="http://siilihai.com/">Siilihai</a>, a web forum reader app intentionally very
+reminiscent of newsreaders of old.</p>
+
+<p>Siilihai scrapes the content from web forums and presents it as threaded
+conversations so that it&rsquo;s easier to read and follow conversations. Parsers
+can be written pretty easily for most forum software, and while forum content
+is only accessed locally by the client, it stores generated message IDs in the
+siilihai.com service so that whatever messages you read in one client are
+marked read in any other clients you might use as well. The service is also
+used as a repository for forum parsers.</p>
+
+<p>Anyway, as the event was held at <a href="http://www.futurice.com">our office</a>, I
+grabbed a Mac that was handy so that I could try out Siilihai for myself.
+Getting it built was simple as it is written using Qt, but I wanted to create
+a distributable package (an app bundle in OS X parlance) so that all the other
+beret wearers could enjoy it too. This, however, turned out to be a bit more
+involved than I&rsquo;d thought.</p>
+
+<h2 id="the-anatomy-of-an-app:76d812ff55f356c4b63aef151eb7ae82">The anatomy of an app</h2>
+
+<p>An app bundle is pretty self-contained. Apart from basic system libraries that
+can be assumed to be available on every Mac, apps usually ship all their
+libraries inside the app bundle together with the runnable binary. Some space
+may be wasted this way if several apps bundle the same libraries, but
+generally it seems pretty useful. At least it&rsquo;s simple to deploy applications
+when they can simply be copied into place.</p>
+
+<p>Siilihai uses a couple of shared libraries of its own, and naturally Qt. Since
+Qt is not installed by default in OS X, I had to include all of these in the
+app bundle. Bundling Qt is relatively simple using the
+<a href="http://doc.qt.nokia.com/stable/deployment-mac.html">macdeployqt</a> tool
+included in the Qt SDK, but it only really takes care of the whole process if
+the application is a single binary that is only dependent on Qt. Siilihai&rsquo;s
+custom libraries required a bit more love.</p>
+
+<h2 id="rewiring-and-rewriting:76d812ff55f356c4b63aef151eb7ae82">Rewiring and rewriting</h2>
+
+<p>For an app that uses dynamic libraries to work, the runtime linker must be
+able to find the libraries when the app is run. In Unix-style OSes this is
+generally accomplished by installing the libraries into standard paths such as
+<code>/usr/lib</code>. The dynamic linker is preconfigured to look in these directories
+when it is looking for library files.</p>
+
+<p>If the libraries are for some reason installed into a nonstandard path, that
+path can also be configured as an &ldquo;rpath&rdquo; in the app binary itself. This is
+just another way of telling the dynamic linker where to look, but in a per-app
+fashion.</p>
+
+<p>These concepts are valid for OS X <code>.dylib</code> files as well, with some
+differences. Using the command line utility <code>otool</code> we can examine this
+search path information. Let&rsquo;s see the output for <code>otool</code> itself:</p>
+
+<p><div class="highlight" style="background: #272822"><pre style="line-height: 125%">$ otool -L <span style="color: #e6db74">`</span>which otool<span style="color: #e6db74">`</span>
+/usr/bin/otool:
+    /usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 159.0.0)
+</pre></div>
+</p>
+
+<p>We can see that otool depends on a single dylib, libSystem. Now, my knowledge
+isn&rsquo;t broad enough to tell if the actual path to the lib is hardcoded in the
+binary, or if the output is due to the dynamic linker knowing to look in
+<code>/usr/lib</code>, but in the context of this discussion it doesn&rsquo;t really matter.
+Let&rsquo;s look at the output for <code>libSystem.B.dylib</code> next:</p>
+
+<p><div class="highlight" style="background: #272822"><pre style="line-height: 125%">$ otool -L /usr/lib/libSystem.B.dylib
+/usr/lib/libSystem.B.dylib:
+    /usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 159.0.0)
+    /usr/lib/system/libcache.dylib (compatibility version 1.0.0, current version 47.0.0)
+    /usr/lib/system/libcommonCrypto.dylib (compatibility version 1.0.0, current version 55010.0.0)
+    /usr/lib/system/libcompiler_rt.dylib (compatibility version 1.0.0, current version 6.0.0)
+    /usr/lib/system/libcopyfile.dylib (compatibility version 1.0.0, current version 85.1.0)
+    ...
+</pre></div>
+</p>
+
+<p>We see that libSystem is linked against a whole bunch of other system
+libraries, but also that the otool output lists the library itself. As far as
+I can tell, this is because the library knows its own path, something that
+needs to be taken into account later. If you know better, please leave a
+comment.</p>
+
+<p>The consequence is that because I was going to put siilihai&rsquo;s libraries in a
+nonstandard place (inside the app bundle), I need to edit the library
+locations stored in the app binary so that the libraries get found by the
+linker. Siilihai&rsquo;s libraries also link to each other, so I have to do the same
+thing to them too.</p>
+
+            </main>
+        </article>
+        <footer>
+    <div>
+        <p>© 2015 Ilkka Laukkanen. <a href="http://creativecommons.org/licenses/by-sa/4.0/">Some rights reserved</a>.</p>
+        <p><a href="https://github.com/ilkka"><i class="fa fa-github"></i> ilkka</a> &mdash; 
+        <a href="https://twitter.com/ilkkalaukkanen"><i class="fa fa-twitter"></i> ilkkalaukkanen</a></p>
+        <p>Home icon by iconsmind.com from <a href="https://thenounproject.com">The Noun Project</a>.</p>
+    </div>
+</footer>
+
+    <script>document.write('<script src="http://'
+        + (location.host || 'localhost').split(':')[0]
+		+ ':1313/livereload.js?mindelay=10"></'
+        + 'script>')</script></body>
+</html>

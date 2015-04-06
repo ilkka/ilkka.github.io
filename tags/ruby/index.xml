@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ruby on ilkka.io</title>
+    <link>http://localhost:1313/tags/ruby/</link>
+    <description>Recent content in Ruby on ilkka.io</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© 2015 Ilkka Laukkanen. &lt;a href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Some rights reserved&lt;/a&gt;.</copyright>
+    <lastBuildDate>Sun, 13 Feb 2011 22:19:50 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/ruby/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Jitsu is a meta build system for Ninja</title>
+      <link>http://localhost:1313/blog/2011/02/13/jitsu-is-a-meta-build-system-for-ninja/</link>
+      <pubDate>Sun, 13 Feb 2011 22:19:50 +0200</pubDate>
+      
+      <guid>http://localhost:1313/blog/2011/02/13/jitsu-is-a-meta-build-system-for-ninja/</guid>
+      <description>&lt;p&gt;A while back I hit upon &lt;a href=&#34;https://github.com/martine/ninja&#34;&gt;Ninja&lt;/a&gt;, a very fast
+and very simple build system that is apparently used for building
+&lt;a href=&#34;http://www.chromium.org/&#34;&gt;Chromium&lt;/a&gt;. Can&amp;rsquo;t remember where I first heard of
+it, might&amp;rsquo;ve been &lt;a href=&#34;http://news.ycombinator.com&#34;&gt;Hacker News&lt;/a&gt; or just
+somebody&amp;rsquo;s tweet, but having been interested in build systems for years, at
+least since setting up Linux builds from scratch for a big piece of software
+while working on my M.Sc. thesis, I immediately started playing around with
+it.&lt;/p&gt;
+
+&lt;p&gt;Ninja is indeed fast, but by design the buildfiles are hard to write. Ninja
+sources include a patch to &lt;a href=&#34;http://code.google.com/p/gyp&#34;&gt;Gyp&lt;/a&gt;, a higher-level
+build system also somehow (not sure how exactly) related to Chromium, but the
+support wasn&amp;rsquo;t very complete, and somehow I just didn&amp;rsquo;t find Gyp appealing. I
+therefore did what anyone in my circumstances would&amp;rsquo;ve done, and started
+writing a &amp;ldquo;meta build system&amp;rdquo; myself.&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s called &lt;a href=&#34;https://github.com/ilkka/jitsu&#34;&gt;Jitsu&lt;/a&gt;, and since I really like
+Ruby, that&amp;rsquo;s what I wrote it in. It&amp;rsquo;s at version 0.1.2 now and available from
+rubygems.org, and as of now it can build (or rather, generate ninja buildfiles
+for) C++ binaries and static libraries. Builds are specified as &lt;code&gt;build.jitsu&lt;/code&gt;
+files in YAML format, which the tool processes into &lt;code&gt;build.ninja&lt;/code&gt; files that
+can then be used by Ninja. I&amp;rsquo;ll keep trying to use it in my own projects so
+hopefully it&amp;rsquo;ll keep on improving from here on out. Let&amp;rsquo;s see where it will
+go, I haven&amp;rsquo;t really delineated the scope yet, to e.g. just doing C++ builds.&lt;/p&gt;
+
+&lt;p&gt;If you are interested, install the gem, maybe &lt;a href=&#34;https://github.com/ilkka/jitsu&#34;&gt;grab the
+source&lt;/a&gt; and give it a spin. Let me know what
+you think. Also see &lt;a href=&#34;http://ilkka.github.com/jitsu&#34;&gt;the documentation&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Teach Vim about Gemfiles</title>
+      <link>http://localhost:1313/blog/2011/02/03/teach-vim-about-gemfiles/</link>
+      <pubDate>Thu, 03 Feb 2011 18:27:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/blog/2011/02/03/teach-vim-about-gemfiles/</guid>
+      <description>&lt;p&gt;By default, the excellent Vim editor doesn&amp;rsquo;t know what the filetype of
+Gemfiles is (it&amp;rsquo;s &lt;code&gt;ruby&lt;/code&gt;, of course). I&amp;rsquo;ve been sprinkling Vim modelines in
+mine for ages, but just now as I was hacking at &lt;a href=&#34;https://github.com/ilkka/ticgit&#34;&gt;my clone of
+ticgit&lt;/a&gt;, I realized that it makes no sense to
+sprinkle these onto other people&amp;rsquo;s code so liberally when I could just teach
+Vim to Do The Right Thing.  So, I promptly added the following
+autocommand into my &lt;code&gt;vimrc&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span style=&#34;color: #75715e&#34;&gt;&amp;quot; I put my autocommands in a block like this&lt;/span&gt;
+&lt;span style=&#34;color: #66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;!&lt;/span&gt;exists&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;autocommandsLoaded&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
+  &lt;span style=&#34;color: #66d9ef&#34;&gt;let&lt;/span&gt; autocommandsLoaded &lt;span style=&#34;color: #f8f8f2&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;1&lt;/span&gt;
+  ...
+  autocmd &lt;span style=&#34;color: #f8f8f2&#34;&gt;BufNewFile,BufRead&lt;/span&gt; Gemfile &lt;span style=&#34;color: #66d9ef&#34;&gt;setlocal&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;filetype&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;ruby&lt;/span&gt;
+&lt;span style=&#34;color: #66d9ef&#34;&gt;endif&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Now all &lt;code&gt;Gemfile&lt;/code&gt;s are opened in ruby mode and I don&amp;rsquo;t have to annoy other
+people with my editor-specific modelines any more.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Fix Outlook Quoting Style</title>
+      <link>http://localhost:1313/blog/2011/01/31/fix-outlook-quoting-style/</link>
+      <pubDate>Mon, 31 Jan 2011 14:31:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/blog/2011/01/31/fix-outlook-quoting-style/</guid>
+      <description>&lt;p&gt;Like many others before and after myself, I find myself having to use MS
+Outlook in my daily work. Also like many, I loathe its style of quoting email
+messages. Fortunately I use Exchange&amp;rsquo;s rather surprisingly good (as of the
+2007 version) OWA web client, so with Firefox&amp;rsquo;s &lt;a href=&#34;https://addons.mozilla.org/en-US/firefox/addon/its-all-text/&#34;&gt;It&amp;rsquo;s All
+Text&lt;/a&gt; extension,
+Vim and some Ruby code, I can fix quoting in messages I&amp;rsquo;m replying to easily.&lt;/p&gt;
+
+&lt;p&gt;Googling for a ready-made solution I came across &lt;a href=&#34;http://www.mail-archive.com/gnhlug@zk3.dec.com/msg13395.html&#34;&gt;a post to gnhlug&amp;rsquo;s mailing
+list&lt;/a&gt; that had a
+Perl solution, albeit one supporting only English and only older Exchange
+versions, but it gave me the spark I needed to write my own implementation.&lt;/p&gt;
+
+&lt;p&gt;Whereas (as far as I can tell) the original author wanted to correct the
+quoting style of all the participants in the conversation, I thought that was
+unnecessarily disruptive and only opted to correctly quote the message I would
+be replying to. The usage scenario then is something like this:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;In OWA, choose to reply to a message. Horribly quoted message text appears.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Use It&amp;rsquo;s All Text or some other similar tool to open message text in a
+reasonably smart editor.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Filter entire message text through this script. E.g. in Vim type
+&lt;code&gt;:%!path-to-script.rb&lt;/code&gt;, after making the script executable of course.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Replace original mesage text with output of filter. If using It&amp;rsquo;s All Text,
+just type &lt;code&gt;:wq&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Presto! Correctly quoted message. You might have to move your sig, though.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;That&amp;rsquo;s how to use it, now here&amp;rsquo;s the script:&lt;/p&gt;
+
+&lt;script
+src=&#34;https://gist.github.com/803961.js?file=fix-outlook-quoting.rb&#34;&gt;&lt;/script&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Rakefile for Jekyll site management</title>
+      <link>http://localhost:1313/blog/2010/12/08/rakefile-for-jekyll-site-management/</link>
+      <pubDate>Wed, 08 Dec 2010 17:00:52 +0200</pubDate>
+      
+      <guid>http://localhost:1313/blog/2010/12/08/rakefile-for-jekyll-site-management/</guid>
+      <description>&lt;p&gt;Previously I&amp;rsquo;ve used a bunch of scripts for managing post creation and site
+compilation tasks, but recently I decided to move over to Rake. The whole
+Rakefile as-it-stands is &lt;a href=&#34;https://github.com/ilkka/ilkka.github.com/tree/source&#34;&gt;in the
+repo&lt;/a&gt;, naturally, but
+here&amp;rsquo;s a couple of bits I&amp;rsquo;m finding useful.&lt;/p&gt;
+
+&lt;p&gt;I have a &lt;code&gt;default&lt;/code&gt; task set up that runs compass, jekyll, and &lt;code&gt;git commit&lt;/code&gt;s
+and &lt;code&gt;git push&lt;/code&gt;es the result. The compass and jekyll bits are simple &lt;code&gt;sh&lt;/code&gt;
+steps, but the rest is a bit more involved. Let&amp;rsquo;s start with post creation
+though, in the spirit of the real workflow.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;
+namespace &#34;post&#34; do
+  desc &#34;Given a title as an argument, create a new post file&#34;
+  task :new, [:title] do |t, args|
+    now = DateTime::now().to_date()
+    filename = &#34;#{now.strftime}-#{args.title.gsub(/\s/, &#39;_&#39;).downcase}.markdown&#34;
+    path = File.join(&#34;_posts&#34;, filename)
+    if File.exist? path; raise RuntimeError.new(&#34;Won&#39;t clobber #{path}&#34;); end
+    File.open(path, &#39;w&#39;) do |file|
+      file.write &lt;&lt;-EOS
+---
+layout: post
+title: #{args.title}
+---
+
+Content goes here
+EOS
+    end
+    puts &#34;Now open #{path} in an editor.&#34;
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The above listing is the new post creation task, and the entirety of the
+&lt;code&gt;post&lt;/code&gt; namespace currently, as it happens. It takes the post title as an
+argument, and uses that and the current date to generate a filename. At the
+moment it just replaces whitespace with underscores, but it might be good to
+do more escaping to ensure a good filename. Then the task writes a post
+template into the file and prints the filename so it&amp;rsquo;s easy to launch an
+editor for it.&lt;/p&gt;
+
+&lt;p&gt;To ensure good clean commits of the site I clean the &lt;code&gt;_site&lt;/code&gt; directory before
+compilation, i.e. delete all files except for any dotfiles, so as not to
+destroy the &lt;code&gt;.git&lt;/code&gt; dir in there. I use a helper method to get a list of all
+the files:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;
+def site_files
+  FileList[&#39;_site/**/*&#39;].find_all {|f| File.file? f}
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This file list is then used in the &lt;code&gt;clean&lt;/code&gt; and &lt;code&gt;commit&lt;/code&gt; tasks like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;
+desc &#34;Clean generated site files&#34;
+task :clean do
+  FileUtils.rm site_files
+end
+
+desc &#34;Commit compiled site to Git&#34;
+task :commit do
+  g = Git.open(&#39;_site&#39;)
+  g.add site_files.map {|f| f.gsub(/^_site\//, &#39;&#39;)}
+  g.commit &#34;Regenerated&#34;
+end
+
+desc &#34;Push committed site to GitHub&#34;
+task :push do
+  g = Git.open(&#39;_site&#39;)
+  g.push
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;clean&lt;/code&gt; task is simple because one can use the filelist directly, but when
+committing, the &lt;code&gt;_site&lt;/code&gt; dir bit has to be dropped from the filenames with a
+simple &lt;code&gt;map&lt;/code&gt; + &lt;code&gt;gsub&lt;/code&gt; combo. I&amp;rsquo;m using &lt;a href=&#34;https://github.com/schacon&#34;&gt;Scott
+Chacon&amp;rsquo;s&lt;/a&gt; &lt;a href=&#34;https://github.com/schacon/ruby-git&#34;&gt;ruby-git
+gem&lt;/a&gt; to perform git operations on the
+repo.&lt;/p&gt;
+
+&lt;p&gt;That&amp;rsquo;s pretty much it for the moment. I might expand the post management
+features a bit at some point though, but since most of that is no simpler via
+Rake than through shell commands and an editor, it remains to be seen what
+those new features might be.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Jekyll tag cloud</title>
+      <link>http://localhost:1313/blog/2010/11/21/jekyll-tag-cloud/</link>
+      <pubDate>Sun, 21 Nov 2010 23:11:50 +0200</pubDate>
+      
+      <guid>http://localhost:1313/blog/2010/11/21/jekyll-tag-cloud/</guid>
+      <description>&lt;p&gt;Having &lt;a href=&#34;http://localhost:1313/blog/2010/11/20/hosting-a-jekyll-blog-with-extensions-on-github&#34;&gt;gotten archives
+working&lt;/a&gt;
+nicely, I decided to next tackle the task of creating a tag cloud for
+my blog. The &lt;a href=&#34;https://github.com/mojombo/jekyll/wiki/Template-Data&#34;&gt;Jekyll
+docs&lt;/a&gt; are,
+sadly, a bit ambiguous on how exactly to get at all the available
+categories, for example, but as with my archive plugin, I decided to
+go ahead and try out stuff until something workable emerged. With
+archive pages, all that needed to be done was to write a generator
+plugin to create more pages. With tags, however, I want to do
+more. Specifically, I want to generate a tag cloud into my layout.&lt;/p&gt;
+
+&lt;p&gt;Googling a bit I came across &lt;a href=&#34;https://gist.github.com/364416&#34;&gt;a gist&lt;/a&gt;
+where tag cloud generation was done in the &lt;code&gt;Rakefile&lt;/code&gt;. I didn&amp;rsquo;t want
+to clutter my (as-of-then-nonexistant) &lt;code&gt;Rakefile&lt;/code&gt; with stuff like
+this, and instead thought that the logical place to put this code is
+in a plugin. I decided to implement the same basic idea though, where
+the tag links go in &lt;code&gt;&amp;lt;span&amp;gt;&lt;/code&gt;s that get dynamically styled with
+different font sizes. Here&amp;rsquo;s the source of my new tag plugin:&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/710577.js?file=tag_cloud_tag.rb&#34;&gt;
+&lt;/script&gt;
+
+&lt;p&gt;The plugin class inherits from &lt;code&gt;Liquid::Tag&lt;/code&gt; and has just one method
+apart from the constructor, &lt;code&gt;render&lt;/code&gt;. The &lt;code&gt;context&lt;/code&gt; parameter to
+&lt;code&gt;render&lt;/code&gt; includes whatever data would be accessible in the template
+via the &lt;code&gt;registers&lt;/code&gt; hash.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Here I must take a moment to vent a very tiny bit at Jekyll: why
+and/or how is it that while the &lt;a href=&#34;https://github.com/Shopify/liquid/wiki/Liquid-for-Designers&#34;&gt;Liquid docs clearly state that only
+tags in double curly brackets may resolve to
+text&lt;/a&gt;,
+tags defined in Jekyll tag plugins &lt;em&gt;must&lt;/em&gt; be put in brackets +
+percent signs? Illogical, and it bit me on the ass more than once
+as I was writing my plugin.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The &lt;code&gt;render&lt;/code&gt; method gets all the tags in all the articles from
+&lt;code&gt;context.registers[:site].tags&lt;/code&gt;. That&amp;rsquo;s a hash keyed on the tags as
+strings, and the values are lists of articles that have that tag. The
+&lt;code&gt;inject&lt;/code&gt; on the next lines calculates the average length of the
+article arrays. Next, I just iterate over all the tags once more, and
+this time use the average to calculate a weight for every
+tag. Finally, I output HTML for each tag, with a &lt;code&gt;&amp;lt;span&amp;gt;&lt;/code&gt; that gets
+its &lt;code&gt;font-size&lt;/code&gt; set dynamically to a percentage based on the
+weight. Finally the tag is registered with Liquid and it&amp;rsquo;s ready to
+use&amp;hellip; provided you remember to use the brackets-plus-percent signs
+markup.&lt;/p&gt;
+
+&lt;p&gt;The tag page class and the associated generator are very similar to
+the archive plugin, so I&amp;rsquo;m just going to direct you to the &lt;a href=&#34;https://gist.github.com/710577&#34;&gt;gist with
+the source code&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Hosting a Jekyll blog with extensions on GitHub</title>
+      <link>http://localhost:1313/blog/2010/11/20/hosting-a-jekyll-blog-with-extensions-on-github/</link>
+      <pubDate>Sat, 20 Nov 2010 20:39:09 +0200</pubDate>
+      
+      <guid>http://localhost:1313/blog/2010/11/20/hosting-a-jekyll-blog-with-extensions-on-github/</guid>
+      <description>
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: Really there&amp;rsquo;s nothing about this article that is true any more.
+I&amp;rsquo;m now running &lt;a href=&#34;http://gohugo.io&#34;&gt;Hugo&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;I&amp;rsquo;ve finally gone and done it, it seems, and started a blog that&amp;rsquo;s
+more focused than my previous attempts at Internet wordsmithery.&lt;/p&gt;
+
+&lt;p&gt;No, wait, actually this blog is &lt;em&gt;less&lt;/em&gt; focused, the &lt;a href=&#34;http://ilkkalaukkanen.blogspot.com&#34;&gt;previous
+one&lt;/a&gt; tried to be about my
+photography hobby. From the top, then:&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ve finally gone and&amp;hellip; crud. Let&amp;rsquo;s not write one more of &lt;em&gt;those&lt;/em&gt;
+posts. You know the ones. The beef here is that this is my blog, it&amp;rsquo;s
+about stuff, you can find it at &lt;a href=&#34;http://ilkka.github.io&#34;&gt;http://ilkka.github.io&lt;/a&gt;, and I had
+some fun with &lt;a href=&#34;http://jekyllrb.com&#34;&gt;Jekyll&lt;/a&gt; while making it. If you
+want to use Jekyll too, and especially want to use Jekyll &lt;code&gt;_plugins&lt;/code&gt;
+together with GitHub pages, or just have a few minutes to waste with
+nothing good on the youtubes, read on.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;m not going to talk about basic Jekyll usage since you can read all
+about that elsewhere (like on the &lt;a href=&#34;https://github.com/mojombo/jekyll/wiki&#34;&gt;Jekyll GitHub
+wiki&lt;/a&gt;), and if you happen to
+care about things like this I probably don&amp;rsquo;t have to go into detail
+about the reasons why I chose it, either: the content is statically
+generated from Liquid templates and a bunch of Markdown or Textile
+files or even HTML, so all one needs for hosting is a web server,
+everything is stored safely in git, clean and simple etc. etc. GitHub
+pages is a pretty ideal hosting choice since it automagically
+jekyllifies your pages &amp;ndash; which we&amp;rsquo;ll see is sometimes not so good &amp;ndash;
+and is just generally totally sweet, so let&amp;rsquo;s not go there either.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-revolution-will-be-archived:c2df341ce8c1080f73ca15b658053c8d&#34;&gt;The Revolution will be archived&lt;/h2&gt;
+
+&lt;p&gt;So. I did some Jekyll testing and saw that it was Good, but I found
+that it lacked something I wanted for my site, namely archive
+pages. After messing around a bit with the Liquid template language, I
+came to the conclusion that it wouldn&amp;rsquo;t cut it alone and that I needed some
+custom site-specific code in the form of &lt;a href=&#34;https://github.com/mojombo/jekyll/wiki/Plugins&#34;&gt;Jekyll
+plugins&lt;/a&gt; to get what I
+wanted. The plugin mechanism in Jekyll allows one to put ruby code
+along with the post sources, layouts and other stuff and have it be
+executed when Jekyll runs. Ominous!&lt;/p&gt;
+
+&lt;p&gt;In the interest of coherent narrative, I&amp;rsquo;m going to totally ignore how
+things actually went down and try to tell it the way they should&amp;rsquo;ve,
+and the first milestone on that journey is the creation of a new page
+class in Jekyll. The &lt;code&gt;ArchivePage&lt;/code&gt; class&amp;rsquo; source is below.&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/707020.js?file=archivepage.rb&#34;&gt;&amp;nbsp;&lt;/script&gt;
+
+&lt;p&gt;Most of &lt;code&gt;ArchivePage&lt;/code&gt;&amp;rsquo;s methods and ideas are copied from Jekyll&amp;rsquo;s own
+&lt;code&gt;Page&lt;/code&gt; class. It mixes in &lt;code&gt;Convertible&lt;/code&gt;, therefore it can be laid out
+and converted like any other page. What it does not do is read its
+content from a file, instead the content is initialized in the
+constructor. I know, I know, suboptimal and I &lt;em&gt;am&lt;/em&gt; coming up with a
+better solution but this is not the point. &lt;code&gt;ArchivePage&lt;/code&gt; relies on
+being provided with a ready-made list of &lt;code&gt;posts&lt;/code&gt;, and also, again
+rather crudely, on a &lt;code&gt;month&lt;/code&gt; parameter that&amp;rsquo;s actually a string of the
+format &amp;ldquo;YYYY/MM&amp;rdquo;, like in post URLs, and that will be in fact used as
+part of an URL, which you see if you look at the &lt;code&gt;url&lt;/code&gt; method.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;ext&lt;/code&gt; and &lt;code&gt;basename&lt;/code&gt; are quite self-explanatory, but the &lt;code&gt;data&lt;/code&gt;
+hash is what determines the layout and makes the posts available to
+the template code in &lt;code&gt;content&lt;/code&gt;. Anything that could be set in a page&amp;rsquo;s
+YAML front matter can be set here. I set the &lt;code&gt;type&lt;/code&gt; of the page to be
+&amp;ldquo;archive&amp;rdquo; so that I can identify these pages later as I&amp;rsquo;m iterating
+&lt;code&gt;site.pages&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;render&lt;/code&gt; method is what the site uses to render pages into their
+final form, ready to be written to the destination. The layouts and
+sitewide data are passed to it as &lt;code&gt;layouts&lt;/code&gt; and &lt;code&gt;site_payload&lt;/code&gt;, and it
+combines its own data with &lt;code&gt;site_payload&lt;/code&gt; and passes all that to the
+&lt;code&gt;Convertible&lt;/code&gt; method &lt;code&gt;do_layout&lt;/code&gt; that does the actual converter
+selection according to source format, template parsing, rendering and
+so on. It uses the &lt;code&gt;to_liquid&lt;/code&gt; method which is really just a leftover
+from &lt;code&gt;Page&lt;/code&gt;, I&amp;rsquo;m not sure if it could be just folded into either the
+constructor or &lt;code&gt;render&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;write&lt;/code&gt; is just more slightly modified copypasta from &lt;code&gt;Page&lt;/code&gt;: figure
+out the destination file path into &lt;code&gt;dest&lt;/code&gt;, create the directory path
+there (in two steps that could probably be combined), open a &lt;code&gt;File&lt;/code&gt;
+for writing and dump the &lt;code&gt;output&lt;/code&gt; from &lt;code&gt;render&lt;/code&gt; into it.&lt;/p&gt;
+
+&lt;h2 id=&#34;talkin-bout-my-generation:c2df341ce8c1080f73ca15b658053c8d&#34;&gt;Talkin&amp;rsquo; bout my generation&lt;/h2&gt;
+
+&lt;p&gt;That&amp;rsquo;s the &lt;code&gt;ArchivePage&lt;/code&gt; class in a nutshell, but that alone won&amp;rsquo;t do
+much: there has to a plugin class too, namely a &lt;code&gt;Generator&lt;/code&gt; subclass:&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/707909.js?file=archivegenerator.rb&#34;&gt;&amp;nbsp;&lt;/script&gt;
+
+&lt;p&gt;&lt;code&gt;Generator&lt;/code&gt; plugins have a single method for an interface,
+&lt;code&gt;generate&lt;/code&gt;. It takes the &lt;code&gt;site&lt;/code&gt; as parameter, and from there one can
+do pretty much what one wants. Here I go through all posts in
+&lt;code&gt;collate_by_month&lt;/code&gt;, where build a hash of lists of posts keyed on the
+year and month they were created. Then I simply create an
+&lt;code&gt;ArchivePage&lt;/code&gt; instance for every month and, crucially, add the pages
+into &lt;code&gt;site.pages&lt;/code&gt; so that I can later access them in my template.&lt;/p&gt;
+
+&lt;p&gt;Now I have the archive pages for all my months stored neatly with all
+my other pages. All I have to do now is make them accessible. To that
+end I wrote some template code, the results of which you can see down
+at the bottom of this page and others, and the code looks like this:&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/708018.js?file=archivelinks.html&#34;&gt;&amp;nbsp;&lt;/script&gt;
+
+&lt;p&gt;This bit is not too elegant either, but it gets the job done and works
+reasonably well &amp;ndash; which is easy to say given the single-digit post
+counts I&amp;rsquo;ve tested. All it does is iterate over the whole &lt;code&gt;site.pages&lt;/code&gt;
+list and pick out the pages that have a &lt;code&gt;type&lt;/code&gt; value of &amp;ldquo;archive&amp;rdquo;,
+which the &lt;code&gt;ArchivePage&lt;/code&gt; instances have. Presto, instant archive pages!&lt;/p&gt;
+
+&lt;p&gt;This approach leads to a problem that I hinted at in the beginning
+though: naturally GitHub doesn&amp;rsquo;t want random people (even if they all
+are brilliant hackers) running their code on GitHub&amp;rsquo;s servers, so
+Jekyll plugins don&amp;rsquo;t work when GitHub regenerates the
+pages. Unfortunately I only found this out at this point, and I
+already had some development history in my pages&amp;rsquo; repository&amp;rsquo;s master
+branch which I didn&amp;rsquo;t want to throw away. Also I didn&amp;rsquo;t want to find
+hosting elsewhere, and really didn&amp;rsquo;t want separate repos for the
+source and the content, so I found myself with two problems:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;I need a good workflow for writing, generating and uploading, and&lt;/li&gt;
+&lt;li&gt;I need a good way to host both the Jekyll source and the generated site in one repo.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Both of these actually kind of tie together, since the way Jekyll
+normally works, meaning with the out-of-the box configuration, is to
+generate the site in the &lt;code&gt;_site&lt;/code&gt; folder under the root of the source
+tree. Now, if I want to not have to maintain two repos, I must host
+the sources to this blog in the &lt;code&gt;ilkka.github.com&lt;/code&gt; repo alongside the
+generated site. However, the generated site needs to be in the master
+branch, and it needs to start at the root of the tree, meaning the
+main &lt;code&gt;index.html&lt;/code&gt; file needs to be in the root directory, not in
+e.g. &lt;code&gt;_site&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;branching-out:c2df341ce8c1080f73ca15b658053c8d&#34;&gt;Branching out&lt;/h2&gt;
+
+&lt;p&gt;The way I came up with to solve this is to use two branches: &lt;code&gt;master&lt;/code&gt;
+is for the generated site, since that&amp;rsquo;s what GitHub pages wants, and
+I&amp;rsquo;ll create a second branch called &lt;code&gt;source&lt;/code&gt; to keep the sources
+in. Then I&amp;rsquo;ll add the &lt;code&gt;master&lt;/code&gt; branch as a submodule of the &lt;code&gt;source&lt;/code&gt;
+branch so that it shows up as the &lt;code&gt;_site&lt;/code&gt; directory. This allows me to
+have both branches essentially checked out at the same time, which
+makes updating a breeze even if it means using twice the disk space
+locally.&lt;/p&gt;
+
+&lt;p&gt;The first thing I need to do is move the sources out of &lt;code&gt;master&lt;/code&gt; and
+into &lt;code&gt;source&lt;/code&gt;. I don&amp;rsquo;t want to lose the history though, so I&amp;rsquo;ll have
+to rename the branch, and I also don&amp;rsquo;t want the branches to share a
+root &amp;ndash; there&amp;rsquo;s no commonality there &amp;ndash; so I want a pristine &lt;code&gt;master&lt;/code&gt;
+branch. Happily this is easy with Git. First I rename the old branch
+locally:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;
+git branch -m master source
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This only renames the local branch though: I still have to rename the
+remote branch in GitHub, which I&amp;rsquo;ll do later. Now I create a pristine
+new &lt;code&gt;master&lt;/code&gt;, which is well documented in the &lt;a href=&#34;http://book.git-scm.com/5_creating_new_empty_branches.html&#34;&gt;Git Community
+Book&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;
+git symbolic-ref HEAD refs/heads/master
+rm .git/index
+git clean -fdx
+touch index.html
+git add your files
+git commit -m &#39;Blank new master branch&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now I cannot just do a normal push with this new &lt;code&gt;master&lt;/code&gt; branch
+because the master in GitHub is unrelated and cannot be merged. What I
+&lt;em&gt;can&lt;/em&gt; do is borrow a page from George Lucas&amp;rsquo; book and force-push:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;
+git push --force origin master
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will essentially clobber the remote repo and is really not
+recommended on a published repo, but in my case I think it&amp;rsquo;s pretty
+unlikely that anybody else has cloned it yet.&lt;/p&gt;
+
+&lt;p&gt;Now all that remains is to push the &lt;code&gt;source&lt;/code&gt; branch:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;
+git push origin source:source
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Also done but not detailed here is that &lt;code&gt;source&lt;/code&gt; was set to follow
+&lt;code&gt;origin/master&lt;/code&gt; so I actually had to recreate it locally and set it to
+follow &lt;code&gt;origin/source&lt;/code&gt;. Then I checked out &lt;code&gt;source&lt;/code&gt; and added the
+submodule, using my private URL so that I could commit changes to the
+generated site easily:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;
+git checkout source
+git submodule add git@github.com:ilkka/ilkka.github.com.git _site
+git commit -m &#34;Added site as submodule&#34;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now whenever I run Jekyll, or as I normally do, namely have &lt;code&gt;compass
+watch&lt;/code&gt; running in one window and &lt;code&gt;jekyll --auto --server&lt;/code&gt; in another,
+the site is generated into &lt;code&gt;_site&lt;/code&gt; and I can commit and push the
+changes directly.&lt;/p&gt;
+
+&lt;p&gt;All in all this seems to work pretty nicely, and Jekyll really
+scratches some fundamental itch for me. I get to code and tweak, which
+is all I really need right now, now that I&amp;rsquo;ve no time or need for
+programming professionally, at least not right now. In a way it&amp;rsquo;s
+pretty liberating, since I can totally get my hack on without getting
+brainburn from too much time spent staring at my code. Expect more of
+that then, in this space, along with other stuff. As I said in the
+beginning, I&amp;rsquo;m gonna play pretty fast and loose here.&lt;/p&gt;
+
+&lt;p&gt;If you want to check out the code and source in full, take a look at
+the &lt;a href=&#34;https://github.com/ilkka/ilkka.github.com/tree/source&#34;&gt;&lt;code&gt;source&lt;/code&gt; branch in
+GitHub&lt;/a&gt;. I&amp;rsquo;ll
+be posting about new developments in this front as well.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

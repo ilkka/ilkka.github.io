@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+    <head prefix="og: http://ogp.me/ns#">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="About me and the things I think and do.">
+    <meta property="og:title" content="Jekyll tag cloud &mdash; ilkka.io">
+    <meta property="og:site_name" content="ilkka.io">
+    <meta property="og:url" content="http://localhost:1313/blog/2010/11/21/jekyll-tag-cloud/">
+    
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="Having gotten archives working nicely, I decided to next tackle the task of creating a tag cloud for my blog. The Jekyll docs are, sadly, a bit ambiguous on how exactly to get at all the available categories, for example, but as with my archive plugin, I decided to go ahead and try out stuff until something workable emerged. With archive pages, all that needed to be done was to write a generator plugin to create more pages.">
+    
+    <meta property="og:article:author" content="http://twitter.com/ilkkalaukkanen">
+    
+    <meta property="og:article:published_time" content="21000-11-11T1121:00:00Z00:00">
+    
+    <meta property="og:article:tag" content="ruby">
+    
+    <meta property="og:article:tag" content="coding">
+    
+    
+
+    <meta name="superfish" content="nofish">
+
+    <title>Jekyll tag cloud &mdash; ilkka.io</title>
+
+    <link rel="canonical" href="http://localhost:1313/blog/2010/11/21/jekyll-tag-cloud/">
+    <link href="" rel="alternate" type="application/rss+xml" title="ilkka.io" />
+
+    <link href="http://localhost:1313/css/print.css" media="print" rel="stylesheet" type="text/css">
+    <link href="http://localhost:1313/css/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/zenburn.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//cdn.jsdelivr.net/jquery.midnight/1.1.0/midnight.jquery.min.js"></script>
+
+    <script src="http://localhost:1313/js/bundle.js"></script>
+
+    
+</head>
+
+    <body>
+        <nav class="nav--main">
+    <div class="nav__links">
+        <a href="http://localhost:1313/" class="icon--home"><span class="hide">home</span></a>
+    </div>
+</nav>
+
+        <article class="post post--single post--full">
+            <header class="page-header post__header" id="header-with-changing-background" data-midnight="header">
+                <h1 class="post__title">Jekyll tag cloud</h1>
+                <aside class="post__meta">
+                    
+
+<i class="fa fa-tag"></i>&nbsp;<a class="tag-link" href="http://localhost:1313/tags/ruby">ruby</a>
+, <a class="tag-link" href="http://localhost:1313/tags/coding">coding</a>
+, 
+
+a
+
+2 minute read from Sunday, 21 Nov 2010.
+
+                </aside>
+            </header>
+
+            <main class="post__content" data-midnight="body">
+                <p>Having <a href="http://localhost:1313/blog/2010/11/20/hosting-a-jekyll-blog-with-extensions-on-github">gotten archives
+working</a>
+nicely, I decided to next tackle the task of creating a tag cloud for
+my blog. The <a href="https://github.com/mojombo/jekyll/wiki/Template-Data">Jekyll
+docs</a> are,
+sadly, a bit ambiguous on how exactly to get at all the available
+categories, for example, but as with my archive plugin, I decided to
+go ahead and try out stuff until something workable emerged. With
+archive pages, all that needed to be done was to write a generator
+plugin to create more pages. With tags, however, I want to do
+more. Specifically, I want to generate a tag cloud into my layout.</p>
+
+<p>Googling a bit I came across <a href="https://gist.github.com/364416">a gist</a>
+where tag cloud generation was done in the <code>Rakefile</code>. I didn&rsquo;t want
+to clutter my (as-of-then-nonexistant) <code>Rakefile</code> with stuff like
+this, and instead thought that the logical place to put this code is
+in a plugin. I decided to implement the same basic idea though, where
+the tag links go in <code>&lt;span&gt;</code>s that get dynamically styled with
+different font sizes. Here&rsquo;s the source of my new tag plugin:</p>
+
+<script src="https://gist.github.com/710577.js?file=tag_cloud_tag.rb">
+</script>
+
+<p>The plugin class inherits from <code>Liquid::Tag</code> and has just one method
+apart from the constructor, <code>render</code>. The <code>context</code> parameter to
+<code>render</code> includes whatever data would be accessible in the template
+via the <code>registers</code> hash.</p>
+
+<blockquote>
+<p>Here I must take a moment to vent a very tiny bit at Jekyll: why
+and/or how is it that while the <a href="https://github.com/Shopify/liquid/wiki/Liquid-for-Designers">Liquid docs clearly state that only
+tags in double curly brackets may resolve to
+text</a>,
+tags defined in Jekyll tag plugins <em>must</em> be put in brackets +
+percent signs? Illogical, and it bit me on the ass more than once
+as I was writing my plugin.</p>
+</blockquote>
+
+<p>The <code>render</code> method gets all the tags in all the articles from
+<code>context.registers[:site].tags</code>. That&rsquo;s a hash keyed on the tags as
+strings, and the values are lists of articles that have that tag. The
+<code>inject</code> on the next lines calculates the average length of the
+article arrays. Next, I just iterate over all the tags once more, and
+this time use the average to calculate a weight for every
+tag. Finally, I output HTML for each tag, with a <code>&lt;span&gt;</code> that gets
+its <code>font-size</code> set dynamically to a percentage based on the
+weight. Finally the tag is registered with Liquid and it&rsquo;s ready to
+use&hellip; provided you remember to use the brackets-plus-percent signs
+markup.</p>
+
+<p>The tag page class and the associated generator are very similar to
+the archive plugin, so I&rsquo;m just going to direct you to the <a href="https://gist.github.com/710577">gist with
+the source code</a>.</p>
+
+            </main>
+        </article>
+        <footer>
+    <div>
+        <p>© 2015 Ilkka Laukkanen. <a href="http://creativecommons.org/licenses/by-sa/4.0/">Some rights reserved</a>.</p>
+        <p><a href="https://github.com/ilkka"><i class="fa fa-github"></i> ilkka</a> &mdash; 
+        <a href="https://twitter.com/ilkkalaukkanen"><i class="fa fa-twitter"></i> ilkkalaukkanen</a></p>
+        <p>Home icon by iconsmind.com from <a href="https://thenounproject.com">The Noun Project</a>.</p>
+    </div>
+</footer>
+
+    <script>document.write('<script src="http://'
+        + (location.host || 'localhost').split(':')[0]
+		+ ':1313/livereload.js?mindelay=10"></'
+        + 'script>')</script></body>
+</html>

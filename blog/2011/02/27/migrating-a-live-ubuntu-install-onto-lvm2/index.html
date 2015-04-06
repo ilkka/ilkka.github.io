@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+    <head prefix="og: http://ogp.me/ns#">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="About me and the things I think and do.">
+    <meta property="og:title" content="Migrating a live Ubuntu install onto LVM2 &mdash; ilkka.io">
+    <meta property="og:site_name" content="ilkka.io">
+    <meta property="og:url" content="http://localhost:1313/blog/2011/02/27/migrating-a-live-ubuntu-install-onto-lvm2/">
+    
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="My only home computer is, and has been for a while, a Nokia Booklet. It&rsquo;s a
+nice ultra-portable fanless laptop that gets about 6-7 hours of use per
+charge, and is in my opinion one of the most stylish products ever shipped by
+Nokia.
+">
+    
+    <meta property="og:article:author" content="http://twitter.com/ilkkalaukkanen">
+    
+    <meta property="og:article:published_time" content="27000-02-02T227:00:00Z00:00">
+    
+    <meta property="og:article:tag" content="ubuntu">
+    
+    
+
+    <meta name="superfish" content="nofish">
+
+    <title>Migrating a live Ubuntu install onto LVM2 &mdash; ilkka.io</title>
+
+    <link rel="canonical" href="http://localhost:1313/blog/2011/02/27/migrating-a-live-ubuntu-install-onto-lvm2/">
+    <link href="" rel="alternate" type="application/rss+xml" title="ilkka.io" />
+
+    <link href="http://localhost:1313/css/print.css" media="print" rel="stylesheet" type="text/css">
+    <link href="http://localhost:1313/css/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/zenburn.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//cdn.jsdelivr.net/jquery.midnight/1.1.0/midnight.jquery.min.js"></script>
+
+    <script src="http://localhost:1313/js/bundle.js"></script>
+
+    
+</head>
+
+    <body>
+        <nav class="nav--main">
+    <div class="nav__links">
+        <a href="http://localhost:1313/" class="icon--home"><span class="hide">home</span></a>
+    </div>
+</nav>
+
+        <article class="post post--single post--full">
+            <header class="page-header post__header" id="header-with-changing-background" data-midnight="header">
+                <h1 class="post__title">Migrating a live Ubuntu install onto LVM2</h1>
+                <aside class="post__meta">
+                    
+
+<i class="fa fa-tag"></i>&nbsp;<a class="tag-link" href="http://localhost:1313/tags/ubuntu">ubuntu</a>
+, 
+
+a
+
+7 minute read from Sunday, 27 Feb 2011.
+
+                </aside>
+            </header>
+
+            <main class="post__content" data-midnight="body">
+                
+
+<p>My only home computer is, and has been for a while, a Nokia Booklet. It&rsquo;s a
+nice ultra-portable fanless laptop that gets about 6-7 hours of use per
+charge, and is in my opinion one of the most stylish products ever shipped by
+Nokia.</p>
+
+<p>Granted, it&rsquo;s not too powerful, only sporting a dual-core Intel Atom
+Z530 running at 1.6 GHz, and it has one major flaw from a Linux user&rsquo;s
+standpoint in that it has the almost infamous GMA500 graphics hardware
+courtesy of the &ldquo;Poulsbo&rdquo; chipset. <a href="https://wiki.ubuntu.com/HardwareSupportComponentsVideoCardsPoulsbo/">Support nowadays is
+okay</a>, in
+that I run Maverick on it at native panel resolution, and can actually pretty
+consistently put the machine to sleep with <code>uswsusp</code> and have it wake up
+correctly, but I can&rsquo;t for example run the snazzy new <code>gnome-shell</code> on it, or
+use compiz.</p>
+
+<p>Anyway, I used to have the original Windows 7 install on a second partition,
+but it soon became apparent that I would find no use for it and decided to use
+the whole disk for Ubuntu. I didn&rsquo;t want to reinstall, however, and
+unfortunately hadn&rsquo;t originally put it on LVM, so the exercise would be a bit
+more substantial than simply growing a logical volume.</p>
+
+<p>This, then, was my plan of action:</p>
+
+<ol>
+<li>Nuke the windows partition, make a LVM partition in it&rsquo;s place, and
+ create a volume group and logical volume with it, then create a new ext4
+ fs on the logical volume.</li>
+<li>Copy over the running Ubuntu installation onto the new filesystem.</li>
+<li>Update grub to locate the new-old Ubuntu on the LVM filesystem.</li>
+<li>Boot from the logical volume.</li>
+<li>Add the old Ubuntu partition to the volume group and grow the logical
+ volume and filesystem onto that.</li>
+</ol>
+
+<p>Simple! There are a couple of glaring holes in the plan but we&rsquo;ll handle those
+as we get to &lsquo;em.</p>
+
+<h2 id="nuke-em-high:a7dd1aa35c78f78c43f8b77ed3d6444c">Nuke &lsquo;em high</h2>
+
+<p>The first step was simple: first, just delete the windows partition and create
+a new partition in its place with the partition type set to <code>0x8e</code> for Linux
+LVM. Then we need to tell LVM about this new partition, or &ldquo;physical volume&rdquo;
+in LVM terminology, by running <code>pvcreate</code> on it (I&rsquo;m running all these
+commands as root):</p>
+
+<p><div class="highlight" style="background: #272822"><pre style="line-height: 125%"># pvcreate /dev/sda1
+</pre></div>
+</p>
+
+<p>Then we create a volume group, which is a container of physical volumes, and
+itself acts as a container for logical volumes:</p>
+
+<p><div class="highlight" style="background: #272822"><pre style="line-height: 125%"># vgcreate vg-0 /dev/sda1
+</pre></div>
+</p>
+
+<p>Finally, create a logical volume that fills up the new volume group:</p>
+
+<p><div class="highlight" style="background: #272822"><pre style="line-height: 125%"># lvcreate -n root -l 100%VG vg-0
+</pre></div>
+</p>
+
+<p>Now there&rsquo;s a brand spanking new logical volume called <code>root</code> on the volume
+group <code>vg-0</code>. As evidence of this, there is a new device node for it at
+<code>/dev/vg-0/root</code>. Next, create the filesystem:</p>
+
+<p><div class="highlight" style="background: #272822"><pre style="line-height: 125%"># mkfs.ext4 /dev/vg-0/root
+</pre></div>
+</p>
+
+<h2 id="replica:a7dd1aa35c78f78c43f8b77ed3d6444c">Replica</h2>
+
+<p>Now the new filesystem can be mounted and the running installation copied onto
+it. There might be some cases where copying from a live fs might be a bad
+idea, but generally as long as you don&rsquo;t do anything substantial at the same
+time, you shouldn&rsquo;t have too much trouble.</p>
+
+<p>I used <code>rsync</code> to do the actual copying, but any similar tool could be used as
+long as it correctly preserves all file attributes. What&rsquo;s just as important
+is to skip all the special pseudofilesystems and the mountpoint itself:</p>
+
+<p><div class="highlight" style="background: #272822"><pre style="line-height: 125%"># mount /dev/vg-0/root /mnt
+# rsync -a / --exclude<span style="color: #f92672">=</span>/<span style="color: #f92672">{</span>dev,proc,sys,var/run,var/lock<span style="color: #f92672">}</span> /mnt | <span style="color: #ae81ff">\</span>
+  tee transfer.log; \
+  ogg123 /usr/share/sounds/ubuntu/stereo/system-ready.ogg
+</pre></div>
+</p>
+
+<p>I used <code>tee</code> to capture the output from rsync and save it in a logfile, and
+made it play a sound when it finished so I wouldn&rsquo;t have to keep checking.
+It&rsquo;s always a good idea to do a dry run first, and <code>rsync</code> has the <code>-n</code> flag
+for that. For me the command complained about not being able to copy all file
+attributes, but even after trawling the verbose logs I couldn&rsquo;t find any
+specific file-related errors, so I decided to ignore that message and went
+ahead with the real copy. All told the process took a couple of hours for 20+
+GB.</p>
+
+<h2 id="rub-a-dub-dub:a7dd1aa35c78f78c43f8b77ed3d6444c">Rub-a-dub-dub</h2>
+
+<p>I haven&rsquo;t played with grub a whole lot, but after looking at how the thing was
+configured on Ubuntu, I tentatively came to the conclusion that grub (version
+2 that is) should find the copied Ubuntu from the logical volume and add it to
+the boot menu automagically. So I updated <code>grub.cfg</code>:</p>
+
+<p><div class="highlight" style="background: #272822"><pre style="line-height: 125%"># update-grub
+</pre></div>
+</p>
+
+<p>The output hinted at what a look at <code>/boot/grub/grub.cfg</code> confirmed, i.e. that
+grub had indeed found the copy. However, I happened to notice that the root
+settings for the LVM kernels were incorrect, and had the UUIDs of my old root
+partition. I didn&rsquo;t think much of it, expecting them to be set correctly as I
+ran <code>update-grub</code> from the new partition, and simply fixed them manually.</p>
+
+<p>At this point I rebooted, selected the latest kernel from the logical volume
+and found Ubuntu running nicely. I used fdisk to delete the old root partition
+and created a new LVM partition in its place, and shutdown the machine,
+deciding to call it a day.</p>
+
+<p>This was a near-catastrophic error, as it turns out. Well, catastrophic in a
+relative sense.</p>
+
+<h2 id="disco-inferno:a7dd1aa35c78f78c43f8b77ed3d6444c">Disco inferno</h2>
+
+<p>Booting in the morning, I was greeted by a friendly grub message saying
+&ldquo;ERROR: no such disk&rdquo;, and a <code>grub-rescue&gt;</code> prompt that didn&rsquo;t know a single
+command, not even help.</p>
+
+<p>After thinking about it for a few moments, my error was glaringly obvious:
+grub on the MBR was still looking for it&rsquo;s config file from the old root
+partition, which I had nuked, because I had never reinstalled it, only
+recreated the config file. And even if I <em>had</em> reinstalled it, it wouldn&rsquo;t
+have booted, because I had only updated the <code>grub.cfg</code> file on the old root,
+not on the new one. Facepalm.</p>
+
+<p>Well, thankfully I happened to have another Ubuntu machine available, so I
+quickly created a bootable USB stick and started fixing things. The default
+Ubuntu live image doesn&rsquo;t have the userspace LVM tools, but as long as there&rsquo;s
+network connectivity, one can just install them on the running ramdisk, so
+that&rsquo;s no problem.</p>
+
+<p>The first order of business was to get the new root mounted using the live
+image:</p>
+
+<p><div class="highlight" style="background: #272822"><pre style="line-height: 125%"># apt-get install -y lvm2
+# vgchange -a y vg-0
+# mount /dev/vg-0/root /mnt
+</pre></div>
+</p>
+
+<p>The <code>vgchange</code> command makes the volume group active, this is required so that
+the logical volume can be mounted. Now the mounted root has all the tools
+required to reinstall and reconfigure grub, so the easiest method is to chroot
+into the mount and fix it from there. For this to work, the most important
+pseudofilesystems need to be bind-mounted into the chroot:</p>
+
+<p><div class="highlight" style="background: #272822"><pre style="line-height: 125%"># <span style="color: #66d9ef">for </span>d in dev/pts dev proc sys; <span style="color: #66d9ef">do </span>mount -B /<span style="color: #f8f8f2">$d</span> /mnt/<span style="color: #f8f8f2">$d</span>; <span style="color: #66d9ef">done</span>
+</pre></div>
+</p>
+
+<p>Now we can chroot into the volume, reinstall grub and rebuild the
+configuration:</p>
+
+<p><div class="highlight" style="background: #272822"><pre style="line-height: 125%"># chroot /mnt
+# grub-install /dev/sda
+# update-grub
+</pre></div>
+</p>
+
+<p>Easy peasy. Now for a reboot&hellip;</p>
+
+<p>&hellip;and the same error message.</p>
+
+<p><img alt="WTF?!" class="img-responsive"
+src="http://4.bp.blogspot.com/_dcdi--LdAeQ/Sa1sWd8j4pI/AAAAAAAAEBg/BGX_vc32JHc/s400/wtf.jpg"/></p>
+
+<p>I did the same boot from USB stick, install lvm, mount root rumba again and
+started scratching my head and looking at files. In the end it was a simple
+comment on some forum somewhere that tipped me off as to what the actual
+problem was. I forget where (sorry) but someone said that the format for the
+parameter for the <code>set root</code> command of grub was the same as the volume node
+name in the <code>/dev/mapper</code> directory. Now, <code>update-grub</code> had put entries like
+<code>set root='(vg-0-root)'</code> in the <code>grub.cfg</code>, but <em>actually</em> the dash in the
+volume group name gets kinda-sorta escaped, so the node is in fact named
+<code>/dev/mapper/vg--0-root</code>. It appears there is a <a href="https://bugs.launchpad.net/ubuntu/+source/grub2/+bug/726021">bug in
+<code>update-grub</code></a>
+that causes this behavior.</p>
+
+<p>As manually fixing the file would have just been a one-off solution, I renamed
+the volume group (which was thankfully very easy):</p>
+
+<p><div class="highlight" style="background: #272822"><pre style="line-height: 125%"># umount /mnt
+# vgchange -a n vg-0
+# vgrename vg-0 vg0
+# vgchange -a y vg0
+# mount /dev/vg0/root /mnt
+</pre></div>
+</p>
+
+<p>The volume group needs to be deactivated to rename it, but other than that
+it&rsquo;s straightforward. Now I <code>grub-install</code>ed and <code>update-grub</code>&rsquo;d again and
+confirmed that this time it generated correct config files. Time to wipe off
+that cold sweat and lean back.</p>
+
+<h2 id="grow-your-own:a7dd1aa35c78f78c43f8b77ed3d6444c">Grow your own</h2>
+
+<p>All that then remained was to add the old root&rsquo;s physical volume to the volume
+group, then use up that space. For this, you first need to initialize the
+partition for LVM, then extend the volume group onto it, <em>then</em> grow the
+logical volume, and <strong>finally</strong> grow the filesystem to match the new volume
+size. Sounds complicated but is just a few simple steps really (/dev/sda6 is
+the old root partition here):</p>
+
+<p><div class="highlight" style="background: #272822"><pre style="line-height: 125%"># pvcreate /dev/sda6
+# vgextend vg0 /dev/sda6
+# lvextend -l 100%VG vg0/root
+# resize2fs /dev/vg0/root
+</pre></div>
+</p>
+
+<p>And that&rsquo;s it! One reboot later I&rsquo;m here typing this and feeling a bit smug
+for shooting myself in the leg, then managing to bandage it up without doing
+any more damage in the process.</p>
+
+            </main>
+        </article>
+        <footer>
+    <div>
+        <p>© 2015 Ilkka Laukkanen. <a href="http://creativecommons.org/licenses/by-sa/4.0/">Some rights reserved</a>.</p>
+        <p><a href="https://github.com/ilkka"><i class="fa fa-github"></i> ilkka</a> &mdash; 
+        <a href="https://twitter.com/ilkkalaukkanen"><i class="fa fa-twitter"></i> ilkkalaukkanen</a></p>
+        <p>Home icon by iconsmind.com from <a href="https://thenounproject.com">The Noun Project</a>.</p>
+    </div>
+</footer>
+
+    <script>document.write('<script src="http://'
+        + (location.host || 'localhost').split(':')[0]
+		+ ':1313/livereload.js?mindelay=10"></'
+        + 'script>')</script></body>
+</html>

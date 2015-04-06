@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+    <head prefix="og: http://ogp.me/ns#">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="About me and the things I think and do.">
+    <meta property="og:title" content="Dgh, The Debian/Ubuntu Downgrade Helper &mdash; ilkka.io">
+    <meta property="og:site_name" content="ilkka.io">
+    <meta property="og:url" content="http://localhost:1313/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/">
+    
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="Ever had the bright idea of upgrading, say, your Ubuntu machine to use some
+snazzy new software from a PPA, only to have it blow up in your face? The grim
+realization that there&rsquo;s no easy downgrade path, instead you&rsquo;ll have to find
+every single package the PPA upgraded and downgrade them by hand to keep
+software from breaking? Me too!
+">
+    
+    <meta property="og:article:author" content="http://twitter.com/ilkkalaukkanen">
+    
+    <meta property="og:article:published_time" content="25000-05-05T525:00:00Z00:00">
+    
+    <meta property="og:article:tag" content="ubuntu">
+    
+    <meta property="og:article:tag" content="sysadmin">
+    
+    
+
+    <meta name="superfish" content="nofish">
+
+    <title>Dgh, The Debian/Ubuntu Downgrade Helper &mdash; ilkka.io</title>
+
+    <link rel="canonical" href="http://localhost:1313/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/">
+    <link href="" rel="alternate" type="application/rss+xml" title="ilkka.io" />
+
+    <link href="http://localhost:1313/css/print.css" media="print" rel="stylesheet" type="text/css">
+    <link href="http://localhost:1313/css/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/zenburn.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//cdn.jsdelivr.net/jquery.midnight/1.1.0/midnight.jquery.min.js"></script>
+
+    <script src="http://localhost:1313/js/bundle.js"></script>
+
+    
+</head>
+
+    <body>
+        <nav class="nav--main">
+    <div class="nav__links">
+        <a href="http://localhost:1313/" class="icon--home"><span class="hide">home</span></a>
+    </div>
+</nav>
+
+        <article class="post post--single post--full">
+            <header class="page-header post__header" id="header-with-changing-background" data-midnight="header">
+                <h1 class="post__title">Dgh, The Debian/Ubuntu Downgrade Helper</h1>
+                <aside class="post__meta">
+                    
+
+<i class="fa fa-tag"></i>&nbsp;<a class="tag-link" href="http://localhost:1313/tags/ubuntu">ubuntu</a>
+, <a class="tag-link" href="http://localhost:1313/tags/sysadmin">sysadmin</a>
+, 
+
+a
+
+2 minute read from Wednesday, 25 May 2011.
+
+                </aside>
+            </header>
+
+            <main class="post__content" data-midnight="body">
+                <p>Ever had the bright idea of upgrading, say, your Ubuntu machine to use some
+snazzy new software from a PPA, only to have it blow up in your face? The grim
+realization that there&rsquo;s no easy downgrade path, instead you&rsquo;ll have to find
+every single package the PPA upgraded and downgrade them by hand to keep
+software from breaking? Me too!</p>
+
+<p>I recently had this exact situation with the <a href="https://launchpad.net/~gnome3-team/+archive/gnome3">gnome3-team
+PPA</a>. It worked like a
+charm in my work computer, but when I tried it on my Nokia Booklet, it totally
+failed, probably thanks to the infamous GMA500 graphics hardware. Anyway,
+after a bit of hand-wringing I realized that:</p>
+
+<ol>
+<li>I had to downgrade, there was stuff on the machine I didn&rsquo;t want to wipe,</li>
+<li>I had been in this same situation before, and</li>
+<li>probably others had, too.</li>
+</ol>
+
+<p>So I wrote a little tool to help, and I&rsquo;m glad to say it worked perfectly. The
+tool is <a href="http://github.com/ilkka/dgh">dgh</a>, and it helps by finding the
+packages that look like they need to be downgraded. It does this by looking at
+<code>apt-cache policy</code> output, and finding packages whose installed version is not
+available in any repository. Usage is simple, but requires some manual work
+(for now):</p>
+
+<ol>
+<li>Remove the offending package archive from apt&rsquo;s sources</li>
+<li>Run <code>apt-get update</code></li>
+
+<li><p>Produce <code>apt-cache policy</code> output for all installed packages, e.g.:</p>
+
+<p><div class="highlight" style="background: #272822"><pre style="line-height: 125%">dpkg --get-selections| \
+egrep &#39;\binstall&#39;|awk &#39;{print $1}&#39;| \
+xargs env LANG=C apt-cache policy| \
+tee packages.list
+     
+</pre></div>
+</p></li>
+
+<li><p>Run <code>dgh</code> on the output:</p>
+
+<p><div class="highlight" style="background: #272822"><pre style="line-height: 125%">$ dgh packages.list
+     
+</pre></div>
+</p></li>
+</ol>
+
+<p>Dgh will report packages it thinks are downgrade candidates. Note that it will
+probably report all manually installed packages too, so be careful when
+downgrading.</p>
+
+<p>I have a few enhancements I want to do before I call it 1.0, like not
+requiring a pre-created policy output file and perhaps even performing the
+downgrade by itself, but it&rsquo;s usable now, just <a href="http://github.com/ilkka/dgh">grab the
+code</a> or <code>gem install dgh</code> directly from
+rubygems.</p>
+
+            </main>
+        </article>
+        <footer>
+    <div>
+        <p>© 2015 Ilkka Laukkanen. <a href="http://creativecommons.org/licenses/by-sa/4.0/">Some rights reserved</a>.</p>
+        <p><a href="https://github.com/ilkka"><i class="fa fa-github"></i> ilkka</a> &mdash; 
+        <a href="https://twitter.com/ilkkalaukkanen"><i class="fa fa-twitter"></i> ilkkalaukkanen</a></p>
+        <p>Home icon by iconsmind.com from <a href="https://thenounproject.com">The Noun Project</a>.</p>
+    </div>
+</footer>
+
+    <script>document.write('<script src="http://'
+        + (location.host || 'localhost').split(':')[0]
+		+ ':1313/livereload.js?mindelay=10"></'
+        + 'script>')</script></body>
+</html>

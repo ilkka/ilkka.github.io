@@ -1,0 +1,74 @@
+https://keybase.io/ilkka
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of http://ilkka.io
+  * I am ilkka (https://keybase.io/ilkka) on keybase.
+  * I have a public key with fingerprint C63C E57F 6A94 9A15 5E23  C4C0 439F A002 AE5D 46DA
+
+To do so, I am signing this object:
+
+{
+    "body": {
+        "client": {
+            "name": "keybase.io node.js client",
+            "version": "0.7.7"
+        },
+        "key": {
+            "fingerprint": "c63ce57f6a949a155e23c4c0439fa002ae5d46da",
+            "host": "keybase.io",
+            "key_id": "439FA002AE5D46DA",
+            "uid": "26e1a3f6dc4597dde02b2cbbb5624800",
+            "username": "ilkka"
+        },
+        "merkle_root": {
+            "ctime": 1424612039,
+            "hash": "e2eac4293c5d8943e4172bcaaa4f4fd59182ce43e1db129dc03a2881852046bbc7c9f31b628648d76467288dc813bf011e0aa352fd45579db4bbba35b3aa9a4b",
+            "seqno": 159451
+        },
+        "service": {
+            "hostname": "ilkka.io",
+            "protocol": "http:"
+        },
+        "type": "web_service_binding",
+        "version": 1
+    },
+    "ctime": 1424612134,
+    "expire_in": 157680000,
+    "prev": "1d9215f25a35b8ce706d3bdd42bce88cecea084e950dc1e461dfb13f54bf2829",
+    "seqno": 16,
+    "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
+Comment: GPGTools - https://gpgtools.org
+
+owFVUn9oVVUcf2/OhQsriQ03xrBLrYnjdc6555x7zyhpZY5E+kNWoPV6nF93u+75
+7nv33i0fY2EQ5VBIWmSMldsfKQ6SVZIjUv8rYQ0kEqRZSlBsIoJtFCFY56wF8797
+P9/P93M+n885xzauy9Rnnz8xUXMmv/On7OyiyPQszrcNOSJSVadzyJHFUJdS+1Xi
+B7TT6fTrquCJzoXRllKkdG5/smWV0+EM6jgJo5JhgZyX85zhDku3y0FY6tVxOQ6t
+liOpKzXxAsoZZhwSopErsQTYZQEHAHFNFKaKG8m+KEnvO9VZ0SyEyqCGv7PL8Lte
+IDsw3dFlZgMrA0Q15G5AlcSEeUppgASSQghCEfYBsMREx6uRwmJ/P7dmD+i4v6gL
+cRStJJZpaOcQI0whAi4zdnjSZzY00lxixFxJlM+wqzH0kJCccxzgQBEGfSS1waES
+EDElgcuR70OfIICpENKTLHChoMin2FcexdQzcyV96IoAQKgB5y5BgcKEeEwJbLwb
+QLicM46F8Z/oSiky5gjDBA7b/3gwlNr6tp2tjfZfa+U4SiMZFQ3al6blThs4rZYt
+6w0tCqv7pwoiLClzW2uv0+rfXwZ0cYejD5bDWBdCyyAeNb0CYM/Rg0YTKoYgCRCx
+tn2pPUCVK5TCpiftG0BqDnysGQFKQm1EVSCgGxAsAuQjtiYiNUZ5r9FMwt4STwdi
+7QyPZFtqM9n6TN36GvtgM/UbHvn/Fc//+sC9xy7nnht99MTYew9+sbApc/ncUMvF
+k1cW0L656MiN5OxyflpN1MQNQbqx/W4dP77tmxt731k6OpkZ+WP6E/pL9dK1ojh0
+NVzc//IPx8aX8mfyU6dHi9NB3dufL9w5TCqHmvFnTVcmnb+2/t3z7eMXxp9abptp
+DW6lH42/+OrZ5uYPZr+ePaKv91xvm3v4+/Pbf5s5Pf3+tslT1cw/c09UnPPZyroL
+E+P3pr57rb3151tP3n0pX2k5OPrK07UPfbphz+9vdX/YeLNx88Xt8+vHDjfuOt7Z
+Ggs8c+2ZL4tvdi/tG2qoq0W7FkbGcNPu8jn51Z9TPz6bNFx6l90uLOvFq7tfj7s/
+HmgaPrr3Xw==
+=fpvs
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/ilkka

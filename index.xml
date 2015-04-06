@@ -1,0 +1,1472 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ilkka.io</title>
+    <link>http://localhost:1313/</link>
+    <description>Recent content on ilkka.io</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© 2015 Ilkka Laukkanen. &lt;a href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Some rights reserved&lt;/a&gt;.</copyright>
+    <lastBuildDate>Wed, 11 Mar 2015 16:15:00 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>About</title>
+      <link>http://localhost:1313/about/</link>
+      <pubDate>Wed, 11 Mar 2015 16:15:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/about/</guid>
+      <description>
+
+&lt;p&gt;Some facts.&lt;/p&gt;
+
+&lt;h2 id=&#34;hello:6083a88ee3411b0d17ce02d738f69d47&#34;&gt;Hello!&lt;/h2&gt;
+
+&lt;p&gt;I&amp;rsquo;m Ilkka, a human being from Tampere, Finland. You may find me at &lt;a href=&#34;http://twitter.com/ilkkalaukkanen&#34;&gt;@ilkkalaukkanen&lt;/a&gt; and &lt;a href=&#34;github.com/ilkka&#34;&gt;github.com/ilkka&lt;/a&gt;. I work at &lt;a href=&#34;http://futurice.com&#34;&gt;Futurice&lt;/a&gt;, a lean service creation agency and two-time best workplace in Europe according to &lt;a href=&#34;greatplacetowork.fi&#34;&gt;GPtW&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Packaging a Qt app for OS X</title>
+      <link>http://localhost:1313/blog/2011/10/19/packaging-a-qt-app-for-os-x/</link>
+      <pubDate>Wed, 19 Oct 2011 23:06:27 +0300</pubDate>
+      
+      <guid>http://localhost:1313/blog/2011/10/19/packaging-a-qt-app-for-os-x/</guid>
+      <description>
+
+&lt;p&gt;I participated in &lt;a href=&#34;http://barcamp.org/w/page/39167337/BarCampTampere2&#34;&gt;BarCamp Tampere 2&lt;/a&gt; recently, and one of
+the many very interesting presentations was &lt;a href=&#34;http://www.modeemi.fi/~cosmo&#34;&gt;Ville Ranki&lt;/a&gt; talking about
+&lt;a href=&#34;http://siilihai.com/&#34;&gt;Siilihai&lt;/a&gt;, a web forum reader app intentionally very
+reminiscent of newsreaders of old.&lt;/p&gt;
+
+&lt;p&gt;Siilihai scrapes the content from web forums and presents it as threaded
+conversations so that it&amp;rsquo;s easier to read and follow conversations. Parsers
+can be written pretty easily for most forum software, and while forum content
+is only accessed locally by the client, it stores generated message IDs in the
+siilihai.com service so that whatever messages you read in one client are
+marked read in any other clients you might use as well. The service is also
+used as a repository for forum parsers.&lt;/p&gt;
+
+&lt;p&gt;Anyway, as the event was held at &lt;a href=&#34;http://www.futurice.com&#34;&gt;our office&lt;/a&gt;, I
+grabbed a Mac that was handy so that I could try out Siilihai for myself.
+Getting it built was simple as it is written using Qt, but I wanted to create
+a distributable package (an app bundle in OS X parlance) so that all the other
+beret wearers could enjoy it too. This, however, turned out to be a bit more
+involved than I&amp;rsquo;d thought.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-anatomy-of-an-app:76d812ff55f356c4b63aef151eb7ae82&#34;&gt;The anatomy of an app&lt;/h2&gt;
+
+&lt;p&gt;An app bundle is pretty self-contained. Apart from basic system libraries that
+can be assumed to be available on every Mac, apps usually ship all their
+libraries inside the app bundle together with the runnable binary. Some space
+may be wasted this way if several apps bundle the same libraries, but
+generally it seems pretty useful. At least it&amp;rsquo;s simple to deploy applications
+when they can simply be copied into place.&lt;/p&gt;
+
+&lt;p&gt;Siilihai uses a couple of shared libraries of its own, and naturally Qt. Since
+Qt is not installed by default in OS X, I had to include all of these in the
+app bundle. Bundling Qt is relatively simple using the
+&lt;a href=&#34;http://doc.qt.nokia.com/stable/deployment-mac.html&#34;&gt;macdeployqt&lt;/a&gt; tool
+included in the Qt SDK, but it only really takes care of the whole process if
+the application is a single binary that is only dependent on Qt. Siilihai&amp;rsquo;s
+custom libraries required a bit more love.&lt;/p&gt;
+
+&lt;h2 id=&#34;rewiring-and-rewriting:76d812ff55f356c4b63aef151eb7ae82&#34;&gt;Rewiring and rewriting&lt;/h2&gt;
+
+&lt;p&gt;For an app that uses dynamic libraries to work, the runtime linker must be
+able to find the libraries when the app is run. In Unix-style OSes this is
+generally accomplished by installing the libraries into standard paths such as
+&lt;code&gt;/usr/lib&lt;/code&gt;. The dynamic linker is preconfigured to look in these directories
+when it is looking for library files.&lt;/p&gt;
+
+&lt;p&gt;If the libraries are for some reason installed into a nonstandard path, that
+path can also be configured as an &amp;ldquo;rpath&amp;rdquo; in the app binary itself. This is
+just another way of telling the dynamic linker where to look, but in a per-app
+fashion.&lt;/p&gt;
+
+&lt;p&gt;These concepts are valid for OS X &lt;code&gt;.dylib&lt;/code&gt; files as well, with some
+differences. Using the command line utility &lt;code&gt;otool&lt;/code&gt; we can examine this
+search path information. Let&amp;rsquo;s see the output for &lt;code&gt;otool&lt;/code&gt; itself:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;$ otool -L &lt;span style=&#34;color: #e6db74&#34;&gt;`&lt;/span&gt;which otool&lt;span style=&#34;color: #e6db74&#34;&gt;`&lt;/span&gt;
+/usr/bin/otool:
+    /usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 159.0.0)
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;We can see that otool depends on a single dylib, libSystem. Now, my knowledge
+isn&amp;rsquo;t broad enough to tell if the actual path to the lib is hardcoded in the
+binary, or if the output is due to the dynamic linker knowing to look in
+&lt;code&gt;/usr/lib&lt;/code&gt;, but in the context of this discussion it doesn&amp;rsquo;t really matter.
+Let&amp;rsquo;s look at the output for &lt;code&gt;libSystem.B.dylib&lt;/code&gt; next:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;$ otool -L /usr/lib/libSystem.B.dylib
+/usr/lib/libSystem.B.dylib:
+    /usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 159.0.0)
+    /usr/lib/system/libcache.dylib (compatibility version 1.0.0, current version 47.0.0)
+    /usr/lib/system/libcommonCrypto.dylib (compatibility version 1.0.0, current version 55010.0.0)
+    /usr/lib/system/libcompiler_rt.dylib (compatibility version 1.0.0, current version 6.0.0)
+    /usr/lib/system/libcopyfile.dylib (compatibility version 1.0.0, current version 85.1.0)
+    ...
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;We see that libSystem is linked against a whole bunch of other system
+libraries, but also that the otool output lists the library itself. As far as
+I can tell, this is because the library knows its own path, something that
+needs to be taken into account later. If you know better, please leave a
+comment.&lt;/p&gt;
+
+&lt;p&gt;The consequence is that because I was going to put siilihai&amp;rsquo;s libraries in a
+nonstandard place (inside the app bundle), I need to edit the library
+locations stored in the app binary so that the libraries get found by the
+linker. Siilihai&amp;rsquo;s libraries also link to each other, so I have to do the same
+thing to them too.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Dgh, The Debian/Ubuntu Downgrade Helper</title>
+      <link>http://localhost:1313/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/</link>
+      <pubDate>Wed, 25 May 2011 22:39:00 +0300</pubDate>
+      
+      <guid>http://localhost:1313/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/</guid>
+      <description>&lt;p&gt;Ever had the bright idea of upgrading, say, your Ubuntu machine to use some
+snazzy new software from a PPA, only to have it blow up in your face? The grim
+realization that there&amp;rsquo;s no easy downgrade path, instead you&amp;rsquo;ll have to find
+every single package the PPA upgraded and downgrade them by hand to keep
+software from breaking? Me too!&lt;/p&gt;
+
+&lt;p&gt;I recently had this exact situation with the &lt;a href=&#34;https://launchpad.net/~gnome3-team/+archive/gnome3&#34;&gt;gnome3-team
+PPA&lt;/a&gt;. It worked like a
+charm in my work computer, but when I tried it on my Nokia Booklet, it totally
+failed, probably thanks to the infamous GMA500 graphics hardware. Anyway,
+after a bit of hand-wringing I realized that:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;I had to downgrade, there was stuff on the machine I didn&amp;rsquo;t want to wipe,&lt;/li&gt;
+&lt;li&gt;I had been in this same situation before, and&lt;/li&gt;
+&lt;li&gt;probably others had, too.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;So I wrote a little tool to help, and I&amp;rsquo;m glad to say it worked perfectly. The
+tool is &lt;a href=&#34;http://github.com/ilkka/dgh&#34;&gt;dgh&lt;/a&gt;, and it helps by finding the
+packages that look like they need to be downgraded. It does this by looking at
+&lt;code&gt;apt-cache policy&lt;/code&gt; output, and finding packages whose installed version is not
+available in any repository. Usage is simple, but requires some manual work
+(for now):&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Remove the offending package archive from apt&amp;rsquo;s sources&lt;/li&gt;
+&lt;li&gt;Run &lt;code&gt;apt-get update&lt;/code&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Produce &lt;code&gt;apt-cache policy&lt;/code&gt; output for all installed packages, e.g.:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;dpkg --get-selections| \
+egrep &amp;#39;\binstall&amp;#39;|awk &amp;#39;{print $1}&amp;#39;| \
+xargs env LANG=C apt-cache policy| \
+tee packages.list
+     
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Run &lt;code&gt;dgh&lt;/code&gt; on the output:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;$ dgh packages.list
+     
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Dgh will report packages it thinks are downgrade candidates. Note that it will
+probably report all manually installed packages too, so be careful when
+downgrading.&lt;/p&gt;
+
+&lt;p&gt;I have a few enhancements I want to do before I call it 1.0, like not
+requiring a pre-created policy output file and perhaps even performing the
+downgrade by itself, but it&amp;rsquo;s usable now, just &lt;a href=&#34;http://github.com/ilkka/dgh&#34;&gt;grab the
+code&lt;/a&gt; or &lt;code&gt;gem install dgh&lt;/code&gt; directly from
+rubygems.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Qt Quick 2 QML Scene Graph GLSL fragment shader tutorial</title>
+      <link>http://localhost:1313/blog/2011/03/04/qtquick_2_qml_scenegraph_glsl_fragment_shader_tutorial/</link>
+      <pubDate>Fri, 04 Mar 2011 13:33:50 +0200</pubDate>
+      
+      <guid>http://localhost:1313/blog/2011/03/04/qtquick_2_qml_scenegraph_glsl_fragment_shader_tutorial/</guid>
+      <description>
+
+&lt;p&gt;I had been hearing a lot about Scene Graph and Qt Quick 2 making it possible to
+implement whatever effects one wanted, to really make apps gorgeous, and still
+stay in the la-la-land of QML UI coding. What I &lt;em&gt;hadn&amp;rsquo;t&lt;/em&gt; had was a chance to
+try it out myself, until recently that is. It&amp;rsquo;s been the most fun I remember
+having in a while, coding-wise.&lt;/p&gt;
+
+&lt;p&gt;As usual though, documentation is a bit lacking. The effects are implemented
+using OpenGL Shader Language (GLSL), and googling does reveal some tutorials for
+that, but still the jump from those mainly C/C++ OpenGL -oriented write-ups to
+Qt Quick 2 isn&amp;rsquo;t altogether straightforward. The docs that I found most helpful
+were:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://zchydem.enume.net/2010/11/01/playing-with-qt-scene-graph/&#34;&gt;Zchydem&amp;rsquo;s earlier blog post&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.opengl.org/documentation/glsl/&#34;&gt;The GLSL reference manual&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.lighthouse3d.com/opengl/glsl/&#34;&gt;Lighthouse 3D&amp;rsquo;s GLSL tutorial&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So, having studied these and banged my head against the wall, I was pretty
+excited when I got my first fragment shaders working on both Ubuntu and the
+N900. I then decided that I&amp;rsquo;d do a tutorial-style write-up to maybe make it
+easier for other people to get started. This is not a real GLSL tutorial
+because I&amp;rsquo;m really not qualified to write something like that. I&amp;rsquo;m aiming to
+tell you what I know, and give tips on how to apply other GLSL tutorials to a
+Qt Quick context. Here&amp;rsquo;s a short-n-shaky video of what I managed and what this
+tutorial will produce:&lt;/p&gt;
+
+&lt;p&gt;&lt;iframe src=&#34;http://player.vimeo.com/video/20641884&#34; width=&#34;400&#34; height=&#34;300&#34;&gt;
+&lt;/iframe&gt;&lt;p&gt;&lt;a href=&#34;http://vimeo.com/20641884&#34;&gt;Qt Quick 2
+Scenegraph + GLSL fragment shaders&lt;/a&gt; from &lt;a
+href=&#34;http://vimeo.com/user4754672&#34;&gt;Ilkka Laukkanen&lt;/a&gt; on &lt;a
+href=&#34;http://vimeo.com&#34;&gt;Vimeo&lt;/a&gt;.&lt;/p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;building-qt-with-scene-graph:b15dbc487fcc486a2eb513ae59b2608f&#34;&gt;Building Qt with Scene Graph&lt;/h2&gt;
+
+&lt;p&gt;To get all the scene graph goodness working, you need to build a special
+version of Qt. There are two ways to accomplish this that I know of:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Qt master + scene graph master (as documented in &lt;a href=&#34;http://zchydem.enume.net/2010/11/01/playing-with-qt-scene-graph/&#34;&gt;Zchydem&amp;rsquo;s post&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;qml-team/qtquick2&lt;/code&gt; branch from the &lt;a href=&#34;http://gitorious.org/qt/staging&#34;&gt;Qt staging repo&lt;/a&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;I&amp;rsquo;d actually recommend the second method because it&amp;rsquo;s a simpler,
+almost-one-step process, and because it&amp;rsquo;s the method I &lt;em&gt;know&lt;/em&gt; will work for
+the N900. So go ahead and clone, checkout and build:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;$ git clone git://gitorious.org/qt/staging.git
+$ &lt;span style=&#34;color: #f8f8f2&#34;&gt;cd &lt;/span&gt;staging
+$ git checkout -b qtquick2 origin/qml-team/qtquick2
+$ ./configure -developer-build -opensource -confirm-license -fast &lt;span style=&#34;color: #ae81ff&#34;&gt;\&lt;/span&gt;
+     -nomake demos -nomake examples \
+     &amp;amp;&amp;amp; nice make -j5
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;I guess you don&amp;rsquo;t need &lt;code&gt;-developer-build&lt;/code&gt; if going this route, but using it is
+a habit I&amp;rsquo;ve gotten into, because you never know when you might need to build
+something that uses those private headers. Also, you might want to scale the
+number of &lt;code&gt;make&lt;/code&gt; jobs according to your hardware.&lt;/p&gt;
+
+&lt;p&gt;When that completes, you will find the &lt;code&gt;qmlscene&lt;/code&gt; binary in &lt;code&gt;staging/bin&lt;/code&gt;.
+It&amp;rsquo;s a viewer for Scene Graph QML files, pretty much comparable to
+&lt;code&gt;qmlviewer&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;running-qt-quick-2-files:b15dbc487fcc486a2eb513ae59b2608f&#34;&gt;Running Qt Quick 2 files&lt;/h2&gt;
+
+&lt;p&gt;I ran into a strange problem on my Ubuntu machine, where having the &lt;code&gt;LANG&lt;/code&gt;
+environment variable set would cause the shaders not to work correctly. I
+therefore suggest you run everything in a sanitized environment (here &lt;code&gt;QTDIR&lt;/code&gt;
+is the &lt;code&gt;staging&lt;/code&gt; directory from the build instructions above):&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;$ env -i &lt;span style=&#34;color: #f8f8f2&#34;&gt;LD_LIBRARY_PATH&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;$QTDIR&lt;/span&gt;/lib &lt;span style=&#34;color: #f8f8f2&#34;&gt;DISPLAY&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;=&lt;/span&gt;:0 &lt;span style=&#34;color: #f8f8f2&#34;&gt;$QTDIR&lt;/span&gt;/bin/qmlscene &lt;span style=&#34;color: #ae81ff&#34;&gt;\&lt;/span&gt;
+    whatever.qml
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&#34;first-steps-in-qt-quick-2:b15dbc487fcc486a2eb513ae59b2608f&#34;&gt;First steps in Qt Quick 2&lt;/h2&gt;
+
+&lt;p&gt;For writing the actual code, I built the master branch of Qt Creator. It does
+have syntax highlighting for GLSL, but apparently that only works when putting
+the shaders in separate files, and that&amp;rsquo;s not supported for plain QML UI
+projects. I didn&amp;rsquo;t get any further into that yet, but will surely explore
+further later. For now, I just put the shaders inline into my QML. But I&amp;rsquo;m
+getting ahead of myself.&lt;/p&gt;
+
+&lt;p&gt;Writing Qt Quick 2 code is pretty much exactly as writing Qt Quick 1 code,
+unsurprisingly. Of course we &lt;code&gt;import QtQuick 2.0&lt;/code&gt; in the beginning instead of
+&lt;code&gt;QtQuick 1.x&lt;/code&gt;, but other than that everything looks the same. Let&amp;rsquo;s go ahead
+and create a new &amp;ldquo;Qt Quick UI&amp;rdquo; project. What we get is this:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;Qt&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;Quick&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;1.0&lt;/span&gt;
+
+&lt;span style=&#34;color: #a6e22e&#34;&gt;Rectangle&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;width:&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;360&lt;/span&gt;
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;height:&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;360&lt;/span&gt;
+    &lt;span style=&#34;color: #a6e22e&#34;&gt;Text&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color: #66d9ef&#34;&gt;anchors.centerIn:&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;parent&lt;/span&gt;
+        &lt;span style=&#34;color: #66d9ef&#34;&gt;text:&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;
+    &lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+    &lt;span style=&#34;color: #a6e22e&#34;&gt;MouseArea&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color: #66d9ef&#34;&gt;anchors.fill:&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;parent&lt;/span&gt;
+        &lt;span style=&#34;color: #66d9ef&#34;&gt;onClicked:&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color: #a6e22e&#34;&gt;Qt&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;quit&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;();&lt;/span&gt;
+        &lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+    &lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Change the import to version 2.0, run it using &lt;code&gt;qmlscene&lt;/code&gt; and it should work
+as expected. Now the fun parts begin.&lt;/p&gt;
+
+&lt;p&gt;Remove the &lt;code&gt;Text&lt;/code&gt; element, get a nice fun square-ish PNG image from somewhere,
+and add &lt;code&gt;Image&lt;/code&gt;, &lt;code&gt;Item&lt;/code&gt; and &lt;code&gt;Text&lt;/code&gt; elements like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;QtQuick&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;2.0&lt;/span&gt;
+
+&lt;span style=&#34;color: #a6e22e&#34;&gt;Rectangle&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;width:&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;512&lt;/span&gt;
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;height:&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;512&lt;/span&gt;
+
+    &lt;span style=&#34;color: #a6e22e&#34;&gt;MouseArea&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color: #66d9ef&#34;&gt;anchors.fill:&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;parent&lt;/span&gt;
+        &lt;span style=&#34;color: #66d9ef&#34;&gt;onClicked:&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color: #a6e22e&#34;&gt;Qt&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;quit&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;();&lt;/span&gt;
+        &lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+    &lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color: #a6e22e&#34;&gt;Image&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color: #66d9ef&#34;&gt;id: kitty&lt;/span&gt;
+        &lt;span style=&#34;color: #66d9ef&#34;&gt;source:&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;kitty.png&amp;quot;&lt;/span&gt;
+    &lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color: #a6e22e&#34;&gt;Item&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color: #66d9ef&#34;&gt;id: scrollercontainer&lt;/span&gt;
+        &lt;span style=&#34;color: #66d9ef&#34;&gt;anchors.fill:&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;parent&lt;/span&gt;
+
+        &lt;span style=&#34;color: #a6e22e&#34;&gt;Text&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color: #66d9ef&#34;&gt;id: scroller&lt;/span&gt;
+            &lt;span style=&#34;color: #66d9ef&#34;&gt;text:&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;Hello QtQuick world!&amp;quot;&lt;/span&gt;
+            &lt;span style=&#34;color: #66d9ef&#34;&gt;color:&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;white&amp;quot;&lt;/span&gt;
+            &lt;span style=&#34;color: #66d9ef&#34;&gt;font.pixelSize:&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;80&lt;/span&gt;
+            &lt;span style=&#34;color: #66d9ef&#34;&gt;anchors.verticalCenter:&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;\&lt;/span&gt;
+                &lt;span style=&#34;color: #a6e22e&#34;&gt;parent&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;verticalCenter&lt;/span&gt;
+        &lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+    &lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Still pretty basic stuff: we&amp;rsquo;ve got our &lt;code&gt;Image&lt;/code&gt; and &lt;code&gt;Item&lt;/code&gt; as children of the
+main &lt;code&gt;Rectangle&lt;/code&gt;. The reason why the &lt;code&gt;Text&lt;/code&gt; is inside the &lt;code&gt;Item&lt;/code&gt; rather than
+as a direct child of the root is that we&amp;rsquo;re going to use the use the &lt;code&gt;Item&lt;/code&gt; to
+clip the possibly long text to a manageable size, because a long text possibly
+wouldn&amp;rsquo;t fit into a texture.&lt;/p&gt;
+
+&lt;p&gt;One interesting thing here is that the Z-ordering or placement of the items
+doesn&amp;rsquo;t really have much bearing on how the end result is going to look, apart
+from the size determining the effective size of the textures we&amp;rsquo;re going to
+animate in the end. So, bigger items &amp;rarr; more detailed textures.&lt;/p&gt;
+
+&lt;h2 id=&#34;sourcery:b15dbc487fcc486a2eb513ae59b2608f&#34;&gt;Sourcery&lt;/h2&gt;
+
+&lt;p&gt;Next, let&amp;rsquo;s add &lt;code&gt;ShaderEffectSource&lt;/code&gt; items for both the image and the text.
+Note that we use the &lt;code&gt;scrollercontainer&lt;/code&gt; element as the source for the
+scroller shader, not the actual text element. This is the clipping bit.&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;ShaderEffectSource&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;id: kitty_source&lt;/span&gt;
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;sourceItem:&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;kitty&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+
+&lt;span style=&#34;color: #a6e22e&#34;&gt;ShaderEffectSource&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;id: scroller_source&lt;/span&gt;
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;sourceItem:&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;scrollercontainer&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;As far as I can tell, a &lt;code&gt;ShaderEffectSource&lt;/code&gt; is an invisible item that acts as
+a binding between a shader effect (that is, a &lt;code&gt;ShaderEffectItem&lt;/code&gt;) and the
+source element. Pretty much like a normal Qt Quick &lt;code&gt;Binding&lt;/code&gt; element.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-first-effect:b15dbc487fcc486a2eb513ae59b2608f&#34;&gt;The first effect&lt;/h2&gt;
+
+&lt;p&gt;Okay, sources are set up so now let&amp;rsquo;s set up the first effect. For that we&amp;rsquo;re
+going to create a &lt;code&gt;ShaderEffectItem&lt;/code&gt;. It is a visible item and it will be
+actual visual representation of the original, now-invisible image. We&amp;rsquo;re going
+to make this the background trippy kitty from the video at the top, so we&amp;rsquo;re
+going to set it to fill the parent. The real work is being done by the GLSL
+code, i.e. the contents of the &lt;code&gt;fragmentShader&lt;/code&gt; property:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;ShaderEffectItem&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;id: kitty_effect&lt;/span&gt;
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;anchors.fill:&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;parent&lt;/span&gt;
+
+    &lt;span style=&#34;color: #a6e22e&#34;&gt;property&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;variant&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;source :&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;kitty_source&lt;/span&gt;
+
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;fragmentShader:&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;    varying highp vec2 qt_TexCoord0;&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;    uniform lowp sampler2D source;&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;    void main() {&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;        gl_FragColor = texture2D(source, qt_TexCoord0);&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;    }&amp;quot;&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;The shader above is a simple pass-through operation, in that it displays the
+source image unaltered. A bit like a C program, the actual work is done in the
+&lt;code&gt;main()&lt;/code&gt; function. What the shader effectively does is set the color of a
+&amp;ldquo;fragment&amp;rdquo; (i.e. pixel, I guess), and it performs this feat by giving a value
+to the &lt;code&gt;gl_FragColor&lt;/code&gt; variable. &lt;code&gt;gl_FragColor&lt;/code&gt; is a four-component vector in
+RGBA format, with all the components ranging from 0 to 1.&lt;/p&gt;
+
+&lt;p&gt;To display the original image, the filter needs to get the corresponding pixel
+value from the source image. It does this by using the &lt;code&gt;texture2D()&lt;/code&gt; function.
+The function takes two parameters: the texture and a two-component vector,
+again with both components between 0 and 1, signifying the &lt;code&gt;(x, y)&lt;/code&gt; point in
+the texture where to get the value from.&lt;/p&gt;
+
+&lt;p&gt;Before the &lt;code&gt;main()&lt;/code&gt; function is a couple of declarations. The declarations in
+GLSL have four parts: the first keyword is a storage qualifier, the second is
+a precision qualifier, the third is the data type and fourth is the name.
+Here I have to admit that the storage qualifiers are pretty much a mystery to
+me: as far as I understand, &lt;code&gt;varying&lt;/code&gt; is for communication between vertex and
+fragment shaders, and &lt;code&gt;uniform&lt;/code&gt; is for values that stay the same over a
+primitive. The qualifiers here are basically just copied from other examples
+and tutorials, but these seem to work. The precision qualifiers are only for
+OpenGL ES, but I couldn&amp;rsquo;t find any information on them in the GLES 2.x
+specification. What I &lt;em&gt;did&lt;/em&gt; notice is that the runtime I built for N900
+requires them for everything, or the shaders don&amp;rsquo;t work. I guess they might
+have some performance impact but haven&amp;rsquo;t explored it.&lt;/p&gt;
+
+&lt;p&gt;Both of the declarations act as an input to the shader. &lt;code&gt;qt_TexCoord0&lt;/code&gt; is
+apparently provided by the scene graph runtime, and is, unsurprisingly, the
+input texture coordinate. &lt;code&gt;source&lt;/code&gt; is for getting pixels from the source item.
+This works by way of having a property by the same name in the
+&lt;code&gt;ShaderEffectItem&lt;/code&gt;. That property has type &lt;code&gt;variant&lt;/code&gt; and gets the correct
+&lt;code&gt;ShaderEffectSource&lt;/code&gt; as its default value. This is how QML communicates with
+the shader.&lt;/p&gt;
+
+&lt;p&gt;All right, that works but isn&amp;rsquo;t interesting. But since we&amp;rsquo;re setting all
+components of the output color, we can do whatever we want to the original
+pixels or even replace them. So let&amp;rsquo;s do something more:&lt;/p&gt;
+
+&lt;h2 id=&#34;some-motion:b15dbc487fcc486a2eb513ae59b2608f&#34;&gt;Some motion&lt;/h2&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;ShaderEffectItem&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;id: kitty_effect&lt;/span&gt;
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;anchors.fill:&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;parent&lt;/span&gt;
+
+    &lt;span style=&#34;color: #a6e22e&#34;&gt;property&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;real&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;angle :&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;0.0&lt;/span&gt;
+    &lt;span style=&#34;color: #a6e22e&#34;&gt;PropertyAnimation&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;on&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;angle&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color: #66d9ef&#34;&gt;to:&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;360.0&lt;/span&gt;
+        &lt;span style=&#34;color: #66d9ef&#34;&gt;duration:&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;800&lt;/span&gt;
+        &lt;span style=&#34;color: #66d9ef&#34;&gt;loops:&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;Animation&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Infinite&lt;/span&gt;
+    &lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color: #a6e22e&#34;&gt;property&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;variant&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;source :&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;kitty_source&lt;/span&gt;
+
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;fragmentShader:&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;    varying highp vec2 qt_TexCoord0;&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;    uniform lowp sampler2D source;&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;    uniform highp float angle;&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;    void main() {&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;        highp float texAngle = 0.0;&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;        if (qt_TexCoord0.x != 0.0 ||&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;            qt_TexCoord0.y != 0.0) {&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;            texAngle = atan(qt_TexCoord0.y - 0.5,&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;                qt_TexCoord0.x - 0.5);&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;        }&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;        gl_FragColor =&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;            vec4(sin(texAngle + radians(angle)),&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;                sin(texAngle + radians(angle - 120.0)),&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;                sin(texAngle + radians(angle - 240.0)),&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;                1.0)&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;           * texture2D(source, qt_TexCoord0);&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;    }&amp;quot;&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;ve added a few things here. The first is an animated &lt;code&gt;angle&lt;/code&gt; property that
+runs through a full circle in degrees and a corresponding &lt;code&gt;float&lt;/code&gt; variable
+declaration in the shader. We&amp;rsquo;re using the angle to create a color spinner
+that we&amp;rsquo;re going to overlay on the source image.&lt;/p&gt;
+
+&lt;p&gt;To calculate the correct color to overlay on any given pixel, we note that it
+depends on the angle of an imagined line drawn from the center of the image to
+the pixel. This is simply a conversion from Cartesian to polar coordinates,
+which is accomplished with an arc tan operation. Because the source texture
+coordinates range from 0 to 1, however, the resultant angles will be from 0 to
+90. To get angles that go all around, we shift the coordinates by -0.5.&lt;/p&gt;
+
+&lt;p&gt;Then we compose the value for &lt;code&gt;gl_FragColor&lt;/code&gt; with a multiplication operation:
+we multiply the original texture pixel with a four-component vector created
+with the &lt;code&gt;vec4&lt;/code&gt; function. Because we want the color components to change
+gradually, we take their values from a sine function of the angle we
+calculated earlier. We apply different offsets (120 and 240 degrees) to the
+different components so that we get different colors at different directions,
+and we also apply the animated offset from the QML &lt;code&gt;angle&lt;/code&gt; property. Note that
+&lt;code&gt;sin&lt;/code&gt; takes a radian input, so we convert from degrees to radians. Finally,
+while many 3D coding tutorials advocate a coding style where the decimal point
+and zero are always written even when not necessary, in shaders it seems to be
+required whenever dealing in floating-point numbers.&lt;/p&gt;
+
+&lt;p&gt;These enhancements result in a fun little primary color spinner overlaid on
+the source image.&lt;/p&gt;
+
+&lt;h2 id=&#34;increase-the-trippy:b15dbc487fcc486a2eb513ae59b2608f&#34;&gt;Increase the trippy&lt;/h2&gt;
+
+&lt;p&gt;I want more trippy. To increase the trippy, I want to twist up the spinner so
+it&amp;rsquo;s hypnotic!&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;    &lt;span style=&#34;color: #a6e22e&#34;&gt;ShaderEffectItem&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color: #f8f8f2&#34;&gt;...&lt;/span&gt;
+        &lt;span style=&#34;color: #66d9ef&#34;&gt;fragmentShader:&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;        ...&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;        void main() {&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;            highp float texAngle = 0.0;&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;            if (qt_TexCoord0.x != 0.0 ||&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;                qt_TexCoord0.y != 0.0) {&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;                texAngle = atan(qt_TexCoord0.y - 0.5,&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;                    qt_TexCoord0.x - 0.5);&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;            }&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;            highp float skew =&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;                sqrt(pow(qt_TexCoord0.x - 0.5, 2.0)&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;                     + pow(qt_TexCoord0.y - 0.5, 2.0))&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;                * 10.0;&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;            highp vec4 colorwheel =&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;                vec4(sin(texAngle + radians(angle) - skew),&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;                    sin(texAngle + radians(angle - 120.0) - skew),&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;                    sin(texAngle + radians(angle - 240.0) - skew),&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;                    1.0);&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;            highp vec4 texpixel = texture2D(source, qt_TexCoord0);&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;            gl_FragColor = colorwheel * texpixel;&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;        }&amp;quot;&lt;/span&gt;
+    &lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Roight, the skew factor, or how far we twist up the spinner is relative to the
+distance from the center of the spinner, so we calculate the value of &lt;code&gt;skew&lt;/code&gt;
+with Pythagoras&amp;rsquo; formula, with a suitable constant multiplier to get the
+effect we want. We apply the skew as an offset to the sine function argument
+in the &lt;code&gt;colorwheel&lt;/code&gt; vector, and thus it acts as a delay that increases
+linearly as the distance from the center of the item increases.&lt;/p&gt;
+
+&lt;p&gt;Finally for extra trippy let&amp;rsquo;s make the background wavy! This is easy-peasy at
+this point, all we need to do is throw the texture source coordinates through
+sine and cosine functions before using &lt;code&gt;texture2D&lt;/code&gt; to get the original image
+pixel:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;ShaderEffectItem&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color: #f8f8f2&#34;&gt;...&lt;/span&gt;
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;fragmentShader:&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;    ...&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;    void main() {&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;        ...&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;        highp float wavefactor = 0.03;&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;        highp float wave_x = qt_TexCoord0.x + wavefactor&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;                       * sin(radians(angle + qt_TexCoord0.x * 360.0));&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;        highp float wave_y = qt_TexCoord0.y + wavefactor&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;                       * cos(radians(angle + qt_TexCoord0.y * 360.0));&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;        highp vec4 texpixel = texture2D(source, vec2(wave_x, wave_y));&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;        gl_FragColor = colorwheel * texpixel;&lt;/span&gt;
+&lt;span style=&#34;color: #e6db74&#34;&gt;    }&amp;quot;&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&#34;the-scroller:b15dbc487fcc486a2eb513ae59b2608f&#34;&gt;The scroller&lt;/h2&gt;
+
+&lt;p&gt;That&amp;rsquo;s pretty trippy. All it needs now is &amp;ndash; a scrolling message. That&amp;rsquo;s how
+I feel at least. So let&amp;rsquo;s add some text to the &lt;code&gt;scroller&lt;/code&gt; element and make it
+scroll.&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Text&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;id: scroller&lt;/span&gt;
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;text:&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;Hello QtQuick world! Hello QtQuick world! &amp;quot;&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;+&lt;/span&gt;
+        &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;Hello QtQuick world! Hello QtQuick world! &amp;quot;&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;+&lt;/span&gt;
+        &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;Hello QtQuick world! Hello QtQuick world! &amp;quot;&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;+&lt;/span&gt;
+        &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;Hello QtQuick world! Hello QtQuick world! &amp;quot;&lt;/span&gt;
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;color:&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;white&amp;quot;&lt;/span&gt;
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;font.pixelSize:&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;80&lt;/span&gt;
+    &lt;span style=&#34;color: #66d9ef&#34;&gt;anchors.verticalCenter:&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;parent&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;verticalCenter&lt;/span&gt;
+    &lt;span style=&#34;color: #a6e22e&#34;&gt;PropertyAnimation&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;on&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;x&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color: #66d9ef&#34;&gt;from:&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;scrollercontainer&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;width&lt;/span&gt;
+        &lt;span style=&#34;color: #66d9ef&#34;&gt;to:&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;scroller&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;width&lt;/span&gt;
+        &lt;span style=&#34;color: #66d9ef&#34;&gt;duration:&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;800&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;scroller&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;width&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;/&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;100&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
+        &lt;span style=&#34;color: #66d9ef&#34;&gt;loops:&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;Animation&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Infinite&lt;/span&gt;
+    &lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Multi-line string literals are a bit clunky without support for here-doc
+syntax, but this way we get a suitably long string to test the idea. A
+bog-standard &lt;code&gt;PropertyAnimation&lt;/code&gt; moves the text from right to left across the
+parent element, with a speed that&amp;rsquo;s dependent on the width of the string
+itself, so that it stays constant with varying strings. Trippy and reminiscent
+of old-school demo stuff, I like.&lt;/p&gt;
+
+&lt;h2 id=&#34;all-done-for-now:b15dbc487fcc486a2eb513ae59b2608f&#34;&gt;All done for now&lt;/h2&gt;
+
+&lt;p&gt;That&amp;rsquo;s it for now. I&amp;rsquo;ll try to find the time to keep working on this stuff a
+bit more. The need to build the &lt;code&gt;qtquick2&lt;/code&gt; staging branch is a bit of a
+hindrance since it seems it&amp;rsquo;s impossible to build it on OS X versions prior to
+the upcoming Lion, due to a OpenGL version issue. Since my workhorse home
+computer is a Mac, this puts a bit of a crimp on toying with scenegraph.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Migrating a live Ubuntu install onto LVM2</title>
+      <link>http://localhost:1313/blog/2011/02/27/migrating-a-live-ubuntu-install-onto-lvm2/</link>
+      <pubDate>Sun, 27 Feb 2011 13:56:40 +0200</pubDate>
+      
+      <guid>http://localhost:1313/blog/2011/02/27/migrating-a-live-ubuntu-install-onto-lvm2/</guid>
+      <description>
+
+&lt;p&gt;My only home computer is, and has been for a while, a Nokia Booklet. It&amp;rsquo;s a
+nice ultra-portable fanless laptop that gets about 6-7 hours of use per
+charge, and is in my opinion one of the most stylish products ever shipped by
+Nokia.&lt;/p&gt;
+
+&lt;p&gt;Granted, it&amp;rsquo;s not too powerful, only sporting a dual-core Intel Atom
+Z530 running at 1.6 GHz, and it has one major flaw from a Linux user&amp;rsquo;s
+standpoint in that it has the almost infamous GMA500 graphics hardware
+courtesy of the &amp;ldquo;Poulsbo&amp;rdquo; chipset. &lt;a href=&#34;https://wiki.ubuntu.com/HardwareSupportComponentsVideoCardsPoulsbo/&#34;&gt;Support nowadays is
+okay&lt;/a&gt;, in
+that I run Maverick on it at native panel resolution, and can actually pretty
+consistently put the machine to sleep with &lt;code&gt;uswsusp&lt;/code&gt; and have it wake up
+correctly, but I can&amp;rsquo;t for example run the snazzy new &lt;code&gt;gnome-shell&lt;/code&gt; on it, or
+use compiz.&lt;/p&gt;
+
+&lt;p&gt;Anyway, I used to have the original Windows 7 install on a second partition,
+but it soon became apparent that I would find no use for it and decided to use
+the whole disk for Ubuntu. I didn&amp;rsquo;t want to reinstall, however, and
+unfortunately hadn&amp;rsquo;t originally put it on LVM, so the exercise would be a bit
+more substantial than simply growing a logical volume.&lt;/p&gt;
+
+&lt;p&gt;This, then, was my plan of action:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Nuke the windows partition, make a LVM partition in it&amp;rsquo;s place, and
+ create a volume group and logical volume with it, then create a new ext4
+ fs on the logical volume.&lt;/li&gt;
+&lt;li&gt;Copy over the running Ubuntu installation onto the new filesystem.&lt;/li&gt;
+&lt;li&gt;Update grub to locate the new-old Ubuntu on the LVM filesystem.&lt;/li&gt;
+&lt;li&gt;Boot from the logical volume.&lt;/li&gt;
+&lt;li&gt;Add the old Ubuntu partition to the volume group and grow the logical
+ volume and filesystem onto that.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Simple! There are a couple of glaring holes in the plan but we&amp;rsquo;ll handle those
+as we get to &amp;lsquo;em.&lt;/p&gt;
+
+&lt;h2 id=&#34;nuke-em-high:a7dd1aa35c78f78c43f8b77ed3d6444c&#34;&gt;Nuke &amp;lsquo;em high&lt;/h2&gt;
+
+&lt;p&gt;The first step was simple: first, just delete the windows partition and create
+a new partition in its place with the partition type set to &lt;code&gt;0x8e&lt;/code&gt; for Linux
+LVM. Then we need to tell LVM about this new partition, or &amp;ldquo;physical volume&amp;rdquo;
+in LVM terminology, by running &lt;code&gt;pvcreate&lt;/code&gt; on it (I&amp;rsquo;m running all these
+commands as root):&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;# pvcreate /dev/sda1
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Then we create a volume group, which is a container of physical volumes, and
+itself acts as a container for logical volumes:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;# vgcreate vg-0 /dev/sda1
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Finally, create a logical volume that fills up the new volume group:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;# lvcreate -n root -l 100%VG vg-0
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Now there&amp;rsquo;s a brand spanking new logical volume called &lt;code&gt;root&lt;/code&gt; on the volume
+group &lt;code&gt;vg-0&lt;/code&gt;. As evidence of this, there is a new device node for it at
+&lt;code&gt;/dev/vg-0/root&lt;/code&gt;. Next, create the filesystem:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;# mkfs.ext4 /dev/vg-0/root
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&#34;replica:a7dd1aa35c78f78c43f8b77ed3d6444c&#34;&gt;Replica&lt;/h2&gt;
+
+&lt;p&gt;Now the new filesystem can be mounted and the running installation copied onto
+it. There might be some cases where copying from a live fs might be a bad
+idea, but generally as long as you don&amp;rsquo;t do anything substantial at the same
+time, you shouldn&amp;rsquo;t have too much trouble.&lt;/p&gt;
+
+&lt;p&gt;I used &lt;code&gt;rsync&lt;/code&gt; to do the actual copying, but any similar tool could be used as
+long as it correctly preserves all file attributes. What&amp;rsquo;s just as important
+is to skip all the special pseudofilesystems and the mountpoint itself:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;# mount /dev/vg-0/root /mnt
+# rsync -a / --exclude&lt;span style=&#34;color: #f92672&#34;&gt;=&lt;/span&gt;/&lt;span style=&#34;color: #f92672&#34;&gt;{&lt;/span&gt;dev,proc,sys,var/run,var/lock&lt;span style=&#34;color: #f92672&#34;&gt;}&lt;/span&gt; /mnt | &lt;span style=&#34;color: #ae81ff&#34;&gt;\&lt;/span&gt;
+  tee transfer.log; \
+  ogg123 /usr/share/sounds/ubuntu/stereo/system-ready.ogg
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;I used &lt;code&gt;tee&lt;/code&gt; to capture the output from rsync and save it in a logfile, and
+made it play a sound when it finished so I wouldn&amp;rsquo;t have to keep checking.
+It&amp;rsquo;s always a good idea to do a dry run first, and &lt;code&gt;rsync&lt;/code&gt; has the &lt;code&gt;-n&lt;/code&gt; flag
+for that. For me the command complained about not being able to copy all file
+attributes, but even after trawling the verbose logs I couldn&amp;rsquo;t find any
+specific file-related errors, so I decided to ignore that message and went
+ahead with the real copy. All told the process took a couple of hours for 20+
+GB.&lt;/p&gt;
+
+&lt;h2 id=&#34;rub-a-dub-dub:a7dd1aa35c78f78c43f8b77ed3d6444c&#34;&gt;Rub-a-dub-dub&lt;/h2&gt;
+
+&lt;p&gt;I haven&amp;rsquo;t played with grub a whole lot, but after looking at how the thing was
+configured on Ubuntu, I tentatively came to the conclusion that grub (version
+2 that is) should find the copied Ubuntu from the logical volume and add it to
+the boot menu automagically. So I updated &lt;code&gt;grub.cfg&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;# update-grub
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;The output hinted at what a look at &lt;code&gt;/boot/grub/grub.cfg&lt;/code&gt; confirmed, i.e. that
+grub had indeed found the copy. However, I happened to notice that the root
+settings for the LVM kernels were incorrect, and had the UUIDs of my old root
+partition. I didn&amp;rsquo;t think much of it, expecting them to be set correctly as I
+ran &lt;code&gt;update-grub&lt;/code&gt; from the new partition, and simply fixed them manually.&lt;/p&gt;
+
+&lt;p&gt;At this point I rebooted, selected the latest kernel from the logical volume
+and found Ubuntu running nicely. I used fdisk to delete the old root partition
+and created a new LVM partition in its place, and shutdown the machine,
+deciding to call it a day.&lt;/p&gt;
+
+&lt;p&gt;This was a near-catastrophic error, as it turns out. Well, catastrophic in a
+relative sense.&lt;/p&gt;
+
+&lt;h2 id=&#34;disco-inferno:a7dd1aa35c78f78c43f8b77ed3d6444c&#34;&gt;Disco inferno&lt;/h2&gt;
+
+&lt;p&gt;Booting in the morning, I was greeted by a friendly grub message saying
+&amp;ldquo;ERROR: no such disk&amp;rdquo;, and a &lt;code&gt;grub-rescue&amp;gt;&lt;/code&gt; prompt that didn&amp;rsquo;t know a single
+command, not even help.&lt;/p&gt;
+
+&lt;p&gt;After thinking about it for a few moments, my error was glaringly obvious:
+grub on the MBR was still looking for it&amp;rsquo;s config file from the old root
+partition, which I had nuked, because I had never reinstalled it, only
+recreated the config file. And even if I &lt;em&gt;had&lt;/em&gt; reinstalled it, it wouldn&amp;rsquo;t
+have booted, because I had only updated the &lt;code&gt;grub.cfg&lt;/code&gt; file on the old root,
+not on the new one. Facepalm.&lt;/p&gt;
+
+&lt;p&gt;Well, thankfully I happened to have another Ubuntu machine available, so I
+quickly created a bootable USB stick and started fixing things. The default
+Ubuntu live image doesn&amp;rsquo;t have the userspace LVM tools, but as long as there&amp;rsquo;s
+network connectivity, one can just install them on the running ramdisk, so
+that&amp;rsquo;s no problem.&lt;/p&gt;
+
+&lt;p&gt;The first order of business was to get the new root mounted using the live
+image:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;# apt-get install -y lvm2
+# vgchange -a y vg-0
+# mount /dev/vg-0/root /mnt
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;vgchange&lt;/code&gt; command makes the volume group active, this is required so that
+the logical volume can be mounted. Now the mounted root has all the tools
+required to reinstall and reconfigure grub, so the easiest method is to chroot
+into the mount and fix it from there. For this to work, the most important
+pseudofilesystems need to be bind-mounted into the chroot:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;# &lt;span style=&#34;color: #66d9ef&#34;&gt;for &lt;/span&gt;d in dev/pts dev proc sys; &lt;span style=&#34;color: #66d9ef&#34;&gt;do &lt;/span&gt;mount -B /&lt;span style=&#34;color: #f8f8f2&#34;&gt;$d&lt;/span&gt; /mnt/&lt;span style=&#34;color: #f8f8f2&#34;&gt;$d&lt;/span&gt;; &lt;span style=&#34;color: #66d9ef&#34;&gt;done&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Now we can chroot into the volume, reinstall grub and rebuild the
+configuration:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;# chroot /mnt
+# grub-install /dev/sda
+# update-grub
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Easy peasy. Now for a reboot&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;&amp;hellip;and the same error message.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt=&#34;WTF?!&#34; class=&#34;img-responsive&#34;
+src=&#34;http://4.bp.blogspot.com/_dcdi--LdAeQ/Sa1sWd8j4pI/AAAAAAAAEBg/BGX_vc32JHc/s400/wtf.jpg&#34;/&gt;&lt;/p&gt;
+
+&lt;p&gt;I did the same boot from USB stick, install lvm, mount root rumba again and
+started scratching my head and looking at files. In the end it was a simple
+comment on some forum somewhere that tipped me off as to what the actual
+problem was. I forget where (sorry) but someone said that the format for the
+parameter for the &lt;code&gt;set root&lt;/code&gt; command of grub was the same as the volume node
+name in the &lt;code&gt;/dev/mapper&lt;/code&gt; directory. Now, &lt;code&gt;update-grub&lt;/code&gt; had put entries like
+&lt;code&gt;set root=&#39;(vg-0-root)&#39;&lt;/code&gt; in the &lt;code&gt;grub.cfg&lt;/code&gt;, but &lt;em&gt;actually&lt;/em&gt; the dash in the
+volume group name gets kinda-sorta escaped, so the node is in fact named
+&lt;code&gt;/dev/mapper/vg--0-root&lt;/code&gt;. It appears there is a &lt;a href=&#34;https://bugs.launchpad.net/ubuntu/+source/grub2/+bug/726021&#34;&gt;bug in
+&lt;code&gt;update-grub&lt;/code&gt;&lt;/a&gt;
+that causes this behavior.&lt;/p&gt;
+
+&lt;p&gt;As manually fixing the file would have just been a one-off solution, I renamed
+the volume group (which was thankfully very easy):&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;# umount /mnt
+# vgchange -a n vg-0
+# vgrename vg-0 vg0
+# vgchange -a y vg0
+# mount /dev/vg0/root /mnt
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;The volume group needs to be deactivated to rename it, but other than that
+it&amp;rsquo;s straightforward. Now I &lt;code&gt;grub-install&lt;/code&gt;ed and &lt;code&gt;update-grub&lt;/code&gt;&amp;rsquo;d again and
+confirmed that this time it generated correct config files. Time to wipe off
+that cold sweat and lean back.&lt;/p&gt;
+
+&lt;h2 id=&#34;grow-your-own:a7dd1aa35c78f78c43f8b77ed3d6444c&#34;&gt;Grow your own&lt;/h2&gt;
+
+&lt;p&gt;All that then remained was to add the old root&amp;rsquo;s physical volume to the volume
+group, then use up that space. For this, you first need to initialize the
+partition for LVM, then extend the volume group onto it, &lt;em&gt;then&lt;/em&gt; grow the
+logical volume, and &lt;strong&gt;finally&lt;/strong&gt; grow the filesystem to match the new volume
+size. Sounds complicated but is just a few simple steps really (/dev/sda6 is
+the old root partition here):&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;# pvcreate /dev/sda6
+# vgextend vg0 /dev/sda6
+# lvextend -l 100%VG vg0/root
+# resize2fs /dev/vg0/root
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;And that&amp;rsquo;s it! One reboot later I&amp;rsquo;m here typing this and feeling a bit smug
+for shooting myself in the leg, then managing to bandage it up without doing
+any more damage in the process.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Jitsu is a meta build system for Ninja</title>
+      <link>http://localhost:1313/blog/2011/02/13/jitsu-is-a-meta-build-system-for-ninja/</link>
+      <pubDate>Sun, 13 Feb 2011 22:19:50 +0200</pubDate>
+      
+      <guid>http://localhost:1313/blog/2011/02/13/jitsu-is-a-meta-build-system-for-ninja/</guid>
+      <description>&lt;p&gt;A while back I hit upon &lt;a href=&#34;https://github.com/martine/ninja&#34;&gt;Ninja&lt;/a&gt;, a very fast
+and very simple build system that is apparently used for building
+&lt;a href=&#34;http://www.chromium.org/&#34;&gt;Chromium&lt;/a&gt;. Can&amp;rsquo;t remember where I first heard of
+it, might&amp;rsquo;ve been &lt;a href=&#34;http://news.ycombinator.com&#34;&gt;Hacker News&lt;/a&gt; or just
+somebody&amp;rsquo;s tweet, but having been interested in build systems for years, at
+least since setting up Linux builds from scratch for a big piece of software
+while working on my M.Sc. thesis, I immediately started playing around with
+it.&lt;/p&gt;
+
+&lt;p&gt;Ninja is indeed fast, but by design the buildfiles are hard to write. Ninja
+sources include a patch to &lt;a href=&#34;http://code.google.com/p/gyp&#34;&gt;Gyp&lt;/a&gt;, a higher-level
+build system also somehow (not sure how exactly) related to Chromium, but the
+support wasn&amp;rsquo;t very complete, and somehow I just didn&amp;rsquo;t find Gyp appealing. I
+therefore did what anyone in my circumstances would&amp;rsquo;ve done, and started
+writing a &amp;ldquo;meta build system&amp;rdquo; myself.&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s called &lt;a href=&#34;https://github.com/ilkka/jitsu&#34;&gt;Jitsu&lt;/a&gt;, and since I really like
+Ruby, that&amp;rsquo;s what I wrote it in. It&amp;rsquo;s at version 0.1.2 now and available from
+rubygems.org, and as of now it can build (or rather, generate ninja buildfiles
+for) C++ binaries and static libraries. Builds are specified as &lt;code&gt;build.jitsu&lt;/code&gt;
+files in YAML format, which the tool processes into &lt;code&gt;build.ninja&lt;/code&gt; files that
+can then be used by Ninja. I&amp;rsquo;ll keep trying to use it in my own projects so
+hopefully it&amp;rsquo;ll keep on improving from here on out. Let&amp;rsquo;s see where it will
+go, I haven&amp;rsquo;t really delineated the scope yet, to e.g. just doing C++ builds.&lt;/p&gt;
+
+&lt;p&gt;If you are interested, install the gem, maybe &lt;a href=&#34;https://github.com/ilkka/jitsu&#34;&gt;grab the
+source&lt;/a&gt; and give it a spin. Let me know what
+you think. Also see &lt;a href=&#34;http://ilkka.github.com/jitsu&#34;&gt;the documentation&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Teach Vim about Gemfiles</title>
+      <link>http://localhost:1313/blog/2011/02/03/teach-vim-about-gemfiles/</link>
+      <pubDate>Thu, 03 Feb 2011 18:27:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/blog/2011/02/03/teach-vim-about-gemfiles/</guid>
+      <description>&lt;p&gt;By default, the excellent Vim editor doesn&amp;rsquo;t know what the filetype of
+Gemfiles is (it&amp;rsquo;s &lt;code&gt;ruby&lt;/code&gt;, of course). I&amp;rsquo;ve been sprinkling Vim modelines in
+mine for ages, but just now as I was hacking at &lt;a href=&#34;https://github.com/ilkka/ticgit&#34;&gt;my clone of
+ticgit&lt;/a&gt;, I realized that it makes no sense to
+sprinkle these onto other people&amp;rsquo;s code so liberally when I could just teach
+Vim to Do The Right Thing.  So, I promptly added the following
+autocommand into my &lt;code&gt;vimrc&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span style=&#34;color: #75715e&#34;&gt;&amp;quot; I put my autocommands in a block like this&lt;/span&gt;
+&lt;span style=&#34;color: #66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;!&lt;/span&gt;exists&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;autocommandsLoaded&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
+  &lt;span style=&#34;color: #66d9ef&#34;&gt;let&lt;/span&gt; autocommandsLoaded &lt;span style=&#34;color: #f8f8f2&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;1&lt;/span&gt;
+  ...
+  autocmd &lt;span style=&#34;color: #f8f8f2&#34;&gt;BufNewFile,BufRead&lt;/span&gt; Gemfile &lt;span style=&#34;color: #66d9ef&#34;&gt;setlocal&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;filetype&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;ruby&lt;/span&gt;
+&lt;span style=&#34;color: #66d9ef&#34;&gt;endif&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Now all &lt;code&gt;Gemfile&lt;/code&gt;s are opened in ruby mode and I don&amp;rsquo;t have to annoy other
+people with my editor-specific modelines any more.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Fix Outlook Quoting Style</title>
+      <link>http://localhost:1313/blog/2011/01/31/fix-outlook-quoting-style/</link>
+      <pubDate>Mon, 31 Jan 2011 14:31:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/blog/2011/01/31/fix-outlook-quoting-style/</guid>
+      <description>&lt;p&gt;Like many others before and after myself, I find myself having to use MS
+Outlook in my daily work. Also like many, I loathe its style of quoting email
+messages. Fortunately I use Exchange&amp;rsquo;s rather surprisingly good (as of the
+2007 version) OWA web client, so with Firefox&amp;rsquo;s &lt;a href=&#34;https://addons.mozilla.org/en-US/firefox/addon/its-all-text/&#34;&gt;It&amp;rsquo;s All
+Text&lt;/a&gt; extension,
+Vim and some Ruby code, I can fix quoting in messages I&amp;rsquo;m replying to easily.&lt;/p&gt;
+
+&lt;p&gt;Googling for a ready-made solution I came across &lt;a href=&#34;http://www.mail-archive.com/gnhlug@zk3.dec.com/msg13395.html&#34;&gt;a post to gnhlug&amp;rsquo;s mailing
+list&lt;/a&gt; that had a
+Perl solution, albeit one supporting only English and only older Exchange
+versions, but it gave me the spark I needed to write my own implementation.&lt;/p&gt;
+
+&lt;p&gt;Whereas (as far as I can tell) the original author wanted to correct the
+quoting style of all the participants in the conversation, I thought that was
+unnecessarily disruptive and only opted to correctly quote the message I would
+be replying to. The usage scenario then is something like this:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;In OWA, choose to reply to a message. Horribly quoted message text appears.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Use It&amp;rsquo;s All Text or some other similar tool to open message text in a
+reasonably smart editor.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Filter entire message text through this script. E.g. in Vim type
+&lt;code&gt;:%!path-to-script.rb&lt;/code&gt;, after making the script executable of course.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Replace original mesage text with output of filter. If using It&amp;rsquo;s All Text,
+just type &lt;code&gt;:wq&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Presto! Correctly quoted message. You might have to move your sig, though.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;That&amp;rsquo;s how to use it, now here&amp;rsquo;s the script:&lt;/p&gt;
+
+&lt;script
+src=&#34;https://gist.github.com/803961.js?file=fix-outlook-quoting.rb&#34;&gt;&lt;/script&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Shooting tethered with the Nikon D80 and Ubuntu</title>
+      <link>http://localhost:1313/blog/2010/12/08/shooting-tethered-with-the-nikon-d80-and-ubuntu/</link>
+      <pubDate>Wed, 08 Dec 2010 17:09:38 +0200</pubDate>
+      
+      <guid>http://localhost:1313/blog/2010/12/08/shooting-tethered-with-the-nikon-d80-and-ubuntu/</guid>
+      <description>&lt;p&gt;I really like shooting tethered with Lightroom and my MacBook, but today while
+thinking about a band shoot I had coming up, I wondered how easy it would be
+to do the same on Ubuntu on my Nokia Booklet.&lt;/p&gt;
+
+&lt;p&gt;After a bit of Googling I came across &lt;a href=&#34;http://rian76.blogspot.com/2009/09/tethering-from-your-nikon-to-your-linux.html&#34;&gt;a
+post&lt;/a&gt;
+that had a nice and simple script that I could use as a starting point. It
+even calls itself via gphoto2 while working which is a nice solution to the
+problem of needing a script for downloading and another one for viewing the
+images (the hook script provided to gphoto2).&lt;/p&gt;
+
+&lt;p&gt;It has one problem however: I shoot RAW and therefore would need for whatever
+image viewer I call to be able to display NEF files. I know of no such tool
+for Ubuntu, so I switched my D80 to shoot RAW+JPEG instead and edited the
+script to this:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span style=&#34;color: #75715e&#34;&gt;#!/bin/bash&lt;/span&gt;
+
+&lt;span style=&#34;color: #66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;$ACTION&amp;quot;&lt;/span&gt; in
+download&lt;span style=&#34;color: #f92672&#34;&gt;)&lt;/span&gt;
+  &lt;span style=&#34;color: #66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;[&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;$(&lt;/span&gt;expr match &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;$ARGUMENT&amp;quot;&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;#39;.*\.JPG$&amp;#39;&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;)&lt;/span&gt; -gt 0 &lt;span style=&#34;color: #f92672&#34;&gt;]&lt;/span&gt;; &lt;span style=&#34;color: #66d9ef&#34;&gt;then&lt;/span&gt;
+&lt;span style=&#34;color: #66d9ef&#34;&gt;    &lt;/span&gt;killall eog
+    eog -f &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;$ARGUMENT&amp;quot;&lt;/span&gt; &amp;amp;
+  &lt;span style=&#34;color: #66d9ef&#34;&gt;fi&lt;/span&gt;
+  ;;
+&lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;)&lt;/span&gt;
+  &lt;span style=&#34;color: #f8f8f2&#34;&gt;me&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;$(&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;cd&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;0%/*&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;}&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;$PWD&lt;/span&gt;/&lt;span style=&#34;color: #66d9ef&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;0##*/&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;})&lt;/span&gt;
+  gphoto2 --capture-tethered --hook-script&lt;span style=&#34;color: #f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;$me&lt;/span&gt;
+  ;;
+&lt;span style=&#34;color: #66d9ef&#34;&gt;esac&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Only the &lt;code&gt;download&lt;/code&gt; branch of the case statement is edited. I just check if
+the filename ends in &lt;code&gt;.JPG&lt;/code&gt;, and call &lt;code&gt;eog&lt;/code&gt; to display the image if it does.
+The &lt;code&gt;.NEF&lt;/code&gt; files are downloaded too, they&amp;rsquo;re just ignored.&lt;/p&gt;
+
+&lt;p&gt;The downside to this is that I can&amp;rsquo;t seem to be able to leave the images on
+the card as well as download them, in &lt;code&gt;--capture-tethered&lt;/code&gt; mode gphoto2 always
+deletes them. But still, this is a workable solution for when I don&amp;rsquo;t have the
+MacBook handy.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Rakefile for Jekyll site management</title>
+      <link>http://localhost:1313/blog/2010/12/08/rakefile-for-jekyll-site-management/</link>
+      <pubDate>Wed, 08 Dec 2010 17:00:52 +0200</pubDate>
+      
+      <guid>http://localhost:1313/blog/2010/12/08/rakefile-for-jekyll-site-management/</guid>
+      <description>&lt;p&gt;Previously I&amp;rsquo;ve used a bunch of scripts for managing post creation and site
+compilation tasks, but recently I decided to move over to Rake. The whole
+Rakefile as-it-stands is &lt;a href=&#34;https://github.com/ilkka/ilkka.github.com/tree/source&#34;&gt;in the
+repo&lt;/a&gt;, naturally, but
+here&amp;rsquo;s a couple of bits I&amp;rsquo;m finding useful.&lt;/p&gt;
+
+&lt;p&gt;I have a &lt;code&gt;default&lt;/code&gt; task set up that runs compass, jekyll, and &lt;code&gt;git commit&lt;/code&gt;s
+and &lt;code&gt;git push&lt;/code&gt;es the result. The compass and jekyll bits are simple &lt;code&gt;sh&lt;/code&gt;
+steps, but the rest is a bit more involved. Let&amp;rsquo;s start with post creation
+though, in the spirit of the real workflow.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;
+namespace &#34;post&#34; do
+  desc &#34;Given a title as an argument, create a new post file&#34;
+  task :new, [:title] do |t, args|
+    now = DateTime::now().to_date()
+    filename = &#34;#{now.strftime}-#{args.title.gsub(/\s/, &#39;_&#39;).downcase}.markdown&#34;
+    path = File.join(&#34;_posts&#34;, filename)
+    if File.exist? path; raise RuntimeError.new(&#34;Won&#39;t clobber #{path}&#34;); end
+    File.open(path, &#39;w&#39;) do |file|
+      file.write &lt;&lt;-EOS
+---
+layout: post
+title: #{args.title}
+---
+
+Content goes here
+EOS
+    end
+    puts &#34;Now open #{path} in an editor.&#34;
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The above listing is the new post creation task, and the entirety of the
+&lt;code&gt;post&lt;/code&gt; namespace currently, as it happens. It takes the post title as an
+argument, and uses that and the current date to generate a filename. At the
+moment it just replaces whitespace with underscores, but it might be good to
+do more escaping to ensure a good filename. Then the task writes a post
+template into the file and prints the filename so it&amp;rsquo;s easy to launch an
+editor for it.&lt;/p&gt;
+
+&lt;p&gt;To ensure good clean commits of the site I clean the &lt;code&gt;_site&lt;/code&gt; directory before
+compilation, i.e. delete all files except for any dotfiles, so as not to
+destroy the &lt;code&gt;.git&lt;/code&gt; dir in there. I use a helper method to get a list of all
+the files:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;
+def site_files
+  FileList[&#39;_site/**/*&#39;].find_all {|f| File.file? f}
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This file list is then used in the &lt;code&gt;clean&lt;/code&gt; and &lt;code&gt;commit&lt;/code&gt; tasks like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;
+desc &#34;Clean generated site files&#34;
+task :clean do
+  FileUtils.rm site_files
+end
+
+desc &#34;Commit compiled site to Git&#34;
+task :commit do
+  g = Git.open(&#39;_site&#39;)
+  g.add site_files.map {|f| f.gsub(/^_site\//, &#39;&#39;)}
+  g.commit &#34;Regenerated&#34;
+end
+
+desc &#34;Push committed site to GitHub&#34;
+task :push do
+  g = Git.open(&#39;_site&#39;)
+  g.push
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;clean&lt;/code&gt; task is simple because one can use the filelist directly, but when
+committing, the &lt;code&gt;_site&lt;/code&gt; dir bit has to be dropped from the filenames with a
+simple &lt;code&gt;map&lt;/code&gt; + &lt;code&gt;gsub&lt;/code&gt; combo. I&amp;rsquo;m using &lt;a href=&#34;https://github.com/schacon&#34;&gt;Scott
+Chacon&amp;rsquo;s&lt;/a&gt; &lt;a href=&#34;https://github.com/schacon/ruby-git&#34;&gt;ruby-git
+gem&lt;/a&gt; to perform git operations on the
+repo.&lt;/p&gt;
+
+&lt;p&gt;That&amp;rsquo;s pretty much it for the moment. I might expand the post management
+features a bit at some point though, but since most of that is no simpler via
+Rake than through shell commands and an editor, it remains to be seen what
+those new features might be.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Where to find packages for my software</title>
+      <link>http://localhost:1313/blog/2010/11/29/where-to-find-packages-for-my-software/</link>
+      <pubDate>Mon, 29 Nov 2010 21:11:21 +0200</pubDate>
+      
+      <guid>http://localhost:1313/blog/2010/11/29/where-to-find-packages-for-my-software/</guid>
+      <description>&lt;p&gt;If for some inexplicable reason anybody would like to check out any of my
+software in Ubuntu, just add my PPA:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ sudo add-apt-repository ppa:ilkka/myppa
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;There&amp;rsquo;s not much there but I&amp;rsquo;ll try to push releases there on a regular basis,
+to get a hang of the workflow if for nothing else.&lt;/p&gt;
+
+&lt;p&gt;&lt;ins&gt;There&amp;rsquo;s also a snapshot ppa with, yes, snapshot versions, at
+&lt;code&gt;ppa:ilkka/snapshot&lt;/code&gt;.&lt;/ins&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>QML woes</title>
+      <link>http://localhost:1313/blog/2010/11/28/qml-woes/</link>
+      <pubDate>Sun, 28 Nov 2010 20:55:54 +0200</pubDate>
+      
+      <guid>http://localhost:1313/blog/2010/11/28/qml-woes/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;ve been experimenting with &lt;a href=&#34;http://qt.gitorious.org/qt-components&#34;&gt;Qt
+Components&lt;/a&gt; recently, even though they
+are very much in a pre-alpha state. I think that QML together with the
+excellent PySide bindings holds great promise as a crossplatform environment
+for mobile app development, even more so than Qt + QML, since there&amp;rsquo;s no need
+to set up toolchains for compilation and linking. I&amp;rsquo;m hoping to write many
+apps in this manner, implementing ideas that I&amp;rsquo;ve had banging around in my
+head for a while now.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ve been building the &amp;ldquo;mx&amp;rdquo; or Maemo flavor of Qt Components myself from the
+Git repo, but a couple of days ago I came across blog posts by &lt;a href=&#34;http://qt-funk.blogspot.com/2010/10/fresh-from-oven-qt-extras-for-ubuntu.html&#34;&gt;Attila
+Csipa&lt;/a&gt;
+and &lt;a href=&#34;http://blogs.forum.nokia.com/blog/kate-alholas-forum-nokia-blog/2010/11/14/how-to-make-modern-mobile-applications-with-qt-quick-components&#34;&gt;Kate
+Alhola&lt;/a&gt;
+where I read to my great exitement that there&amp;rsquo;s a PPA with binary packages of
+Qt Components for Ubuntu, and that Fremantle packages are available in extras.
+This is the ideal combo for me, since I do my development on Ubuntu machines
+and my current target would be my N900 running Fremantle.&lt;/p&gt;
+
+&lt;p&gt;Excitement soon turned to disappointment, however, when I noticed that the
+&lt;a href=&#34;https://launchpad.net/~forumnokia/+archive/fn-ppa/+packages&#34;&gt;binaries for Maverick are failing to
+build&lt;/a&gt;. The
+problem seems to be that Qt Components wants to &lt;code&gt;#include &amp;lt;mclassfactory.h&amp;gt;&lt;/code&gt;,
+but &lt;code&gt;libmeegotouch-dev&lt;/code&gt; doesn&amp;rsquo;t publish &lt;code&gt;mclassfactory.h&lt;/code&gt; as a public header,
+instead treating it as a private one. I downloaded the source packages for
+both, made &lt;code&gt;mclassfactory.h&lt;/code&gt; public and rebuilt &lt;code&gt;libmeegotouch&lt;/code&gt; and
+&lt;code&gt;qt-components&lt;/code&gt; in their entirety.&lt;/p&gt;
+
+&lt;p&gt;So far I&amp;rsquo;ve only had a chance to do some very preliminary tests on the
+desktop, but it looks promising: things seem to work pretty much as expected,
+and making QML UIs is not just drawing lines and aligning textboxes anymore.&lt;/p&gt;
+
+&lt;p&gt;On the N900 I fared a little worse though: I installed &lt;code&gt;qt-components-dev&lt;/code&gt;,
+quickly typed a QML file that just had a single &lt;code&gt;com.meego.Window&lt;/code&gt; element in
+it and gave it to &lt;code&gt;qt4-qmlviewer&lt;/code&gt; to show, and it managed to display a window
+where the top &lt;sup&gt;1&lt;/sup&gt;&amp;frasl;&lt;sub&gt;3&lt;/sub&gt; was red and the rest black. Better than nothing, I guess.&lt;/p&gt;
+
+&lt;p&gt;So, it seems like my ideal mobile development environment has a ways to go,
+then. I&amp;rsquo;ll have to see what the state of the art &lt;em&gt;really&lt;/em&gt; is on the N900 after
+I get something working on the desktop. It&amp;rsquo;s also a bit of a bother that I
+can&amp;rsquo;t install &lt;code&gt;qt-components&lt;/code&gt; in Scratchbox. It&amp;rsquo;d be nice to not have to copy
+stuff to the N900 every time I want to try out something. Maybe I&amp;rsquo;ll have to
+solve that through some remote directory mounting over USB-net, then.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Jekyll tag cloud</title>
+      <link>http://localhost:1313/blog/2010/11/21/jekyll-tag-cloud/</link>
+      <pubDate>Sun, 21 Nov 2010 23:11:50 +0200</pubDate>
+      
+      <guid>http://localhost:1313/blog/2010/11/21/jekyll-tag-cloud/</guid>
+      <description>&lt;p&gt;Having &lt;a href=&#34;http://localhost:1313/blog/2010/11/20/hosting-a-jekyll-blog-with-extensions-on-github&#34;&gt;gotten archives
+working&lt;/a&gt;
+nicely, I decided to next tackle the task of creating a tag cloud for
+my blog. The &lt;a href=&#34;https://github.com/mojombo/jekyll/wiki/Template-Data&#34;&gt;Jekyll
+docs&lt;/a&gt; are,
+sadly, a bit ambiguous on how exactly to get at all the available
+categories, for example, but as with my archive plugin, I decided to
+go ahead and try out stuff until something workable emerged. With
+archive pages, all that needed to be done was to write a generator
+plugin to create more pages. With tags, however, I want to do
+more. Specifically, I want to generate a tag cloud into my layout.&lt;/p&gt;
+
+&lt;p&gt;Googling a bit I came across &lt;a href=&#34;https://gist.github.com/364416&#34;&gt;a gist&lt;/a&gt;
+where tag cloud generation was done in the &lt;code&gt;Rakefile&lt;/code&gt;. I didn&amp;rsquo;t want
+to clutter my (as-of-then-nonexistant) &lt;code&gt;Rakefile&lt;/code&gt; with stuff like
+this, and instead thought that the logical place to put this code is
+in a plugin. I decided to implement the same basic idea though, where
+the tag links go in &lt;code&gt;&amp;lt;span&amp;gt;&lt;/code&gt;s that get dynamically styled with
+different font sizes. Here&amp;rsquo;s the source of my new tag plugin:&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/710577.js?file=tag_cloud_tag.rb&#34;&gt;
+&lt;/script&gt;
+
+&lt;p&gt;The plugin class inherits from &lt;code&gt;Liquid::Tag&lt;/code&gt; and has just one method
+apart from the constructor, &lt;code&gt;render&lt;/code&gt;. The &lt;code&gt;context&lt;/code&gt; parameter to
+&lt;code&gt;render&lt;/code&gt; includes whatever data would be accessible in the template
+via the &lt;code&gt;registers&lt;/code&gt; hash.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Here I must take a moment to vent a very tiny bit at Jekyll: why
+and/or how is it that while the &lt;a href=&#34;https://github.com/Shopify/liquid/wiki/Liquid-for-Designers&#34;&gt;Liquid docs clearly state that only
+tags in double curly brackets may resolve to
+text&lt;/a&gt;,
+tags defined in Jekyll tag plugins &lt;em&gt;must&lt;/em&gt; be put in brackets +
+percent signs? Illogical, and it bit me on the ass more than once
+as I was writing my plugin.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The &lt;code&gt;render&lt;/code&gt; method gets all the tags in all the articles from
+&lt;code&gt;context.registers[:site].tags&lt;/code&gt;. That&amp;rsquo;s a hash keyed on the tags as
+strings, and the values are lists of articles that have that tag. The
+&lt;code&gt;inject&lt;/code&gt; on the next lines calculates the average length of the
+article arrays. Next, I just iterate over all the tags once more, and
+this time use the average to calculate a weight for every
+tag. Finally, I output HTML for each tag, with a &lt;code&gt;&amp;lt;span&amp;gt;&lt;/code&gt; that gets
+its &lt;code&gt;font-size&lt;/code&gt; set dynamically to a percentage based on the
+weight. Finally the tag is registered with Liquid and it&amp;rsquo;s ready to
+use&amp;hellip; provided you remember to use the brackets-plus-percent signs
+markup.&lt;/p&gt;
+
+&lt;p&gt;The tag page class and the associated generator are very similar to
+the archive plugin, so I&amp;rsquo;m just going to direct you to the &lt;a href=&#34;https://gist.github.com/710577&#34;&gt;gist with
+the source code&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Hosting a Jekyll blog with extensions on GitHub</title>
+      <link>http://localhost:1313/blog/2010/11/20/hosting-a-jekyll-blog-with-extensions-on-github/</link>
+      <pubDate>Sat, 20 Nov 2010 20:39:09 +0200</pubDate>
+      
+      <guid>http://localhost:1313/blog/2010/11/20/hosting-a-jekyll-blog-with-extensions-on-github/</guid>
+      <description>
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: Really there&amp;rsquo;s nothing about this article that is true any more.
+I&amp;rsquo;m now running &lt;a href=&#34;http://gohugo.io&#34;&gt;Hugo&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;I&amp;rsquo;ve finally gone and done it, it seems, and started a blog that&amp;rsquo;s
+more focused than my previous attempts at Internet wordsmithery.&lt;/p&gt;
+
+&lt;p&gt;No, wait, actually this blog is &lt;em&gt;less&lt;/em&gt; focused, the &lt;a href=&#34;http://ilkkalaukkanen.blogspot.com&#34;&gt;previous
+one&lt;/a&gt; tried to be about my
+photography hobby. From the top, then:&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ve finally gone and&amp;hellip; crud. Let&amp;rsquo;s not write one more of &lt;em&gt;those&lt;/em&gt;
+posts. You know the ones. The beef here is that this is my blog, it&amp;rsquo;s
+about stuff, you can find it at &lt;a href=&#34;http://ilkka.github.io&#34;&gt;http://ilkka.github.io&lt;/a&gt;, and I had
+some fun with &lt;a href=&#34;http://jekyllrb.com&#34;&gt;Jekyll&lt;/a&gt; while making it. If you
+want to use Jekyll too, and especially want to use Jekyll &lt;code&gt;_plugins&lt;/code&gt;
+together with GitHub pages, or just have a few minutes to waste with
+nothing good on the youtubes, read on.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;m not going to talk about basic Jekyll usage since you can read all
+about that elsewhere (like on the &lt;a href=&#34;https://github.com/mojombo/jekyll/wiki&#34;&gt;Jekyll GitHub
+wiki&lt;/a&gt;), and if you happen to
+care about things like this I probably don&amp;rsquo;t have to go into detail
+about the reasons why I chose it, either: the content is statically
+generated from Liquid templates and a bunch of Markdown or Textile
+files or even HTML, so all one needs for hosting is a web server,
+everything is stored safely in git, clean and simple etc. etc. GitHub
+pages is a pretty ideal hosting choice since it automagically
+jekyllifies your pages &amp;ndash; which we&amp;rsquo;ll see is sometimes not so good &amp;ndash;
+and is just generally totally sweet, so let&amp;rsquo;s not go there either.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-revolution-will-be-archived:c2df341ce8c1080f73ca15b658053c8d&#34;&gt;The Revolution will be archived&lt;/h2&gt;
+
+&lt;p&gt;So. I did some Jekyll testing and saw that it was Good, but I found
+that it lacked something I wanted for my site, namely archive
+pages. After messing around a bit with the Liquid template language, I
+came to the conclusion that it wouldn&amp;rsquo;t cut it alone and that I needed some
+custom site-specific code in the form of &lt;a href=&#34;https://github.com/mojombo/jekyll/wiki/Plugins&#34;&gt;Jekyll
+plugins&lt;/a&gt; to get what I
+wanted. The plugin mechanism in Jekyll allows one to put ruby code
+along with the post sources, layouts and other stuff and have it be
+executed when Jekyll runs. Ominous!&lt;/p&gt;
+
+&lt;p&gt;In the interest of coherent narrative, I&amp;rsquo;m going to totally ignore how
+things actually went down and try to tell it the way they should&amp;rsquo;ve,
+and the first milestone on that journey is the creation of a new page
+class in Jekyll. The &lt;code&gt;ArchivePage&lt;/code&gt; class&amp;rsquo; source is below.&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/707020.js?file=archivepage.rb&#34;&gt;&amp;nbsp;&lt;/script&gt;
+
+&lt;p&gt;Most of &lt;code&gt;ArchivePage&lt;/code&gt;&amp;rsquo;s methods and ideas are copied from Jekyll&amp;rsquo;s own
+&lt;code&gt;Page&lt;/code&gt; class. It mixes in &lt;code&gt;Convertible&lt;/code&gt;, therefore it can be laid out
+and converted like any other page. What it does not do is read its
+content from a file, instead the content is initialized in the
+constructor. I know, I know, suboptimal and I &lt;em&gt;am&lt;/em&gt; coming up with a
+better solution but this is not the point. &lt;code&gt;ArchivePage&lt;/code&gt; relies on
+being provided with a ready-made list of &lt;code&gt;posts&lt;/code&gt;, and also, again
+rather crudely, on a &lt;code&gt;month&lt;/code&gt; parameter that&amp;rsquo;s actually a string of the
+format &amp;ldquo;YYYY/MM&amp;rdquo;, like in post URLs, and that will be in fact used as
+part of an URL, which you see if you look at the &lt;code&gt;url&lt;/code&gt; method.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;ext&lt;/code&gt; and &lt;code&gt;basename&lt;/code&gt; are quite self-explanatory, but the &lt;code&gt;data&lt;/code&gt;
+hash is what determines the layout and makes the posts available to
+the template code in &lt;code&gt;content&lt;/code&gt;. Anything that could be set in a page&amp;rsquo;s
+YAML front matter can be set here. I set the &lt;code&gt;type&lt;/code&gt; of the page to be
+&amp;ldquo;archive&amp;rdquo; so that I can identify these pages later as I&amp;rsquo;m iterating
+&lt;code&gt;site.pages&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;render&lt;/code&gt; method is what the site uses to render pages into their
+final form, ready to be written to the destination. The layouts and
+sitewide data are passed to it as &lt;code&gt;layouts&lt;/code&gt; and &lt;code&gt;site_payload&lt;/code&gt;, and it
+combines its own data with &lt;code&gt;site_payload&lt;/code&gt; and passes all that to the
+&lt;code&gt;Convertible&lt;/code&gt; method &lt;code&gt;do_layout&lt;/code&gt; that does the actual converter
+selection according to source format, template parsing, rendering and
+so on. It uses the &lt;code&gt;to_liquid&lt;/code&gt; method which is really just a leftover
+from &lt;code&gt;Page&lt;/code&gt;, I&amp;rsquo;m not sure if it could be just folded into either the
+constructor or &lt;code&gt;render&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;write&lt;/code&gt; is just more slightly modified copypasta from &lt;code&gt;Page&lt;/code&gt;: figure
+out the destination file path into &lt;code&gt;dest&lt;/code&gt;, create the directory path
+there (in two steps that could probably be combined), open a &lt;code&gt;File&lt;/code&gt;
+for writing and dump the &lt;code&gt;output&lt;/code&gt; from &lt;code&gt;render&lt;/code&gt; into it.&lt;/p&gt;
+
+&lt;h2 id=&#34;talkin-bout-my-generation:c2df341ce8c1080f73ca15b658053c8d&#34;&gt;Talkin&amp;rsquo; bout my generation&lt;/h2&gt;
+
+&lt;p&gt;That&amp;rsquo;s the &lt;code&gt;ArchivePage&lt;/code&gt; class in a nutshell, but that alone won&amp;rsquo;t do
+much: there has to a plugin class too, namely a &lt;code&gt;Generator&lt;/code&gt; subclass:&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/707909.js?file=archivegenerator.rb&#34;&gt;&amp;nbsp;&lt;/script&gt;
+
+&lt;p&gt;&lt;code&gt;Generator&lt;/code&gt; plugins have a single method for an interface,
+&lt;code&gt;generate&lt;/code&gt;. It takes the &lt;code&gt;site&lt;/code&gt; as parameter, and from there one can
+do pretty much what one wants. Here I go through all posts in
+&lt;code&gt;collate_by_month&lt;/code&gt;, where build a hash of lists of posts keyed on the
+year and month they were created. Then I simply create an
+&lt;code&gt;ArchivePage&lt;/code&gt; instance for every month and, crucially, add the pages
+into &lt;code&gt;site.pages&lt;/code&gt; so that I can later access them in my template.&lt;/p&gt;
+
+&lt;p&gt;Now I have the archive pages for all my months stored neatly with all
+my other pages. All I have to do now is make them accessible. To that
+end I wrote some template code, the results of which you can see down
+at the bottom of this page and others, and the code looks like this:&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/708018.js?file=archivelinks.html&#34;&gt;&amp;nbsp;&lt;/script&gt;
+
+&lt;p&gt;This bit is not too elegant either, but it gets the job done and works
+reasonably well &amp;ndash; which is easy to say given the single-digit post
+counts I&amp;rsquo;ve tested. All it does is iterate over the whole &lt;code&gt;site.pages&lt;/code&gt;
+list and pick out the pages that have a &lt;code&gt;type&lt;/code&gt; value of &amp;ldquo;archive&amp;rdquo;,
+which the &lt;code&gt;ArchivePage&lt;/code&gt; instances have. Presto, instant archive pages!&lt;/p&gt;
+
+&lt;p&gt;This approach leads to a problem that I hinted at in the beginning
+though: naturally GitHub doesn&amp;rsquo;t want random people (even if they all
+are brilliant hackers) running their code on GitHub&amp;rsquo;s servers, so
+Jekyll plugins don&amp;rsquo;t work when GitHub regenerates the
+pages. Unfortunately I only found this out at this point, and I
+already had some development history in my pages&amp;rsquo; repository&amp;rsquo;s master
+branch which I didn&amp;rsquo;t want to throw away. Also I didn&amp;rsquo;t want to find
+hosting elsewhere, and really didn&amp;rsquo;t want separate repos for the
+source and the content, so I found myself with two problems:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;I need a good workflow for writing, generating and uploading, and&lt;/li&gt;
+&lt;li&gt;I need a good way to host both the Jekyll source and the generated site in one repo.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Both of these actually kind of tie together, since the way Jekyll
+normally works, meaning with the out-of-the box configuration, is to
+generate the site in the &lt;code&gt;_site&lt;/code&gt; folder under the root of the source
+tree. Now, if I want to not have to maintain two repos, I must host
+the sources to this blog in the &lt;code&gt;ilkka.github.com&lt;/code&gt; repo alongside the
+generated site. However, the generated site needs to be in the master
+branch, and it needs to start at the root of the tree, meaning the
+main &lt;code&gt;index.html&lt;/code&gt; file needs to be in the root directory, not in
+e.g. &lt;code&gt;_site&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;branching-out:c2df341ce8c1080f73ca15b658053c8d&#34;&gt;Branching out&lt;/h2&gt;
+
+&lt;p&gt;The way I came up with to solve this is to use two branches: &lt;code&gt;master&lt;/code&gt;
+is for the generated site, since that&amp;rsquo;s what GitHub pages wants, and
+I&amp;rsquo;ll create a second branch called &lt;code&gt;source&lt;/code&gt; to keep the sources
+in. Then I&amp;rsquo;ll add the &lt;code&gt;master&lt;/code&gt; branch as a submodule of the &lt;code&gt;source&lt;/code&gt;
+branch so that it shows up as the &lt;code&gt;_site&lt;/code&gt; directory. This allows me to
+have both branches essentially checked out at the same time, which
+makes updating a breeze even if it means using twice the disk space
+locally.&lt;/p&gt;
+
+&lt;p&gt;The first thing I need to do is move the sources out of &lt;code&gt;master&lt;/code&gt; and
+into &lt;code&gt;source&lt;/code&gt;. I don&amp;rsquo;t want to lose the history though, so I&amp;rsquo;ll have
+to rename the branch, and I also don&amp;rsquo;t want the branches to share a
+root &amp;ndash; there&amp;rsquo;s no commonality there &amp;ndash; so I want a pristine &lt;code&gt;master&lt;/code&gt;
+branch. Happily this is easy with Git. First I rename the old branch
+locally:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;
+git branch -m master source
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This only renames the local branch though: I still have to rename the
+remote branch in GitHub, which I&amp;rsquo;ll do later. Now I create a pristine
+new &lt;code&gt;master&lt;/code&gt;, which is well documented in the &lt;a href=&#34;http://book.git-scm.com/5_creating_new_empty_branches.html&#34;&gt;Git Community
+Book&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;
+git symbolic-ref HEAD refs/heads/master
+rm .git/index
+git clean -fdx
+touch index.html
+git add your files
+git commit -m &#39;Blank new master branch&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now I cannot just do a normal push with this new &lt;code&gt;master&lt;/code&gt; branch
+because the master in GitHub is unrelated and cannot be merged. What I
+&lt;em&gt;can&lt;/em&gt; do is borrow a page from George Lucas&amp;rsquo; book and force-push:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;
+git push --force origin master
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will essentially clobber the remote repo and is really not
+recommended on a published repo, but in my case I think it&amp;rsquo;s pretty
+unlikely that anybody else has cloned it yet.&lt;/p&gt;
+
+&lt;p&gt;Now all that remains is to push the &lt;code&gt;source&lt;/code&gt; branch:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;
+git push origin source:source
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Also done but not detailed here is that &lt;code&gt;source&lt;/code&gt; was set to follow
+&lt;code&gt;origin/master&lt;/code&gt; so I actually had to recreate it locally and set it to
+follow &lt;code&gt;origin/source&lt;/code&gt;. Then I checked out &lt;code&gt;source&lt;/code&gt; and added the
+submodule, using my private URL so that I could commit changes to the
+generated site easily:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;
+git checkout source
+git submodule add git@github.com:ilkka/ilkka.github.com.git _site
+git commit -m &#34;Added site as submodule&#34;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now whenever I run Jekyll, or as I normally do, namely have &lt;code&gt;compass
+watch&lt;/code&gt; running in one window and &lt;code&gt;jekyll --auto --server&lt;/code&gt; in another,
+the site is generated into &lt;code&gt;_site&lt;/code&gt; and I can commit and push the
+changes directly.&lt;/p&gt;
+
+&lt;p&gt;All in all this seems to work pretty nicely, and Jekyll really
+scratches some fundamental itch for me. I get to code and tweak, which
+is all I really need right now, now that I&amp;rsquo;ve no time or need for
+programming professionally, at least not right now. In a way it&amp;rsquo;s
+pretty liberating, since I can totally get my hack on without getting
+brainburn from too much time spent staring at my code. Expect more of
+that then, in this space, along with other stuff. As I said in the
+beginning, I&amp;rsquo;m gonna play pretty fast and loose here.&lt;/p&gt;
+
+&lt;p&gt;If you want to check out the code and source in full, take a look at
+the &lt;a href=&#34;https://github.com/ilkka/ilkka.github.com/tree/source&#34;&gt;&lt;code&gt;source&lt;/code&gt; branch in
+GitHub&lt;/a&gt;. I&amp;rsquo;ll
+be posting about new developments in this front as well.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

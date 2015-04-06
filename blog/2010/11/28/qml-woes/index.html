@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+    <head prefix="og: http://ogp.me/ns#">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="About me and the things I think and do.">
+    <meta property="og:title" content="QML woes &mdash; ilkka.io">
+    <meta property="og:site_name" content="ilkka.io">
+    <meta property="og:url" content="http://localhost:1313/blog/2010/11/28/qml-woes/">
+    
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="I&rsquo;ve been experimenting with Qt Components recently, even though they are very much in a pre-alpha state. I think that QML together with the excellent PySide bindings holds great promise as a crossplatform environment for mobile app development, even more so than Qt &#43; QML, since there&rsquo;s no need to set up toolchains for compilation and linking. I&rsquo;m hoping to write many apps in this manner, implementing ideas that I&rsquo;ve had banging around in my head for a while now.">
+    
+    <meta property="og:article:author" content="http://twitter.com/ilkkalaukkanen">
+    
+    <meta property="og:article:published_time" content="28000-11-11T1128:00:00Z00:00">
+    
+    <meta property="og:article:tag" content="qt">
+    
+    <meta property="og:article:tag" content="qml">
+    
+    <meta property="og:article:tag" content="coding">
+    
+    
+
+    <meta name="superfish" content="nofish">
+
+    <title>QML woes &mdash; ilkka.io</title>
+
+    <link rel="canonical" href="http://localhost:1313/blog/2010/11/28/qml-woes/">
+    <link href="" rel="alternate" type="application/rss+xml" title="ilkka.io" />
+
+    <link href="http://localhost:1313/css/print.css" media="print" rel="stylesheet" type="text/css">
+    <link href="http://localhost:1313/css/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/zenburn.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//cdn.jsdelivr.net/jquery.midnight/1.1.0/midnight.jquery.min.js"></script>
+
+    <script src="http://localhost:1313/js/bundle.js"></script>
+
+    
+</head>
+
+    <body>
+        <nav class="nav--main">
+    <div class="nav__links">
+        <a href="http://localhost:1313/" class="icon--home"><span class="hide">home</span></a>
+    </div>
+</nav>
+
+        <article class="post post--single post--full">
+            <header class="page-header post__header" id="header-with-changing-background" data-midnight="header">
+                <h1 class="post__title">QML woes</h1>
+                <aside class="post__meta">
+                    
+
+<i class="fa fa-tag"></i>&nbsp;<a class="tag-link" href="http://localhost:1313/tags/qt">qt</a>
+, <a class="tag-link" href="http://localhost:1313/tags/qml">qml</a>
+, <a class="tag-link" href="http://localhost:1313/tags/coding">coding</a>
+, 
+
+a
+
+2 minute read from Sunday, 28 Nov 2010.
+
+                </aside>
+            </header>
+
+            <main class="post__content" data-midnight="body">
+                <p>I&rsquo;ve been experimenting with <a href="http://qt.gitorious.org/qt-components">Qt
+Components</a> recently, even though they
+are very much in a pre-alpha state. I think that QML together with the
+excellent PySide bindings holds great promise as a crossplatform environment
+for mobile app development, even more so than Qt + QML, since there&rsquo;s no need
+to set up toolchains for compilation and linking. I&rsquo;m hoping to write many
+apps in this manner, implementing ideas that I&rsquo;ve had banging around in my
+head for a while now.</p>
+
+<p>I&rsquo;ve been building the &ldquo;mx&rdquo; or Maemo flavor of Qt Components myself from the
+Git repo, but a couple of days ago I came across blog posts by <a href="http://qt-funk.blogspot.com/2010/10/fresh-from-oven-qt-extras-for-ubuntu.html">Attila
+Csipa</a>
+and <a href="http://blogs.forum.nokia.com/blog/kate-alholas-forum-nokia-blog/2010/11/14/how-to-make-modern-mobile-applications-with-qt-quick-components">Kate
+Alhola</a>
+where I read to my great exitement that there&rsquo;s a PPA with binary packages of
+Qt Components for Ubuntu, and that Fremantle packages are available in extras.
+This is the ideal combo for me, since I do my development on Ubuntu machines
+and my current target would be my N900 running Fremantle.</p>
+
+<p>Excitement soon turned to disappointment, however, when I noticed that the
+<a href="https://launchpad.net/~forumnokia/+archive/fn-ppa/+packages">binaries for Maverick are failing to
+build</a>. The
+problem seems to be that Qt Components wants to <code>#include &lt;mclassfactory.h&gt;</code>,
+but <code>libmeegotouch-dev</code> doesn&rsquo;t publish <code>mclassfactory.h</code> as a public header,
+instead treating it as a private one. I downloaded the source packages for
+both, made <code>mclassfactory.h</code> public and rebuilt <code>libmeegotouch</code> and
+<code>qt-components</code> in their entirety.</p>
+
+<p>So far I&rsquo;ve only had a chance to do some very preliminary tests on the
+desktop, but it looks promising: things seem to work pretty much as expected,
+and making QML UIs is not just drawing lines and aligning textboxes anymore.</p>
+
+<p>On the N900 I fared a little worse though: I installed <code>qt-components-dev</code>,
+quickly typed a QML file that just had a single <code>com.meego.Window</code> element in
+it and gave it to <code>qt4-qmlviewer</code> to show, and it managed to display a window
+where the top <sup>1</sup>&frasl;<sub>3</sub> was red and the rest black. Better than nothing, I guess.</p>
+
+<p>So, it seems like my ideal mobile development environment has a ways to go,
+then. I&rsquo;ll have to see what the state of the art <em>really</em> is on the N900 after
+I get something working on the desktop. It&rsquo;s also a bit of a bother that I
+can&rsquo;t install <code>qt-components</code> in Scratchbox. It&rsquo;d be nice to not have to copy
+stuff to the N900 every time I want to try out something. Maybe I&rsquo;ll have to
+solve that through some remote directory mounting over USB-net, then.</p>
+
+            </main>
+        </article>
+        <footer>
+    <div>
+        <p>© 2015 Ilkka Laukkanen. <a href="http://creativecommons.org/licenses/by-sa/4.0/">Some rights reserved</a>.</p>
+        <p><a href="https://github.com/ilkka"><i class="fa fa-github"></i> ilkka</a> &mdash; 
+        <a href="https://twitter.com/ilkkalaukkanen"><i class="fa fa-twitter"></i> ilkkalaukkanen</a></p>
+        <p>Home icon by iconsmind.com from <a href="https://thenounproject.com">The Noun Project</a>.</p>
+    </div>
+</footer>
+
+    <script>document.write('<script src="http://'
+        + (location.host || 'localhost').split(':')[0]
+		+ ':1313/livereload.js?mindelay=10"></'
+        + 'script>')</script></body>
+</html>

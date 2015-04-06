@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Sysadmin on ilkka.io</title>
+    <link>http://localhost:1313/tags/sysadmin/</link>
+    <description>Recent content in Sysadmin on ilkka.io</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© 2015 Ilkka Laukkanen. &lt;a href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Some rights reserved&lt;/a&gt;.</copyright>
+    <lastBuildDate>Wed, 25 May 2011 22:39:00 +0300</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/sysadmin/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Dgh, The Debian/Ubuntu Downgrade Helper</title>
+      <link>http://localhost:1313/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/</link>
+      <pubDate>Wed, 25 May 2011 22:39:00 +0300</pubDate>
+      
+      <guid>http://localhost:1313/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/</guid>
+      <description>&lt;p&gt;Ever had the bright idea of upgrading, say, your Ubuntu machine to use some
+snazzy new software from a PPA, only to have it blow up in your face? The grim
+realization that there&amp;rsquo;s no easy downgrade path, instead you&amp;rsquo;ll have to find
+every single package the PPA upgraded and downgrade them by hand to keep
+software from breaking? Me too!&lt;/p&gt;
+
+&lt;p&gt;I recently had this exact situation with the &lt;a href=&#34;https://launchpad.net/~gnome3-team/+archive/gnome3&#34;&gt;gnome3-team
+PPA&lt;/a&gt;. It worked like a
+charm in my work computer, but when I tried it on my Nokia Booklet, it totally
+failed, probably thanks to the infamous GMA500 graphics hardware. Anyway,
+after a bit of hand-wringing I realized that:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;I had to downgrade, there was stuff on the machine I didn&amp;rsquo;t want to wipe,&lt;/li&gt;
+&lt;li&gt;I had been in this same situation before, and&lt;/li&gt;
+&lt;li&gt;probably others had, too.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;So I wrote a little tool to help, and I&amp;rsquo;m glad to say it worked perfectly. The
+tool is &lt;a href=&#34;http://github.com/ilkka/dgh&#34;&gt;dgh&lt;/a&gt;, and it helps by finding the
+packages that look like they need to be downgraded. It does this by looking at
+&lt;code&gt;apt-cache policy&lt;/code&gt; output, and finding packages whose installed version is not
+available in any repository. Usage is simple, but requires some manual work
+(for now):&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Remove the offending package archive from apt&amp;rsquo;s sources&lt;/li&gt;
+&lt;li&gt;Run &lt;code&gt;apt-get update&lt;/code&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Produce &lt;code&gt;apt-cache policy&lt;/code&gt; output for all installed packages, e.g.:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;dpkg --get-selections| \
+egrep &amp;#39;\binstall&amp;#39;|awk &amp;#39;{print $1}&amp;#39;| \
+xargs env LANG=C apt-cache policy| \
+tee packages.list
+     
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Run &lt;code&gt;dgh&lt;/code&gt; on the output:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;$ dgh packages.list
+     
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Dgh will report packages it thinks are downgrade candidates. Note that it will
+probably report all manually installed packages too, so be careful when
+downgrading.&lt;/p&gt;
+
+&lt;p&gt;I have a few enhancements I want to do before I call it 1.0, like not
+requiring a pre-created policy output file and perhaps even performing the
+downgrade by itself, but it&amp;rsquo;s usable now, just &lt;a href=&#34;http://github.com/ilkka/dgh&#34;&gt;grab the
+code&lt;/a&gt; or &lt;code&gt;gem install dgh&lt;/code&gt; directly from
+rubygems.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

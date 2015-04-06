@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+    <head prefix="og: http://ogp.me/ns#">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="About me and the things I think and do.">
+    <meta property="og:title" content="Rakefile for Jekyll site management &mdash; ilkka.io">
+    <meta property="og:site_name" content="ilkka.io">
+    <meta property="og:url" content="http://localhost:1313/blog/2010/12/08/rakefile-for-jekyll-site-management/">
+    
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="Previously I&rsquo;ve used a bunch of scripts for managing post creation and site compilation tasks, but recently I decided to move over to Rake. The whole Rakefile as-it-stands is in the repo, naturally, but here&rsquo;s a couple of bits I&rsquo;m finding useful. I have a default task set up that runs compass, jekyll, and git commits and git pushes the result. The compass and jekyll bits are simple sh steps, but the rest is a bit more involved.">
+    
+    <meta property="og:article:author" content="http://twitter.com/ilkkalaukkanen">
+    
+    <meta property="og:article:published_time" content="8000-12-12T128:00:00Z00:00">
+    
+    <meta property="og:article:tag" content="ruby">
+    
+    <meta property="og:article:tag" content="rake">
+    
+    <meta property="og:article:tag" content="jekyll">
+    
+    
+
+    <meta name="superfish" content="nofish">
+
+    <title>Rakefile for Jekyll site management &mdash; ilkka.io</title>
+
+    <link rel="canonical" href="http://localhost:1313/blog/2010/12/08/rakefile-for-jekyll-site-management/">
+    <link href="" rel="alternate" type="application/rss+xml" title="ilkka.io" />
+
+    <link href="http://localhost:1313/css/print.css" media="print" rel="stylesheet" type="text/css">
+    <link href="http://localhost:1313/css/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/zenburn.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//cdn.jsdelivr.net/jquery.midnight/1.1.0/midnight.jquery.min.js"></script>
+
+    <script src="http://localhost:1313/js/bundle.js"></script>
+
+    
+</head>
+
+    <body>
+        <nav class="nav--main">
+    <div class="nav__links">
+        <a href="http://localhost:1313/" class="icon--home"><span class="hide">home</span></a>
+    </div>
+</nav>
+
+        <article class="post post--single post--full">
+            <header class="page-header post__header" id="header-with-changing-background" data-midnight="header">
+                <h1 class="post__title">Rakefile for Jekyll site management</h1>
+                <aside class="post__meta">
+                    
+
+<i class="fa fa-tag"></i>&nbsp;<a class="tag-link" href="http://localhost:1313/tags/ruby">ruby</a>
+, <a class="tag-link" href="http://localhost:1313/tags/rake">rake</a>
+, <a class="tag-link" href="http://localhost:1313/tags/jekyll">jekyll</a>
+, 
+
+a
+
+3 minute read from Wednesday,  8 Dec 2010.
+
+                </aside>
+            </header>
+
+            <main class="post__content" data-midnight="body">
+                <p>Previously I&rsquo;ve used a bunch of scripts for managing post creation and site
+compilation tasks, but recently I decided to move over to Rake. The whole
+Rakefile as-it-stands is <a href="https://github.com/ilkka/ilkka.github.com/tree/source">in the
+repo</a>, naturally, but
+here&rsquo;s a couple of bits I&rsquo;m finding useful.</p>
+
+<p>I have a <code>default</code> task set up that runs compass, jekyll, and <code>git commit</code>s
+and <code>git push</code>es the result. The compass and jekyll bits are simple <code>sh</code>
+steps, but the rest is a bit more involved. Let&rsquo;s start with post creation
+though, in the spirit of the real workflow.</p>
+
+<pre><code class="language-ruby">
+namespace "post" do
+  desc "Given a title as an argument, create a new post file"
+  task :new, [:title] do |t, args|
+    now = DateTime::now().to_date()
+    filename = "#{now.strftime}-#{args.title.gsub(/\s/, '_').downcase}.markdown"
+    path = File.join("_posts", filename)
+    if File.exist? path; raise RuntimeError.new("Won't clobber #{path}"); end
+    File.open(path, 'w') do |file|
+      file.write <<-EOS
+---
+layout: post
+title: #{args.title}
+---
+
+Content goes here
+EOS
+    end
+    puts "Now open #{path} in an editor."
+  end
+end
+</code></pre>
+
+<p>The above listing is the new post creation task, and the entirety of the
+<code>post</code> namespace currently, as it happens. It takes the post title as an
+argument, and uses that and the current date to generate a filename. At the
+moment it just replaces whitespace with underscores, but it might be good to
+do more escaping to ensure a good filename. Then the task writes a post
+template into the file and prints the filename so it&rsquo;s easy to launch an
+editor for it.</p>
+
+<p>To ensure good clean commits of the site I clean the <code>_site</code> directory before
+compilation, i.e. delete all files except for any dotfiles, so as not to
+destroy the <code>.git</code> dir in there. I use a helper method to get a list of all
+the files:</p>
+
+<pre><code class="language-ruby">
+def site_files
+  FileList['_site/**/*'].find_all {|f| File.file? f}
+end
+</code></pre>
+
+<p>This file list is then used in the <code>clean</code> and <code>commit</code> tasks like this:</p>
+
+<pre><code class="language-ruby">
+desc "Clean generated site files"
+task :clean do
+  FileUtils.rm site_files
+end
+
+desc "Commit compiled site to Git"
+task :commit do
+  g = Git.open('_site')
+  g.add site_files.map {|f| f.gsub(/^_site\//, '')}
+  g.commit "Regenerated"
+end
+
+desc "Push committed site to GitHub"
+task :push do
+  g = Git.open('_site')
+  g.push
+end
+</code></pre>
+
+<p>The <code>clean</code> task is simple because one can use the filelist directly, but when
+committing, the <code>_site</code> dir bit has to be dropped from the filenames with a
+simple <code>map</code> + <code>gsub</code> combo. I&rsquo;m using <a href="https://github.com/schacon">Scott
+Chacon&rsquo;s</a> <a href="https://github.com/schacon/ruby-git">ruby-git
+gem</a> to perform git operations on the
+repo.</p>
+
+<p>That&rsquo;s pretty much it for the moment. I might expand the post management
+features a bit at some point though, but since most of that is no simpler via
+Rake than through shell commands and an editor, it remains to be seen what
+those new features might be.</p>
+
+            </main>
+        </article>
+        <footer>
+    <div>
+        <p>© 2015 Ilkka Laukkanen. <a href="http://creativecommons.org/licenses/by-sa/4.0/">Some rights reserved</a>.</p>
+        <p><a href="https://github.com/ilkka"><i class="fa fa-github"></i> ilkka</a> &mdash; 
+        <a href="https://twitter.com/ilkkalaukkanen"><i class="fa fa-twitter"></i> ilkkalaukkanen</a></p>
+        <p>Home icon by iconsmind.com from <a href="https://thenounproject.com">The Noun Project</a>.</p>
+    </div>
+</footer>
+
+    <script>document.write('<script src="http://'
+        + (location.host || 'localhost').split(':')[0]
+		+ ':1313/livereload.js?mindelay=10"></'
+        + 'script>')</script></body>
+</html>

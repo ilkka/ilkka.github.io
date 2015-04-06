@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tools on ilkka.io</title>
+    <link>http://localhost:1313/tags/tools/</link>
+    <description>Recent content in Tools on ilkka.io</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© 2015 Ilkka Laukkanen. &lt;a href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Some rights reserved&lt;/a&gt;.</copyright>
+    <lastBuildDate>Mon, 31 Jan 2011 14:31:00 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/tools/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Fix Outlook Quoting Style</title>
+      <link>http://localhost:1313/blog/2011/01/31/fix-outlook-quoting-style/</link>
+      <pubDate>Mon, 31 Jan 2011 14:31:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/blog/2011/01/31/fix-outlook-quoting-style/</guid>
+      <description>&lt;p&gt;Like many others before and after myself, I find myself having to use MS
+Outlook in my daily work. Also like many, I loathe its style of quoting email
+messages. Fortunately I use Exchange&amp;rsquo;s rather surprisingly good (as of the
+2007 version) OWA web client, so with Firefox&amp;rsquo;s &lt;a href=&#34;https://addons.mozilla.org/en-US/firefox/addon/its-all-text/&#34;&gt;It&amp;rsquo;s All
+Text&lt;/a&gt; extension,
+Vim and some Ruby code, I can fix quoting in messages I&amp;rsquo;m replying to easily.&lt;/p&gt;
+
+&lt;p&gt;Googling for a ready-made solution I came across &lt;a href=&#34;http://www.mail-archive.com/gnhlug@zk3.dec.com/msg13395.html&#34;&gt;a post to gnhlug&amp;rsquo;s mailing
+list&lt;/a&gt; that had a
+Perl solution, albeit one supporting only English and only older Exchange
+versions, but it gave me the spark I needed to write my own implementation.&lt;/p&gt;
+
+&lt;p&gt;Whereas (as far as I can tell) the original author wanted to correct the
+quoting style of all the participants in the conversation, I thought that was
+unnecessarily disruptive and only opted to correctly quote the message I would
+be replying to. The usage scenario then is something like this:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;In OWA, choose to reply to a message. Horribly quoted message text appears.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Use It&amp;rsquo;s All Text or some other similar tool to open message text in a
+reasonably smart editor.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Filter entire message text through this script. E.g. in Vim type
+&lt;code&gt;:%!path-to-script.rb&lt;/code&gt;, after making the script executable of course.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Replace original mesage text with output of filter. If using It&amp;rsquo;s All Text,
+just type &lt;code&gt;:wq&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Presto! Correctly quoted message. You might have to move your sig, though.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;That&amp;rsquo;s how to use it, now here&amp;rsquo;s the script:&lt;/p&gt;
+
+&lt;script
+src=&#34;https://gist.github.com/803961.js?file=fix-outlook-quoting.rb&#34;&gt;&lt;/script&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

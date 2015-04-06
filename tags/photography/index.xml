@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Photography on ilkka.io</title>
+    <link>http://localhost:1313/tags/photography/</link>
+    <description>Recent content in Photography on ilkka.io</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© 2015 Ilkka Laukkanen. &lt;a href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Some rights reserved&lt;/a&gt;.</copyright>
+    <lastBuildDate>Wed, 08 Dec 2010 17:09:38 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/photography/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Shooting tethered with the Nikon D80 and Ubuntu</title>
+      <link>http://localhost:1313/blog/2010/12/08/shooting-tethered-with-the-nikon-d80-and-ubuntu/</link>
+      <pubDate>Wed, 08 Dec 2010 17:09:38 +0200</pubDate>
+      
+      <guid>http://localhost:1313/blog/2010/12/08/shooting-tethered-with-the-nikon-d80-and-ubuntu/</guid>
+      <description>&lt;p&gt;I really like shooting tethered with Lightroom and my MacBook, but today while
+thinking about a band shoot I had coming up, I wondered how easy it would be
+to do the same on Ubuntu on my Nokia Booklet.&lt;/p&gt;
+
+&lt;p&gt;After a bit of Googling I came across &lt;a href=&#34;http://rian76.blogspot.com/2009/09/tethering-from-your-nikon-to-your-linux.html&#34;&gt;a
+post&lt;/a&gt;
+that had a nice and simple script that I could use as a starting point. It
+even calls itself via gphoto2 while working which is a nice solution to the
+problem of needing a script for downloading and another one for viewing the
+images (the hook script provided to gphoto2).&lt;/p&gt;
+
+&lt;p&gt;It has one problem however: I shoot RAW and therefore would need for whatever
+image viewer I call to be able to display NEF files. I know of no such tool
+for Ubuntu, so I switched my D80 to shoot RAW+JPEG instead and edited the
+script to this:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span style=&#34;color: #75715e&#34;&gt;#!/bin/bash&lt;/span&gt;
+
+&lt;span style=&#34;color: #66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;$ACTION&amp;quot;&lt;/span&gt; in
+download&lt;span style=&#34;color: #f92672&#34;&gt;)&lt;/span&gt;
+  &lt;span style=&#34;color: #66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;[&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;$(&lt;/span&gt;expr match &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;$ARGUMENT&amp;quot;&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;#39;.*\.JPG$&amp;#39;&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;)&lt;/span&gt; -gt 0 &lt;span style=&#34;color: #f92672&#34;&gt;]&lt;/span&gt;; &lt;span style=&#34;color: #66d9ef&#34;&gt;then&lt;/span&gt;
+&lt;span style=&#34;color: #66d9ef&#34;&gt;    &lt;/span&gt;killall eog
+    eog -f &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;$ARGUMENT&amp;quot;&lt;/span&gt; &amp;amp;
+  &lt;span style=&#34;color: #66d9ef&#34;&gt;fi&lt;/span&gt;
+  ;;
+&lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;)&lt;/span&gt;
+  &lt;span style=&#34;color: #f8f8f2&#34;&gt;me&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;$(&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;cd&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;0%/*&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;}&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;$PWD&lt;/span&gt;/&lt;span style=&#34;color: #66d9ef&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;0##*/&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;})&lt;/span&gt;
+  gphoto2 --capture-tethered --hook-script&lt;span style=&#34;color: #f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;$me&lt;/span&gt;
+  ;;
+&lt;span style=&#34;color: #66d9ef&#34;&gt;esac&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Only the &lt;code&gt;download&lt;/code&gt; branch of the case statement is edited. I just check if
+the filename ends in &lt;code&gt;.JPG&lt;/code&gt;, and call &lt;code&gt;eog&lt;/code&gt; to display the image if it does.
+The &lt;code&gt;.NEF&lt;/code&gt; files are downloaded too, they&amp;rsquo;re just ignored.&lt;/p&gt;
+
+&lt;p&gt;The downside to this is that I can&amp;rsquo;t seem to be able to leave the images on
+the card as well as download them, in &lt;code&gt;--capture-tethered&lt;/code&gt; mode gphoto2 always
+deletes them. But still, this is a workable solution for when I don&amp;rsquo;t have the
+MacBook handy.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

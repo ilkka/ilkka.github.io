@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Rake on ilkka.io</title>
+    <link>http://localhost:1313/tags/rake/</link>
+    <description>Recent content in Rake on ilkka.io</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© 2015 Ilkka Laukkanen. &lt;a href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Some rights reserved&lt;/a&gt;.</copyright>
+    <lastBuildDate>Wed, 08 Dec 2010 17:00:52 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/rake/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Rakefile for Jekyll site management</title>
+      <link>http://localhost:1313/blog/2010/12/08/rakefile-for-jekyll-site-management/</link>
+      <pubDate>Wed, 08 Dec 2010 17:00:52 +0200</pubDate>
+      
+      <guid>http://localhost:1313/blog/2010/12/08/rakefile-for-jekyll-site-management/</guid>
+      <description>&lt;p&gt;Previously I&amp;rsquo;ve used a bunch of scripts for managing post creation and site
+compilation tasks, but recently I decided to move over to Rake. The whole
+Rakefile as-it-stands is &lt;a href=&#34;https://github.com/ilkka/ilkka.github.com/tree/source&#34;&gt;in the
+repo&lt;/a&gt;, naturally, but
+here&amp;rsquo;s a couple of bits I&amp;rsquo;m finding useful.&lt;/p&gt;
+
+&lt;p&gt;I have a &lt;code&gt;default&lt;/code&gt; task set up that runs compass, jekyll, and &lt;code&gt;git commit&lt;/code&gt;s
+and &lt;code&gt;git push&lt;/code&gt;es the result. The compass and jekyll bits are simple &lt;code&gt;sh&lt;/code&gt;
+steps, but the rest is a bit more involved. Let&amp;rsquo;s start with post creation
+though, in the spirit of the real workflow.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;
+namespace &#34;post&#34; do
+  desc &#34;Given a title as an argument, create a new post file&#34;
+  task :new, [:title] do |t, args|
+    now = DateTime::now().to_date()
+    filename = &#34;#{now.strftime}-#{args.title.gsub(/\s/, &#39;_&#39;).downcase}.markdown&#34;
+    path = File.join(&#34;_posts&#34;, filename)
+    if File.exist? path; raise RuntimeError.new(&#34;Won&#39;t clobber #{path}&#34;); end
+    File.open(path, &#39;w&#39;) do |file|
+      file.write &lt;&lt;-EOS
+---
+layout: post
+title: #{args.title}
+---
+
+Content goes here
+EOS
+    end
+    puts &#34;Now open #{path} in an editor.&#34;
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The above listing is the new post creation task, and the entirety of the
+&lt;code&gt;post&lt;/code&gt; namespace currently, as it happens. It takes the post title as an
+argument, and uses that and the current date to generate a filename. At the
+moment it just replaces whitespace with underscores, but it might be good to
+do more escaping to ensure a good filename. Then the task writes a post
+template into the file and prints the filename so it&amp;rsquo;s easy to launch an
+editor for it.&lt;/p&gt;
+
+&lt;p&gt;To ensure good clean commits of the site I clean the &lt;code&gt;_site&lt;/code&gt; directory before
+compilation, i.e. delete all files except for any dotfiles, so as not to
+destroy the &lt;code&gt;.git&lt;/code&gt; dir in there. I use a helper method to get a list of all
+the files:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;
+def site_files
+  FileList[&#39;_site/**/*&#39;].find_all {|f| File.file? f}
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This file list is then used in the &lt;code&gt;clean&lt;/code&gt; and &lt;code&gt;commit&lt;/code&gt; tasks like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;
+desc &#34;Clean generated site files&#34;
+task :clean do
+  FileUtils.rm site_files
+end
+
+desc &#34;Commit compiled site to Git&#34;
+task :commit do
+  g = Git.open(&#39;_site&#39;)
+  g.add site_files.map {|f| f.gsub(/^_site\//, &#39;&#39;)}
+  g.commit &#34;Regenerated&#34;
+end
+
+desc &#34;Push committed site to GitHub&#34;
+task :push do
+  g = Git.open(&#39;_site&#39;)
+  g.push
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;clean&lt;/code&gt; task is simple because one can use the filelist directly, but when
+committing, the &lt;code&gt;_site&lt;/code&gt; dir bit has to be dropped from the filenames with a
+simple &lt;code&gt;map&lt;/code&gt; + &lt;code&gt;gsub&lt;/code&gt; combo. I&amp;rsquo;m using &lt;a href=&#34;https://github.com/schacon&#34;&gt;Scott
+Chacon&amp;rsquo;s&lt;/a&gt; &lt;a href=&#34;https://github.com/schacon/ruby-git&#34;&gt;ruby-git
+gem&lt;/a&gt; to perform git operations on the
+repo.&lt;/p&gt;
+
+&lt;p&gt;That&amp;rsquo;s pretty much it for the moment. I might expand the post management
+features a bit at some point though, but since most of that is no simpler via
+Rake than through shell commands and an editor, it remains to be seen what
+those new features might be.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

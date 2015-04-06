@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+    <head prefix="og: http://ogp.me/ns#">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="About me and the things I think and do.">
+    <meta property="og:title" content="Jitsu is a meta build system for Ninja &mdash; ilkka.io">
+    <meta property="og:site_name" content="ilkka.io">
+    <meta property="og:url" content="http://localhost:1313/blog/2011/02/13/jitsu-is-a-meta-build-system-for-ninja/">
+    
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="A while back I hit upon Ninja, a very fast
+and very simple build system that is apparently used for building
+Chromium. Can&rsquo;t remember where I first heard of
+it, might&rsquo;ve been Hacker News or just
+somebody&rsquo;s tweet, but having been interested in build systems for years, at
+least since setting up Linux builds from scratch for a big piece of software
+while working on my M.Sc. thesis, I immediately started playing around with
+it.
+">
+    
+    <meta property="og:article:author" content="http://twitter.com/ilkkalaukkanen">
+    
+    <meta property="og:article:published_time" content="13000-02-02T213:00:00Z00:00">
+    
+    <meta property="og:article:tag" content="jitsu">
+    
+    <meta property="og:article:tag" content="ninja">
+    
+    <meta property="og:article:tag" content="ruby">
+    
+    <meta property="og:article:tag" content="coding">
+    
+    
+
+    <meta name="superfish" content="nofish">
+
+    <title>Jitsu is a meta build system for Ninja &mdash; ilkka.io</title>
+
+    <link rel="canonical" href="http://localhost:1313/blog/2011/02/13/jitsu-is-a-meta-build-system-for-ninja/">
+    <link href="" rel="alternate" type="application/rss+xml" title="ilkka.io" />
+
+    <link href="http://localhost:1313/css/print.css" media="print" rel="stylesheet" type="text/css">
+    <link href="http://localhost:1313/css/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/zenburn.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//cdn.jsdelivr.net/jquery.midnight/1.1.0/midnight.jquery.min.js"></script>
+
+    <script src="http://localhost:1313/js/bundle.js"></script>
+
+    
+</head>
+
+    <body>
+        <nav class="nav--main">
+    <div class="nav__links">
+        <a href="http://localhost:1313/" class="icon--home"><span class="hide">home</span></a>
+    </div>
+</nav>
+
+        <article class="post post--single post--full">
+            <header class="page-header post__header" id="header-with-changing-background" data-midnight="header">
+                <h1 class="post__title">Jitsu is a meta build system for Ninja</h1>
+                <aside class="post__meta">
+                    
+
+<i class="fa fa-tag"></i>&nbsp;<a class="tag-link" href="http://localhost:1313/tags/jitsu">jitsu</a>
+, <a class="tag-link" href="http://localhost:1313/tags/ninja">ninja</a>
+, <a class="tag-link" href="http://localhost:1313/tags/ruby">ruby</a>
+, <a class="tag-link" href="http://localhost:1313/tags/coding">coding</a>
+, 
+
+a
+
+2 minute read from Sunday, 13 Feb 2011.
+
+                </aside>
+            </header>
+
+            <main class="post__content" data-midnight="body">
+                <p>A while back I hit upon <a href="https://github.com/martine/ninja">Ninja</a>, a very fast
+and very simple build system that is apparently used for building
+<a href="http://www.chromium.org/">Chromium</a>. Can&rsquo;t remember where I first heard of
+it, might&rsquo;ve been <a href="http://news.ycombinator.com">Hacker News</a> or just
+somebody&rsquo;s tweet, but having been interested in build systems for years, at
+least since setting up Linux builds from scratch for a big piece of software
+while working on my M.Sc. thesis, I immediately started playing around with
+it.</p>
+
+<p>Ninja is indeed fast, but by design the buildfiles are hard to write. Ninja
+sources include a patch to <a href="http://code.google.com/p/gyp">Gyp</a>, a higher-level
+build system also somehow (not sure how exactly) related to Chromium, but the
+support wasn&rsquo;t very complete, and somehow I just didn&rsquo;t find Gyp appealing. I
+therefore did what anyone in my circumstances would&rsquo;ve done, and started
+writing a &ldquo;meta build system&rdquo; myself.</p>
+
+<p>It&rsquo;s called <a href="https://github.com/ilkka/jitsu">Jitsu</a>, and since I really like
+Ruby, that&rsquo;s what I wrote it in. It&rsquo;s at version 0.1.2 now and available from
+rubygems.org, and as of now it can build (or rather, generate ninja buildfiles
+for) C++ binaries and static libraries. Builds are specified as <code>build.jitsu</code>
+files in YAML format, which the tool processes into <code>build.ninja</code> files that
+can then be used by Ninja. I&rsquo;ll keep trying to use it in my own projects so
+hopefully it&rsquo;ll keep on improving from here on out. Let&rsquo;s see where it will
+go, I haven&rsquo;t really delineated the scope yet, to e.g. just doing C++ builds.</p>
+
+<p>If you are interested, install the gem, maybe <a href="https://github.com/ilkka/jitsu">grab the
+source</a> and give it a spin. Let me know what
+you think. Also see <a href="http://ilkka.github.com/jitsu">the documentation</a>.</p>
+
+            </main>
+        </article>
+        <footer>
+    <div>
+        <p>© 2015 Ilkka Laukkanen. <a href="http://creativecommons.org/licenses/by-sa/4.0/">Some rights reserved</a>.</p>
+        <p><a href="https://github.com/ilkka"><i class="fa fa-github"></i> ilkka</a> &mdash; 
+        <a href="https://twitter.com/ilkkalaukkanen"><i class="fa fa-twitter"></i> ilkkalaukkanen</a></p>
+        <p>Home icon by iconsmind.com from <a href="https://thenounproject.com">The Noun Project</a>.</p>
+    </div>
+</footer>
+
+    <script>document.write('<script src="http://'
+        + (location.host || 'localhost').split(':')[0]
+		+ ':1313/livereload.js?mindelay=10"></'
+        + 'script>')</script></body>
+</html>
