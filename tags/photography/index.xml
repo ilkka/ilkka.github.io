@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Photography on ilkka.io</title>
-    <link>http://localhost:1313/tags/photography/</link>
+    <link>http://ilkka.io/tags/photography/</link>
     <description>Recent content in Photography on ilkka.io</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2015 Ilkka Laukkanen. &lt;a href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Some rights reserved&lt;/a&gt;.</copyright>
     <lastBuildDate>Wed, 08 Dec 2010 17:09:38 +0200</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/photography/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://ilkka.io/tags/photography/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Shooting tethered with the Nikon D80 and Ubuntu</title>
-      <link>http://localhost:1313/blog/2010/12/08/shooting-tethered-with-the-nikon-d80-and-ubuntu/</link>
+      <link>http://ilkka.io/blog/2010/12/08/shooting-tethered-with-the-nikon-d80-and-ubuntu/</link>
       <pubDate>Wed, 08 Dec 2010 17:09:38 +0200</pubDate>
       
-      <guid>http://localhost:1313/blog/2010/12/08/shooting-tethered-with-the-nikon-d80-and-ubuntu/</guid>
+      <guid>http://ilkka.io/blog/2010/12/08/shooting-tethered-with-the-nikon-d80-and-ubuntu/</guid>
       <description>&lt;p&gt;I really like shooting tethered with Lightroom and my MacBook, but today while
 thinking about a band shoot I had coming up, I wondered how easy it would be
 to do the same on Ubuntu on my Nokia Booklet.&lt;/p&gt;

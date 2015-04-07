@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Sysadmin on ilkka.io</title>
-    <link>http://localhost:1313/tags/sysadmin/</link>
+    <link>http://ilkka.io/tags/sysadmin/</link>
     <description>Recent content in Sysadmin on ilkka.io</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2015 Ilkka Laukkanen. &lt;a href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Some rights reserved&lt;/a&gt;.</copyright>
     <lastBuildDate>Wed, 25 May 2011 22:39:00 +0300</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/sysadmin/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://ilkka.io/tags/sysadmin/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Dgh, The Debian/Ubuntu Downgrade Helper</title>
-      <link>http://localhost:1313/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/</link>
+      <link>http://ilkka.io/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/</link>
       <pubDate>Wed, 25 May 2011 22:39:00 +0300</pubDate>
       
-      <guid>http://localhost:1313/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/</guid>
+      <guid>http://ilkka.io/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/</guid>
       <description>&lt;p&gt;Ever had the bright idea of upgrading, say, your Ubuntu machine to use some
 snazzy new software from a PPA, only to have it blow up in your face? The grim
 realization that there&amp;rsquo;s no easy downgrade path, instead you&amp;rsquo;ll have to find

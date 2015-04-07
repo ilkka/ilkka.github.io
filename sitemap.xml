@@ -2,78 +2,78 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://localhost:1313/</loc>
+    <loc>http://ilkka.io/</loc>
     <lastmod>2015-03-11T16:15:00+02:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://localhost:1313/about/</loc>
+    <loc>http://ilkka.io/about/</loc>
     <lastmod>2015-03-11T16:15:00+02:00</lastmod>
   </url>
   
   <url>
-    <loc>http://localhost:1313/blog/2011/10/19/packaging-a-qt-app-for-os-x/</loc>
+    <loc>http://ilkka.io/blog/2011/10/19/packaging-a-qt-app-for-os-x/</loc>
     <lastmod>2011-10-19T23:06:27+03:00</lastmod>
   </url>
   
   <url>
-    <loc>http://localhost:1313/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/</loc>
+    <loc>http://ilkka.io/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/</loc>
     <lastmod>2011-05-25T22:39:00+03:00</lastmod>
   </url>
   
   <url>
-    <loc>http://localhost:1313/blog/2011/03/04/qtquick_2_qml_scenegraph_glsl_fragment_shader_tutorial/</loc>
+    <loc>http://ilkka.io/blog/2011/03/04/qtquick_2_qml_scenegraph_glsl_fragment_shader_tutorial/</loc>
     <lastmod>2011-03-04T13:33:50+02:00</lastmod>
   </url>
   
   <url>
-    <loc>http://localhost:1313/blog/2011/02/27/migrating-a-live-ubuntu-install-onto-lvm2/</loc>
+    <loc>http://ilkka.io/blog/2011/02/27/migrating-a-live-ubuntu-install-onto-lvm2/</loc>
     <lastmod>2011-02-27T13:56:40+02:00</lastmod>
   </url>
   
   <url>
-    <loc>http://localhost:1313/blog/2011/02/13/jitsu-is-a-meta-build-system-for-ninja/</loc>
+    <loc>http://ilkka.io/blog/2011/02/13/jitsu-is-a-meta-build-system-for-ninja/</loc>
     <lastmod>2011-02-13T22:19:50+02:00</lastmod>
   </url>
   
   <url>
-    <loc>http://localhost:1313/blog/2011/02/03/teach-vim-about-gemfiles/</loc>
+    <loc>http://ilkka.io/blog/2011/02/03/teach-vim-about-gemfiles/</loc>
     <lastmod>2011-02-03T18:27:00+02:00</lastmod>
   </url>
   
   <url>
-    <loc>http://localhost:1313/blog/2011/01/31/fix-outlook-quoting-style/</loc>
+    <loc>http://ilkka.io/blog/2011/01/31/fix-outlook-quoting-style/</loc>
     <lastmod>2011-01-31T14:31:00+02:00</lastmod>
   </url>
   
   <url>
-    <loc>http://localhost:1313/blog/2010/12/08/shooting-tethered-with-the-nikon-d80-and-ubuntu/</loc>
+    <loc>http://ilkka.io/blog/2010/12/08/shooting-tethered-with-the-nikon-d80-and-ubuntu/</loc>
     <lastmod>2010-12-08T17:09:38+02:00</lastmod>
   </url>
   
   <url>
-    <loc>http://localhost:1313/blog/2010/12/08/rakefile-for-jekyll-site-management/</loc>
+    <loc>http://ilkka.io/blog/2010/12/08/rakefile-for-jekyll-site-management/</loc>
     <lastmod>2010-12-08T17:00:52+02:00</lastmod>
   </url>
   
   <url>
-    <loc>http://localhost:1313/blog/2010/11/29/where-to-find-packages-for-my-software/</loc>
+    <loc>http://ilkka.io/blog/2010/11/29/where-to-find-packages-for-my-software/</loc>
     <lastmod>2010-11-29T21:11:21+02:00</lastmod>
   </url>
   
   <url>
-    <loc>http://localhost:1313/blog/2010/11/28/qml-woes/</loc>
+    <loc>http://ilkka.io/blog/2010/11/28/qml-woes/</loc>
     <lastmod>2010-11-28T20:55:54+02:00</lastmod>
   </url>
   
   <url>
-    <loc>http://localhost:1313/blog/2010/11/21/jekyll-tag-cloud/</loc>
+    <loc>http://ilkka.io/blog/2010/11/21/jekyll-tag-cloud/</loc>
     <lastmod>2010-11-21T23:11:50+02:00</lastmod>
   </url>
   
   <url>
-    <loc>http://localhost:1313/blog/2010/11/20/hosting-a-jekyll-blog-with-extensions-on-github/</loc>
+    <loc>http://ilkka.io/blog/2010/11/20/hosting-a-jekyll-blog-with-extensions-on-github/</loc>
     <lastmod>2010-11-20T20:39:09+02:00</lastmod>
   </url>
   

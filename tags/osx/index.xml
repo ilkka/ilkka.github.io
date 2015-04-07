@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Osx on ilkka.io</title>
-    <link>http://localhost:1313/tags/osx/</link>
+    <link>http://ilkka.io/tags/osx/</link>
     <description>Recent content in Osx on ilkka.io</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2015 Ilkka Laukkanen. &lt;a href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Some rights reserved&lt;/a&gt;.</copyright>
     <lastBuildDate>Wed, 19 Oct 2011 23:06:27 +0300</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/osx/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://ilkka.io/tags/osx/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Packaging a Qt app for OS X</title>
-      <link>http://localhost:1313/blog/2011/10/19/packaging-a-qt-app-for-os-x/</link>
+      <link>http://ilkka.io/blog/2011/10/19/packaging-a-qt-app-for-os-x/</link>
       <pubDate>Wed, 19 Oct 2011 23:06:27 +0300</pubDate>
       
-      <guid>http://localhost:1313/blog/2011/10/19/packaging-a-qt-app-for-os-x/</guid>
+      <guid>http://ilkka.io/blog/2011/10/19/packaging-a-qt-app-for-os-x/</guid>
       <description>
 
 &lt;p&gt;I participated in &lt;a href=&#34;http://barcamp.org/w/page/39167337/BarCampTampere2&#34;&gt;BarCamp Tampere 2&lt;/a&gt; recently, and one of
