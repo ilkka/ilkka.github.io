@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Rake on ilkka.io</title>
-    <link>http://ilkka.io/tags/rake/</link>
+    <link>http://localhost:1313/tags/rake/</link>
     <description>Recent content in Rake on ilkka.io</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2015 Ilkka Laukkanen. &lt;a href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Some rights reserved&lt;/a&gt;.</copyright>
     <lastBuildDate>Wed, 08 Dec 2010 17:00:52 +0200</lastBuildDate>
-    <atom:link href="http://ilkka.io/tags/rake/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/rake/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Rakefile for Jekyll site management</title>
-      <link>http://ilkka.io/blog/2010/12/08/rakefile-for-jekyll-site-management/</link>
+      <link>http://localhost:1313/blog/2010/12/08/rakefile-for-jekyll-site-management/</link>
       <pubDate>Wed, 08 Dec 2010 17:00:52 +0200</pubDate>
       
-      <guid>http://ilkka.io/blog/2010/12/08/rakefile-for-jekyll-site-management/</guid>
+      <guid>http://localhost:1313/blog/2010/12/08/rakefile-for-jekyll-site-management/</guid>
       <description>&lt;p&gt;Previously I&amp;rsquo;ve used a bunch of scripts for managing post creation and site
 compilation tasks, but recently I decided to move over to Rake. The whole
 Rakefile as-it-stands is &lt;a href=&#34;https://github.com/ilkka/ilkka.github.com/tree/source&#34;&gt;in the

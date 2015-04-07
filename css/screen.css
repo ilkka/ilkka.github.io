@@ -326,6 +326,7 @@ main:after {
 /* line 1, ../../sass/_header.scss */
 .page-header {
   background-color: black;
+  background-image: url("/backgrounds/tammerkoski.jpg");
   background-size: cover;
   color: white;
   background-position: 50% 50%;
@@ -333,12 +334,13 @@ main:after {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   max-height: 800px;
   padding: 1.55556em 0;
 }
-/* line 14, ../../sass/_header.scss */
+/* line 15, ../../sass/_header.scss */
 .page-header h1 {
+  color: white;
   margin: 0;
   display: block;
   max-width: 46rem;
@@ -353,37 +355,9 @@ main:after {
   display: block;
   clear: both;
 }
-/* line 20, ../../sass/_header.scss */
+/* line 22, ../../sass/_header.scss */
 .page-header a, .page-header a:visited, .page-header a:active {
   color: #f5abf0;
-}
-/* line 24, ../../sass/_header.scss */
-.page-header.morning {
-  background-image: url("/backgrounds/tammerkoski.jpg");
-}
-/* line 26, ../../sass/_header.scss */
-.page-header.morning h1 {
-  color: black;
-}
-/* line 29, ../../sass/_header.scss */
-.page-header.morning a, .page-header.morning a:visited, .page-header.morning a:active {
-  color: #f5abf0;
-}
-/* line 34, ../../sass/_header.scss */
-.page-header.evening {
-  background-image: url("/backgrounds/itsenaisyydenkatu.jpg");
-}
-/* line 36, ../../sass/_header.scss */
-.page-header.evening a, .page-header.evening a:visited, .page-header.evening a:active {
-  color: #f5abf0;
-}
-/* line 41, ../../sass/_header.scss */
-.page-header.night {
-  background-image: url("/backgrounds/amsterdam.jpg");
-}
-/* line 43, ../../sass/_header.scss */
-.page-header.night a, .page-header.night a:visited, .page-header.night a:active {
-  color: #d6943e;
 }
 
 /* line 1, ../../sass/_footer.scss */
