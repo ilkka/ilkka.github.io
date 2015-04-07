@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tools on ilkka.io</title>
-    <link>http://localhost:1313/tags/tools/</link>
+    <link>http://ilkka.io/tags/tools/</link>
     <description>Recent content in Tools on ilkka.io</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2015 Ilkka Laukkanen. &lt;a href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Some rights reserved&lt;/a&gt;.</copyright>
     <lastBuildDate>Mon, 31 Jan 2011 14:31:00 +0200</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/tools/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://ilkka.io/tags/tools/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Fix Outlook Quoting Style</title>
-      <link>http://localhost:1313/blog/2011/01/31/fix-outlook-quoting-style/</link>
+      <link>http://ilkka.io/blog/2011/01/31/fix-outlook-quoting-style/</link>
       <pubDate>Mon, 31 Jan 2011 14:31:00 +0200</pubDate>
       
-      <guid>http://localhost:1313/blog/2011/01/31/fix-outlook-quoting-style/</guid>
+      <guid>http://ilkka.io/blog/2011/01/31/fix-outlook-quoting-style/</guid>
       <description>&lt;p&gt;Like many others before and after myself, I find myself having to use MS
 Outlook in my daily work. Also like many, I loathe its style of quoting email
 messages. Fortunately I use Exchange&amp;rsquo;s rather surprisingly good (as of the
