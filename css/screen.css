@@ -383,22 +383,25 @@ footer:after {
 
 /* line 1, ../../sass/_nav.scss */
 .nav--main {
+  position: fixed;
+  top: 0;
+  left: 0;
   font-size: 2.61111em;
   line-height: 1.19149em;
 }
-/* line 4, ../../sass/_nav.scss */
+/* line 7, ../../sass/_nav.scss */
 .nav--main .hide {
   position: relative;
   overflow: hidden;
   left: -9999em;
 }
 
-/* line 11, ../../sass/_nav.scss */
+/* line 14, ../../sass/_nav.scss */
 .nav__links {
   margin: 0px;
 }
 
-/* line 15, ../../sass/_nav.scss */
+/* line 18, ../../sass/_nav.scss */
 .icon--home {
   display: inline-block;
   transform: translate(0, 0);
@@ -408,19 +411,19 @@ footer:after {
   background-size: cover;
 }
 
-/* line 26, ../../sass/_nav.scss */
+/* line 29, ../../sass/_nav.scss */
 .midnightHeader.default .icon--home,
 .midnightHeader.header-night .icon--home {
   background-image: url("/icons/home-light.svg");
 }
 
-/* line 33, ../../sass/_nav.scss */
+/* line 36, ../../sass/_nav.scss */
 .midnightHeader.header-morning .icon--home,
 .midnightHeader.header-evening .icon--home {
   background-image: url("/icons/home-light.svg");
 }
 
-/* line 39, ../../sass/_nav.scss */
+/* line 42, ../../sass/_nav.scss */
 .midnightHeader.body .icon--home {
   background-image: url("/icons/home.svg");
 }
