@@ -239,11 +239,14 @@ main:after {
 
 /* line 5, ../../sass/_layout.scss */
 .pagination {
+  display: -webkit-flex;
   display: flex;
+  -webkit-flex-direction: row;
   flex-direction: row;
+  -webkit-justify-content: center;
   justify-content: center;
 }
-/* line 10, ../../sass/_layout.scss */
+/* line 13, ../../sass/_layout.scss */
 .pagination li {
   margin: 0 0.5em;
 }
@@ -331,14 +334,18 @@ main:after {
   color: white;
   background-position: 50% 50%;
   height: 80vh;
+  display: -webkit-flex;
   display: flex;
+  -webkit-flex-direction: column;
   flex-direction: column;
+  -webkit-align-items: center;
   align-items: center;
+  -webkit-justify-content: center;
   justify-content: center;
   max-height: 800px;
   padding: 1.55556em 0;
 }
-/* line 15, ../../sass/_header.scss */
+/* line 19, ../../sass/_header.scss */
 .page-header h1 {
   color: white;
   margin: 0;
@@ -355,7 +362,7 @@ main:after {
   display: block;
   clear: both;
 }
-/* line 22, ../../sass/_header.scss */
+/* line 26, ../../sass/_header.scss */
 .page-header a, .page-header a:visited, .page-header a:active {
   color: #f5abf0;
 }
@@ -364,8 +371,11 @@ main:after {
 footer {
   margin-top: 4.66667em;
   margin-bottom: 1.55556em;
+  display: -webkit-flex;
   display: flex;
+  -webkit-flex-direction: row;
   flex-direction: row;
+  -webkit-justify-content: center;
   justify-content: center;
   max-width: 46rem;
   margin-left: auto;

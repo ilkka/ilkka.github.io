@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Qt on ilkka.io</title>
-    <link>http://ilkka.io/tags/qt/</link>
+    <link>http://localhost:1313/tags/qt/</link>
     <description>Recent content in Qt on ilkka.io</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2015 Ilkka Laukkanen. &lt;a href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Some rights reserved&lt;/a&gt;.</copyright>
     <lastBuildDate>Wed, 19 Oct 2011 23:06:27 +0300</lastBuildDate>
-    <atom:link href="http://ilkka.io/tags/qt/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/qt/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Packaging a Qt app for OS X</title>
-      <link>http://ilkka.io/blog/2011/10/19/packaging-a-qt-app-for-os-x/</link>
+      <link>http://localhost:1313/blog/2011/10/19/packaging-a-qt-app-for-os-x/</link>
       <pubDate>Wed, 19 Oct 2011 23:06:27 +0300</pubDate>
       
-      <guid>http://ilkka.io/blog/2011/10/19/packaging-a-qt-app-for-os-x/</guid>
+      <guid>http://localhost:1313/blog/2011/10/19/packaging-a-qt-app-for-os-x/</guid>
       <description>
 
 &lt;p&gt;I participated in &lt;a href=&#34;http://barcamp.org/w/page/39167337/BarCampTampere2&#34;&gt;BarCamp Tampere 2&lt;/a&gt; recently, and one of
@@ -111,10 +111,10 @@ thing to them too.&lt;/p&gt;
     
     <item>
       <title>QML woes</title>
-      <link>http://ilkka.io/blog/2010/11/28/qml-woes/</link>
+      <link>http://localhost:1313/blog/2010/11/28/qml-woes/</link>
       <pubDate>Sun, 28 Nov 2010 20:55:54 +0200</pubDate>
       
-      <guid>http://ilkka.io/blog/2010/11/28/qml-woes/</guid>
+      <guid>http://localhost:1313/blog/2010/11/28/qml-woes/</guid>
       <description>&lt;p&gt;I&amp;rsquo;ve been experimenting with &lt;a href=&#34;http://qt.gitorious.org/qt-components&#34;&gt;Qt
 Components&lt;/a&gt; recently, even though they
 are very much in a pre-alpha state. I think that QML together with the

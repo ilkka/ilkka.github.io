@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Ubuntu on ilkka.io</title>
-    <link>http://ilkka.io/tags/ubuntu/</link>
+    <link>http://localhost:1313/tags/ubuntu/</link>
     <description>Recent content in Ubuntu on ilkka.io</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2015 Ilkka Laukkanen. &lt;a href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Some rights reserved&lt;/a&gt;.</copyright>
     <lastBuildDate>Wed, 25 May 2011 22:39:00 +0300</lastBuildDate>
-    <atom:link href="http://ilkka.io/tags/ubuntu/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/ubuntu/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Dgh, The Debian/Ubuntu Downgrade Helper</title>
-      <link>http://ilkka.io/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/</link>
+      <link>http://localhost:1313/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/</link>
       <pubDate>Wed, 25 May 2011 22:39:00 +0300</pubDate>
       
-      <guid>http://ilkka.io/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/</guid>
+      <guid>http://localhost:1313/blog/2011/05/25/dgh-the-debian-ubuntu-downgrade-helper/</guid>
       <description>&lt;p&gt;Ever had the bright idea of upgrading, say, your Ubuntu machine to use some
 snazzy new software from a PPA, only to have it blow up in your face? The grim
 realization that there&amp;rsquo;s no easy downgrade path, instead you&amp;rsquo;ll have to find
@@ -77,10 +77,10 @@ rubygems.&lt;/p&gt;
     
     <item>
       <title>Qt Quick 2 QML Scene Graph GLSL fragment shader tutorial</title>
-      <link>http://ilkka.io/blog/2011/03/04/qtquick_2_qml_scenegraph_glsl_fragment_shader_tutorial/</link>
+      <link>http://localhost:1313/blog/2011/03/04/qtquick_2_qml_scenegraph_glsl_fragment_shader_tutorial/</link>
       <pubDate>Fri, 04 Mar 2011 13:33:50 +0200</pubDate>
       
-      <guid>http://ilkka.io/blog/2011/03/04/qtquick_2_qml_scenegraph_glsl_fragment_shader_tutorial/</guid>
+      <guid>http://localhost:1313/blog/2011/03/04/qtquick_2_qml_scenegraph_glsl_fragment_shader_tutorial/</guid>
       <description>
 
 &lt;p&gt;I had been hearing a lot about Scene Graph and Qt Quick 2 making it possible to
@@ -500,10 +500,10 @@ computer is a Mac, this puts a bit of a crimp on toying with scenegraph.&lt;/p&g
     
     <item>
       <title>Migrating a live Ubuntu install onto LVM2</title>
-      <link>http://ilkka.io/blog/2011/02/27/migrating-a-live-ubuntu-install-onto-lvm2/</link>
+      <link>http://localhost:1313/blog/2011/02/27/migrating-a-live-ubuntu-install-onto-lvm2/</link>
       <pubDate>Sun, 27 Feb 2011 13:56:40 +0200</pubDate>
       
-      <guid>http://ilkka.io/blog/2011/02/27/migrating-a-live-ubuntu-install-onto-lvm2/</guid>
+      <guid>http://localhost:1313/blog/2011/02/27/migrating-a-live-ubuntu-install-onto-lvm2/</guid>
       <description>
 
 &lt;p&gt;My only home computer is, and has been for a while, a Nokia Booklet. It&amp;rsquo;s a
@@ -734,10 +734,10 @@ any more damage in the process.&lt;/p&gt;
     
     <item>
       <title>Where to find packages for my software</title>
-      <link>http://ilkka.io/blog/2010/11/29/where-to-find-packages-for-my-software/</link>
+      <link>http://localhost:1313/blog/2010/11/29/where-to-find-packages-for-my-software/</link>
       <pubDate>Mon, 29 Nov 2010 21:11:21 +0200</pubDate>
       
-      <guid>http://ilkka.io/blog/2010/11/29/where-to-find-packages-for-my-software/</guid>
+      <guid>http://localhost:1313/blog/2010/11/29/where-to-find-packages-for-my-software/</guid>
       <description>&lt;p&gt;If for some inexplicable reason anybody would like to check out any of my
 software in Ubuntu, just add my PPA:&lt;/p&gt;
 

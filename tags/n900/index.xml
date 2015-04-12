@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>N900 on ilkka.io</title>
-    <link>http://ilkka.io/tags/n900/</link>
+    <link>http://localhost:1313/tags/n900/</link>
     <description>Recent content in N900 on ilkka.io</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2015 Ilkka Laukkanen. &lt;a href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Some rights reserved&lt;/a&gt;.</copyright>
     <lastBuildDate>Fri, 04 Mar 2011 13:33:50 +0200</lastBuildDate>
-    <atom:link href="http://ilkka.io/tags/n900/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/n900/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Qt Quick 2 QML Scene Graph GLSL fragment shader tutorial</title>
-      <link>http://ilkka.io/blog/2011/03/04/qtquick_2_qml_scenegraph_glsl_fragment_shader_tutorial/</link>
+      <link>http://localhost:1313/blog/2011/03/04/qtquick_2_qml_scenegraph_glsl_fragment_shader_tutorial/</link>
       <pubDate>Fri, 04 Mar 2011 13:33:50 +0200</pubDate>
       
-      <guid>http://ilkka.io/blog/2011/03/04/qtquick_2_qml_scenegraph_glsl_fragment_shader_tutorial/</guid>
+      <guid>http://localhost:1313/blog/2011/03/04/qtquick_2_qml_scenegraph_glsl_fragment_shader_tutorial/</guid>
       <description>
 
 &lt;p&gt;I had been hearing a lot about Scene Graph and Qt Quick 2 making it possible to

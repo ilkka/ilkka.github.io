@@ -6,7 +6,7 @@
     <meta name="description" content="About me and the things I think and do.">
     <meta property="og:title" content="Fix Outlook Quoting Style &mdash; ilkka.io">
     <meta property="og:site_name" content="ilkka.io">
-    <meta property="og:url" content="http://ilkka.io/blog/2011/01/31/fix-outlook-quoting-style/">
+    <meta property="og:url" content="http://localhost:1313/blog/2011/01/31/fix-outlook-quoting-style/">
     
     <meta property="og:type" content="article">
     <meta property="og:description" content="Like many others before and after myself, I find myself having to use MS
@@ -33,7 +33,7 @@ Vim and some Ruby code, I can fix quoting in messages I&rsquo;m replying to easi
 
     <title>Fix Outlook Quoting Style &mdash; ilkka.io</title>
 
-    <link rel="canonical" href="http://ilkka.io/blog/2011/01/31/fix-outlook-quoting-style/">
+    <link rel="canonical" href="http://localhost:1313/blog/2011/01/31/fix-outlook-quoting-style/">
     <link href="" rel="alternate" type="application/rss+xml" title="ilkka.io" />
 
     <link href="/css/print.css" media="print" rel="stylesheet" type="text/css">
@@ -129,5 +129,8 @@ src="https://gist.github.com/803961.js?file=fix-outlook-quoting.rb"></script>
     </div>
 </footer>
 
-    </body>
+    <script>document.write('<script src="http://'
+        + (location.host || 'localhost').split(':')[0]
+		+ ':1313/livereload.js?mindelay=10"></'
+        + 'script>')</script></body>
 </html>

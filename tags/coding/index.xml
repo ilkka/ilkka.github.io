@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Coding on ilkka.io</title>
-    <link>http://ilkka.io/tags/coding/</link>
+    <link>http://localhost:1313/tags/coding/</link>
     <description>Recent content in Coding on ilkka.io</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2015 Ilkka Laukkanen. &lt;a href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Some rights reserved&lt;/a&gt;.</copyright>
     <lastBuildDate>Sun, 13 Feb 2011 22:19:50 +0200</lastBuildDate>
-    <atom:link href="http://ilkka.io/tags/coding/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/coding/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Jitsu is a meta build system for Ninja</title>
-      <link>http://ilkka.io/blog/2011/02/13/jitsu-is-a-meta-build-system-for-ninja/</link>
+      <link>http://localhost:1313/blog/2011/02/13/jitsu-is-a-meta-build-system-for-ninja/</link>
       <pubDate>Sun, 13 Feb 2011 22:19:50 +0200</pubDate>
       
-      <guid>http://ilkka.io/blog/2011/02/13/jitsu-is-a-meta-build-system-for-ninja/</guid>
+      <guid>http://localhost:1313/blog/2011/02/13/jitsu-is-a-meta-build-system-for-ninja/</guid>
       <description>&lt;p&gt;A while back I hit upon &lt;a href=&#34;https://github.com/martine/ninja&#34;&gt;Ninja&lt;/a&gt;, a very fast
 and very simple build system that is apparently used for building
 &lt;a href=&#34;http://www.chromium.org/&#34;&gt;Chromium&lt;/a&gt;. Can&amp;rsquo;t remember where I first heard of
@@ -49,10 +49,10 @@ you think. Also see &lt;a href=&#34;http://ilkka.github.com/jitsu&#34;&gt;the do
     
     <item>
       <title>Teach Vim about Gemfiles</title>
-      <link>http://ilkka.io/blog/2011/02/03/teach-vim-about-gemfiles/</link>
+      <link>http://localhost:1313/blog/2011/02/03/teach-vim-about-gemfiles/</link>
       <pubDate>Thu, 03 Feb 2011 18:27:00 +0200</pubDate>
       
-      <guid>http://ilkka.io/blog/2011/02/03/teach-vim-about-gemfiles/</guid>
+      <guid>http://localhost:1313/blog/2011/02/03/teach-vim-about-gemfiles/</guid>
       <description>&lt;p&gt;By default, the excellent Vim editor doesn&amp;rsquo;t know what the filetype of
 Gemfiles is (it&amp;rsquo;s &lt;code&gt;ruby&lt;/code&gt;, of course). I&amp;rsquo;ve been sprinkling Vim modelines in
 mine for ages, but just now as I was hacking at &lt;a href=&#34;https://github.com/ilkka/ticgit&#34;&gt;my clone of
@@ -77,10 +77,10 @@ people with my editor-specific modelines any more.&lt;/p&gt;
     
     <item>
       <title>Fix Outlook Quoting Style</title>
-      <link>http://ilkka.io/blog/2011/01/31/fix-outlook-quoting-style/</link>
+      <link>http://localhost:1313/blog/2011/01/31/fix-outlook-quoting-style/</link>
       <pubDate>Mon, 31 Jan 2011 14:31:00 +0200</pubDate>
       
-      <guid>http://ilkka.io/blog/2011/01/31/fix-outlook-quoting-style/</guid>
+      <guid>http://localhost:1313/blog/2011/01/31/fix-outlook-quoting-style/</guid>
       <description>&lt;p&gt;Like many others before and after myself, I find myself having to use MS
 Outlook in my daily work. Also like many, I loathe its style of quoting email
 messages. Fortunately I use Exchange&amp;rsquo;s rather surprisingly good (as of the
@@ -122,10 +122,10 @@ src=&#34;https://gist.github.com/803961.js?file=fix-outlook-quoting.rb&#34;&gt;&
     
     <item>
       <title>Where to find packages for my software</title>
-      <link>http://ilkka.io/blog/2010/11/29/where-to-find-packages-for-my-software/</link>
+      <link>http://localhost:1313/blog/2010/11/29/where-to-find-packages-for-my-software/</link>
       <pubDate>Mon, 29 Nov 2010 21:11:21 +0200</pubDate>
       
-      <guid>http://ilkka.io/blog/2010/11/29/where-to-find-packages-for-my-software/</guid>
+      <guid>http://localhost:1313/blog/2010/11/29/where-to-find-packages-for-my-software/</guid>
       <description>&lt;p&gt;If for some inexplicable reason anybody would like to check out any of my
 software in Ubuntu, just add my PPA:&lt;/p&gt;
 
@@ -142,10 +142,10 @@ to get a hang of the workflow if for nothing else.&lt;/p&gt;
     
     <item>
       <title>QML woes</title>
-      <link>http://ilkka.io/blog/2010/11/28/qml-woes/</link>
+      <link>http://localhost:1313/blog/2010/11/28/qml-woes/</link>
       <pubDate>Sun, 28 Nov 2010 20:55:54 +0200</pubDate>
       
-      <guid>http://ilkka.io/blog/2010/11/28/qml-woes/</guid>
+      <guid>http://localhost:1313/blog/2010/11/28/qml-woes/</guid>
       <description>&lt;p&gt;I&amp;rsquo;ve been experimenting with &lt;a href=&#34;http://qt.gitorious.org/qt-components&#34;&gt;Qt
 Components&lt;/a&gt; recently, even though they
 are very much in a pre-alpha state. I think that QML together with the
@@ -194,11 +194,11 @@ solve that through some remote directory mounting over USB-net, then.&lt;/p&gt;
     
     <item>
       <title>Jekyll tag cloud</title>
-      <link>http://ilkka.io/blog/2010/11/21/jekyll-tag-cloud/</link>
+      <link>http://localhost:1313/blog/2010/11/21/jekyll-tag-cloud/</link>
       <pubDate>Sun, 21 Nov 2010 23:11:50 +0200</pubDate>
       
-      <guid>http://ilkka.io/blog/2010/11/21/jekyll-tag-cloud/</guid>
-      <description>&lt;p&gt;Having &lt;a href=&#34;http://ilkka.io/blog/2010/11/20/hosting-a-jekyll-blog-with-extensions-on-github&#34;&gt;gotten archives
+      <guid>http://localhost:1313/blog/2010/11/21/jekyll-tag-cloud/</guid>
+      <description>&lt;p&gt;Having &lt;a href=&#34;http://localhost:1313/blog/2010/11/20/hosting-a-jekyll-blog-with-extensions-on-github&#34;&gt;gotten archives
 working&lt;/a&gt;
 nicely, I decided to next tackle the task of creating a tag cloud for
 my blog. The &lt;a href=&#34;https://github.com/mojombo/jekyll/wiki/Template-Data&#34;&gt;Jekyll
@@ -256,10 +256,10 @@ the source code&lt;/a&gt;.&lt;/p&gt;
     
     <item>
       <title>Hosting a Jekyll blog with extensions on GitHub</title>
-      <link>http://ilkka.io/blog/2010/11/20/hosting-a-jekyll-blog-with-extensions-on-github/</link>
+      <link>http://localhost:1313/blog/2010/11/20/hosting-a-jekyll-blog-with-extensions-on-github/</link>
       <pubDate>Sat, 20 Nov 2010 20:39:09 +0200</pubDate>
       
-      <guid>http://ilkka.io/blog/2010/11/20/hosting-a-jekyll-blog-with-extensions-on-github/</guid>
+      <guid>http://localhost:1313/blog/2010/11/20/hosting-a-jekyll-blog-with-extensions-on-github/</guid>
       <description>
 
 &lt;blockquote&gt;
