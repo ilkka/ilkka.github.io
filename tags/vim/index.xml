@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Vim on ilkka.io</title>
-    <link>http://localhost:1313/tags/vim/</link>
+    <link>http://ilkka.io/tags/vim/</link>
     <description>Recent content in Vim on ilkka.io</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2015 Ilkka Laukkanen. &lt;a href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Some rights reserved&lt;/a&gt;.</copyright>
     <lastBuildDate>Thu, 03 Feb 2011 18:27:00 +0200</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/vim/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://ilkka.io/tags/vim/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Teach Vim about Gemfiles</title>
-      <link>http://localhost:1313/blog/2011/02/03/teach-vim-about-gemfiles/</link>
+      <link>http://ilkka.io/blog/2011/02/03/teach-vim-about-gemfiles/</link>
       <pubDate>Thu, 03 Feb 2011 18:27:00 +0200</pubDate>
       
-      <guid>http://localhost:1313/blog/2011/02/03/teach-vim-about-gemfiles/</guid>
+      <guid>http://ilkka.io/blog/2011/02/03/teach-vim-about-gemfiles/</guid>
       <description>&lt;p&gt;By default, the excellent Vim editor doesn&amp;rsquo;t know what the filetype of
 Gemfiles is (it&amp;rsquo;s &lt;code&gt;ruby&lt;/code&gt;, of course). I&amp;rsquo;ve been sprinkling Vim modelines in
 mine for ages, but just now as I was hacking at &lt;a href=&#34;https://github.com/ilkka/ticgit&#34;&gt;my clone of
