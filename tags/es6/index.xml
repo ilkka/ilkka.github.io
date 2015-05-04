@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Es6 on ilkka.io</title>
+    <link>http://ilkka.io/tags/es6/</link>
+    <description>Recent content in Es6 on ilkka.io</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© 2015 Ilkka Laukkanen. &lt;a href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Some rights reserved&lt;/a&gt;.</copyright>
+    <lastBuildDate>Mon, 04 May 2015 07:15:17 +0300</lastBuildDate>
+    <atom:link href="http://ilkka.io/tags/es6/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Webpack &#43; ES6 &#43; CSS next Yeoman generator</title>
+      <link>http://ilkka.io/blog/generator-webpack-es6-cssnext/</link>
+      <pubDate>Mon, 04 May 2015 07:15:17 +0300</pubDate>
+      
+      <guid>http://ilkka.io/blog/generator-webpack-es6-cssnext/</guid>
+      <description>&lt;p&gt;I like ES6. I &lt;em&gt;really&lt;/em&gt; like &lt;a href=&#34;http://webpack.github.io&#34;&gt;Webpack&lt;/a&gt;. I also quite like future CSS syntax. That&amp;rsquo;s why I wrote &lt;a href=&#34;https://github.com/ilkka/generator-webpack-es6-cssnext&#34;&gt;generator-webpack-es6-cssnext&lt;/a&gt;, a Yeoman generator for starting a project using all of them!&lt;/p&gt;
+
+&lt;p&gt;The generated project gets a very barebones toolchain powered by npm scripts: you can do&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;$ npm start
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;to start up &lt;a href=&#34;http://webpack.github.io/docs/webpack-dev-server.html&#34;&gt;webpack-dev-server&lt;/a&gt; for rapid development, and&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;$ npm run build
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;to just run webpack once.&lt;/p&gt;
+
+&lt;p&gt;The Webpack configuration uses a &lt;a href=&#34;https://github.com/postcss/postcss&#34;&gt;PostCSS&lt;/a&gt; based pipeline for loading and transforming CSS and adding them to the DOM. That means not writing style tags but instead doing e.g.&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;require&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;&amp;#39;../css/main.css&amp;#39;&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;in JS code. The CSS is also checked against the &lt;a href=&#34;http://caniuse.com/&#34;&gt;Can I Use&lt;/a&gt; database.&lt;/p&gt;
+
+&lt;p&gt;All JS code not in node modules is transformed with &lt;a href=&#34;https://babeljs.io/&#34;&gt;Babel&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Hope you like it! If you find a bug, please &lt;a href=&#34;https://github.com/ilkka/generator-webpack-es6-cssnext/issues&#34;&gt;file an issue&lt;/a&gt; or open a pull request.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
